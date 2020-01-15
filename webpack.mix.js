@@ -12,6 +12,7 @@ const tailwindcss = require('tailwindcss');
  |
  */
 
+mix.copyDirectory('resources/assets', 'public/assets');
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .options({
@@ -19,4 +20,4 @@ mix.js('resources/js/app.js', 'public/js')
         postCss: [
             tailwindcss('./tailwind.config.js')
         ],
-    })
+    });
