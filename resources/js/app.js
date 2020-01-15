@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import router from './router';
-import App from './components/App';
+import store from './store';
+import App from './components/app';
 
 require('./bootstrap');
 
@@ -9,5 +10,6 @@ const app = new Vue({
     components: {
         App
     },
+    store,
     router
 });

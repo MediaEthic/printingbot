@@ -115,7 +115,7 @@
                 <label for="email" class="uppercase text-blue-500 text-xs font-bold absolute pl-3 pt-2">{{ __('Email address') }}</label>
 
                 <div>
-                    <input id="email" type="email" class="pt-8 w-full rounded p-3 bg-blue-800 text-gray-100 outline-none focus:bg-blue-700" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="your@email.com">
+                    <input id="email" type="email" class="pt-8 w-full rounded p-3 bg-blue-800 text-gray-100 outline-none focus:bg-blue-700 @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="your@email.com">
 
                     @error('email')
                     <span class="text-red-600 text-sm pt-1" role="alert"><strong>{{ $message }}</strong></span>
@@ -124,10 +124,10 @@
             </div>
 
             <div class="relative pt-3">
-                <label for="password" class="pt-8 w-full rounded p-3 bg-blue-800 text-gray-100 outline-none focus:bg-blue-700">{{ __('Password') }}</label>
+                <label for="password" class="uppercase text-blue-500 text-xs font-bold absolute pl-3 pt-2">{{ __('Password') }}</label>
 
                 <div>
-                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="password">
+                    <input id="password" type="password" class="pt-8 w-full rounded p-3 bg-blue-800 text-gray-100 outline-none focus:bg-blue-700 @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="password">
 
                     @error('password')
                     <span class="text-red-600 text-sm pt-1" role="alert"><strong>{{ $message }}</strong></span>
