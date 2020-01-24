@@ -36,7 +36,7 @@ import itemsRoutes from "./routes/settings/product/items";
 
 import quotationsRoutes from "./routes/sales/quotations";
 import deliveriesRoutes from "./routes/sales/deliveries";
-import billsRoutes from "./routes/sales/bills";
+import invoicesRoutes from "./routes/sales/invoices";
 
 import statisticsRoutes from "./routes/statistics/statistics";
 
@@ -88,12 +88,12 @@ export default new VueRouter({
         ...substratesRoutes,
 
         ...sizesRoutes,
-        ...prospectsRoutes,
+        ...productsRoutes,
         ...itemsRoutes,
 
         ...quotationsRoutes,
         ...deliveriesRoutes,
-        ...billsRoutes,
+        ...invoicesRoutes,
 
         ...statisticsRoutes,
     ],
