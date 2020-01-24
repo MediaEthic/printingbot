@@ -1,50 +1,92 @@
 <template>
-    <nav>
-        <ul>
-            <li v-for="(route, key) in routes">
-                <input class="cd-accordion__input" type="checkbox" :id="'group-' + key"
+    <nav class="nav pb-32">
+        <ul class="tracking-wide">
+            <li v-for="(route, key) in routes"
+                :key="key"
+                class="list py-10 px-12 border-t-2 border-solid border-grey font-bold">
+                <input class="cd-accordion__input"
+                       type="checkbox"
+                       :id="'group-' + key"
                        v-if="route.subitems">
-                <label class="cd-accordion__label" :for="'group-' + key"
+                <label class="cd-accordion__label flex justify-start items-center w-full relative cursor-pointer hover:text-purple1"
+                       :for="'group-' + key"
                        v-if="route.subitems">
-                    <i :class="route.icon"></i>
+                    <i class="text-2xl text-purple1 mr-6" :class="route.icon"></i>
                     {{ route.name }}
+                    <i class="icon-arrow icon-arrow-left-circle text-purple2 absolute right-0"></i>
                 </label>
 
-                <ul class="cd-accordion__sub"
-                    v-if="route.subitems">
-                    <li v-for="(subitem, index) in route.subitems">
-                        <input class="cd-accordion__input" type="checkbox" :id="'group-' + key + index"
+<!--                TODO : transition-group doesn't work x2 + css -->
+                <transition-group name="expand"
+                                  mode="out-in"
+                                  tag="ul"
+                                  @beforeLeave="beforeLeave"
+                                  @enter="enter"
+                                  @afterEnter="afterEnter"
+                                  class="cd-accordion__sub"
+                                  v-if="route.subitems">
+                    <li v-for="(subitem, index) in route.subitems"
+                        :key="key + index"
+                        class="list font-semibold my-6 ml-6">
+                        <input class="cd-accordion__input"
+                               type="checkbox"
+                               :id="'group-' + key + index"
                                v-if="subitem.subitems">
-                        <label class="cd-accordion__label" :for="'group-' + key + index"
+                        <label class="cd-accordion__label relative block w-full cursor-pointer hover:text-purple1" :for="'group-' + key + index"
                                v-if="subitem.subitems">
                             {{ subitem.name }}
+                            <i class="icon-arrow icon-arrow-left-circle text-purple2 absolute right-0"></i>
                         </label>
 
-                        <ul class="cd-accordion__sub"
-                            v-if="subitem.subitems">
-                            <li v-for="(val, pos) in subitem.subitems">
-                                <input class="cd-accordion__input" type="checkbox" :id="'group-' + key + index + val">
-                                <label class="cd-accordion__label" :for="'group-' + key + index + val">
+                        <transition-group name="expand"
+                                          mode="out-in"
+                                          tag="ul"
+                                          class="cd-accordion__sub"
+                                          v-if="subitem.subitems">
+                            <li v-for="(val, pos) in subitem.subitems"
+                                :key="key + index + pos"
+                                class="list my-4 ml-4">
+                                <input class="cd-accordion__input"
+                                       type="checkbox"
+                                       :id="'group-' + key + index + pos">
+                                <label class="cd-accordion__label cursor-pointer hover:text-purple1" :for="'group-' + key + index + pos">
                                     <router-link :to="{ name: val.path }"
-                                                 :key="key + index + val">
+                                                 :key="key + index + pos"
+                                                 @change="activeLevel(key, index)"
+                                    >
                                         {{ val.name }}
                                     </router-link>
                                 </label>
                             </li>
-                        </ul>
+                        </transition-group>
+
+<!--                        <router-link-->
+<!--                            :to="{ name: subitem.path }"-->
+<!--                            v-slot="{ isActive, isExactActive }"-->
+<!--                            class="hover:text-purple1"-->
+<!--                            v-else-->
+<!--                        >-->
+<!--                            <span :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']"-->
+<!--                                  @click="activeLevel(key, index)">-->
+<!--                                {{ subitem.name }}-->
+<!--                            </span>-->
+<!--                        </router-link>-->
 
                         <router-link :to="{ name: subitem.path }"
                                      :key="index"
+                                     @click="activeLevel(key, index)"
+                                     class="hover:text-purple1"
                                      v-else>
                             {{ subitem.name }}
                         </router-link>
                     </li>
-                </ul>
+                </transition-group>
 
                 <router-link :to="{ name: route.path }"
                              :key="key"
+                             class="flex justify-start items-center hover:text-purple1"
                              v-else>
-                    <i :class="route.icon"></i>
+                    <i class="text-2xl text-purple1 mr-6" :class="route.icon"></i>
                     {{ route.name }}
                 </router-link>
             </li>
@@ -59,7 +101,7 @@
             return {
                 routes: [
                     {
-                        name: 'Tableau de bord',
+                        name: 'Accueil',
                         path: 'dashboard.index',
                         icon: 'icon-home',
                     },
@@ -217,7 +259,7 @@
                             },
                             {
                                 name: 'Factures',
-                                path: 'bills.index',
+                                path: 'invoices.index',
                             },
                         ]
                     },
@@ -228,21 +270,84 @@
                     },
                 ]
             }
+        },
+        created() {
+
+        },
+        methods: {
+            beforeLeave(element) {
+                console.log("beforeLeave");
+                this.prevHeight = getComputedStyle(element).height;
+            },
+            enter(element) {
+                console.log("enter");
+                const { height } = getComputedStyle(element);
+
+                element.style.height = this.prevHeight;
+
+                setTimeout(() => {
+                    element.style.height = height;
+                });
+            },
+            afterEnter(element) {
+                console.log("afterEnter");
+                element.style.height = 'auto';
+            },
+            activeLevel(parent1, parent2) {
+                console.log(parent1);
+                console.log(parent2);
+                parent1 = parent1 || null;
+                localStorage.setItem("parent1", parent1);
+
+                parent2 = parent2 || null;
+                localStorage.setItem("parent2", parent2);
+            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    /*.expand-enter-active,*/
+    /*.expand-leave-active {*/
+    /*    transition-duration: 0.3s;*/
+    /*    transition-property: height, opacity;*/
+    /*    transition-timing-function: ease;*/
+    /*    overflow: hidden;*/
+    /*}*/
+
+    .cd-accordion__sub {
+        height: 0;
+        overflow: hidden;
+        transition: display .3s ease-in-out;
+    }
+
     .cd-accordion__input { // hide native checkbox
         position: absolute;
         opacity: 0;
-    }
-    .cd-accordion__sub {
-        display: none; // by default hide all sub menus
+
+        + .cd-accordion__label .icon-arrow {
+            transition: transform .3s ease-in-out;
+        }
+
+        &.checked,
+        &:checked {
+            ~ .cd-accordion__sub { // show children when item is checked
+                height: auto;
+            }
+
+            + .cd-accordion__label .icon-arrow {
+                transform: rotateZ(-90deg);
+            }
+        }
     }
 
-    .cd-accordion__input:checked ~ .cd-accordion__sub { // show children when item is checked
-        display: block;
-    }
 
+    .router-link-exact-active {
+        padding: .5rem 1.5rem;
+        color: theme('colors.purple1');
+        font-weight: 700;
+        line-height: 2.1rem;
+        background-color: theme('colors.purple5');
+        border-radius: 2rem;
+    }
 </style>
