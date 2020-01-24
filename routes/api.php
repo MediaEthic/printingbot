@@ -16,3 +16,13 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('/auth')->group(function () {
+    Route::namespace('Sales')->prefix('/sales')->group(function () {
+        Route::prefix('/invoices')->group(function () {
+            Route::post('/', 'InvoiceController@index');
+            Route::get('{invoices}/pdf', 'InvoiceController@generatePDF');
+            Route::post('/customers/search', 'InvoiceController@searchCustomers');
+        });
+    });
+});
