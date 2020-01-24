@@ -1,6 +1,14 @@
 @import 'reset';
 @import 'variables';
+@import 'general';
+@import 'animations';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import '~cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css';
+
+$default-color: #3D1152;
+$primary-color: #672767;
+@import '~vue2-datepicker/scss/index.scss';
