@@ -6,11 +6,51 @@ axios.defaults.headers.common = {
 
 const state = {
     invoices: [],
+    form: {
+        header: {
+            type: "invoice",
+            name: "",
+            invoice_no: "",
+            invoice_date: "",
+            invoice_status: "draft",
+            third_type: "",
+            third_id: "",
+            third_alias: "",
+            third_name: "",
+            third_address_line1: "",
+            third_address_line2: "",
+            third_address_line3: "",
+            third_zipcode: "",
+            third_city: "",
+            third_country: "",
+            third_intracommunity_no: "",
+            third_reference: "",
+            user_id: "",
+            user_commission_base: "",
+            user_commission_rate: "",
+            user_commission_amount: "",
+            discount_rate: "",
+            bank_rate: "",
+            discount_duration: "",
+            payment_id: "",
+            settlement_id: "",
+            due_date: "",
+            subtotal: "",
+            vat: "",
+            total: "",
+        },
+        body: {
+            lines: []
+        }
+    }
 };
 
 const getters = {
     allInvoices(state) {
         return state.invoices;
+    },
+    formInvoice(state) {
+        return state.form;
     },
 };
 

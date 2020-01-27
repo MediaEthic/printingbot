@@ -13,9 +13,8 @@
                 <table class="wrap-table">
                     <thead class="table-header">
                         <tr class="table-row">
-                            <th scope="col"
-                                class="table-cell">
-                                <i class="icon-circle-check-full"></i>
+                            <th scope="col" class="table-cell checkAll" @click="checkAll">
+                                <i class="icon-check-circle text-2xl"></i>
                             </th>
                             <th scope="col" class="table-cell">Création</th>
                             <th scope="col" class="table-cell">Numéro</th>
@@ -39,11 +38,11 @@
                                         <span><!-- This span is needed to create the "checkbox" element --></span>
                                     </label>
                             </td>
-                            <td class="table-cell" data-title="" @click="showInvoice(row.id)">{{ displayDate(row.created_at) }}</td>
-                            <td class="table-cell" data-title="" @click="showInvoice(row.id)">{{ row.invoice_no }}</td>
-                            <td class="table-cell" data-title="" @click="showInvoice(row.id)">{{ row.client }}</td>
-                            <td class="table-cell" data-title="" @click="showInvoice(row.id)">{{ row.total }}</td>
-                            <td class="table-cell" data-title="" @click="showInvoice(row.id)">
+                            <td class="table-cell" data-title="Création" @click="showInvoice(row.id)">{{ displayDate(row.created_at) }}</td>
+                            <td class="table-cell" data-title="Numéro" @click="showInvoice(row.id)">{{ row.invoice_no }}</td>
+                            <td class="table-cell" data-title="Client" @click="showInvoice(row.id)">{{ row.client }}</td>
+                            <td class="table-cell" data-title="Total HT" @click="showInvoice(row.id)">{{ row.total }}</td>
+                            <td class="table-cell" data-title="Statut" @click="showInvoice(row.id)">
                                 <tag :label="row.status"
                                      :color="defineColorTag(row.status)"
                                 />
@@ -58,20 +57,25 @@
         </div>
         <div slot="sidebar">
             <section>
-                <fieldset class="fieldset" v-if="checkedInvoices.length">
-                    <legend class="legend">Actions</legend>
+                <transition name="slide-right"
+                            mode="out-in"
+                            @beforeLeave="beforeLeave"
+                            @enter="enter"
+                            @afterEnter="afterEnter">
+                    <fieldset class="fieldset" v-if="checkedInvoices.length">
+                        <legend class="legend">Actions</legend>
 
-                    <btnLink :target="`_blank`"
-                         :path="`/api/auth/sales/invoices/`+JSON.stringify(this.checkedInvoices)+`/pdf`"
-                         :label="`Imprimer`"
-                         :icon="`icon-printer`">
-                    </btnLink>
+                        <btnLink :target="`_blank`"
+                             :path="`/api/auth/sales/invoices/`+JSON.stringify(this.checkedInvoices)+`/pdf`"
+                             :label="`Imprimer`"
+                             :icon="`icon-printer`">
+                        </btnLink>
 
-                    <btn :type="`button`"
-                         :label="`Facturer`"
-                         :icon="`icon-edit`">
-                    </btn>
-                </fieldset>
+                        <btn :label="`Facturer`"
+                             :icon="`icon-edit`">
+                        </btn>
+                    </fieldset>
+                </transition>
 
                 <form>
                     <fieldset class="fieldset">
@@ -91,18 +95,14 @@
                                      :shortcuts="shortcuts"
                                      placeholder="Date de facturation"
                                      confirm
-                                     input-class="field"
-                        >
-                        </date-picker>
+                                     input-class="field" />
 
                         <date-picker v-model="filters.dueDate"
                                      lang="en"
                                      type="date"
                                      format="YYYY-MM-dd"
                                      placeholder="Date d'échéance"
-                                     input-class="field"
-                        >
-                        </date-picker>
+                                     input-class="field" />
 
                         <autocomplete :items="customers"
                                       :isAsync="true"
@@ -193,6 +193,8 @@
         data() {
             return {
                 isLoading: false,
+                prevHeight: 0,
+                isCheckAll: false,
                 checkedInvoices: [],
                 pagination: {},
                 shortcuts: [
@@ -204,13 +206,13 @@
                     }
                 ],
                 statuses: [
-                    "draft",
-                    "edited",
-                    "payed",
+                    { id: "draft", name: "draft" },
+                    { id: "edited", name: "edited" },
+                    { id: "payed", name: "payed" },
                 ],
                 exports: [
-                    "true",
-                    "false",
+                    { id: "true", name: "Oui" },
+                    { id: "false", name: "Non" },
                 ],
                 filters: {
                     invoiceNumber: "",
@@ -236,6 +238,30 @@
         },
 
         methods: {
+            beforeLeave(element) {
+                this.prevHeight = getComputedStyle(element).height;
+            },
+            enter(element) {
+                const { height } = getComputedStyle(element);
+
+                element.style.height = this.prevHeight;
+
+                setTimeout(() => {
+                    element.style.height = height;
+                });
+            },
+            afterEnter(element) {
+                element.style.height = 'auto';
+            },
+            checkAll() {
+                this.isCheckAll = !this.isCheckAll;
+                this.checkedInvoices = [];
+                if (this.isCheckAll) { // Check all
+                    for (var key in this.allInvoices.data) {
+                        this.checkedInvoices.push(this.allInvoices.data[key].id);
+                    }
+                }
+            },
             fetchInvoices(pageNumber) {
                 this.isLoading = true;
 
@@ -305,5 +331,14 @@
 </script>
 
 <style lang="scss" scoped>
+    .checkAll {
+        cursor: pointer;
+        transition: all .4s;
 
+        &:hover {
+            > * {
+                color: theme('colors.yellow1');
+            }
+        }
+    }
 </style>
