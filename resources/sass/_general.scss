@@ -23,7 +23,7 @@ body {
             width: 2.5rem;
             height: 2.5rem;
             transform-origin: center;
-            border: .2rem solid theme('colors.grey');
+            border: .2rem solid theme('colors.purple4');
             border-radius: 50%;
             vertical-align: -6px;
             margin-right: 10px;
@@ -34,7 +34,7 @@ body {
                 width: 0;
                 height: .2rem;
                 border-radius: .2rem;
-                background: theme('colors.grey');
+                background: theme('colors.purple4');
                 position: absolute;
                 transform: rotate(45deg);
                 top: 1rem;
@@ -48,7 +48,7 @@ body {
                 width: 0;
                 height: .2rem;
                 border-radius: .2rem;
-                background: theme('colors.grey');
+                background: theme('colors.purple4');
                 position: absolute;
                 transform: rotate(305deg);
                 top: 1.4rem;
@@ -159,6 +159,7 @@ body {
                     font-weight: 500;
                     text-transform: uppercase;
                     color: theme('colors.purple5');
+                    vertical-align: middle;
                 }
             }
         }
@@ -187,6 +188,7 @@ body {
                     font-size: 1.4rem;
                     line-height: 1.8rem;
                     text-align: left;
+                    vertical-align: middle;
                     /*color: theme('colors.black');*/
                 }
             }
@@ -231,5 +233,57 @@ body {
                 }
             }
         }
+    }
+}
+
+
+// Tabs
+.wrap-tabs {
+    margin-top: 2rem;
+
+    .nav-tabs {
+        display: flex;
+        align-items: flex-end;
+        border-bottom: .2rem solid theme('colors.grey');
+        margin-left: -2rem;
+        width: calc(100% + 4rem);
+
+        .nav-item {
+            margin-right: 1rem;
+
+            &:first-child {
+                margin-left: 2rem;
+            }
+
+            .nav-link {
+                display: block;
+                font-size: 1.875rem;
+                font-weight: bold;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: theme('colors.white');
+                background-color: theme('colors.grey');
+                padding: .5rem 1.5rem;
+                border-top-left-radius: 2rem;
+                border-top-right-radius: 2rem;
+                margin-bottom: -.2rem;
+                transition: all .4s;
+
+                &:hover,
+                &.active {
+                    color: theme('colors.purple1');
+                    border-bottom: .2rem solid theme('colors.purple1');
+                    background-color: theme('colors.purple5');
+                }
+
+                &.active {
+                    padding: 1rem 2rem;
+                }
+            }
+        }
+    }
+
+    .content-tabs {
+        padding: 2rem 0;
     }
 }
