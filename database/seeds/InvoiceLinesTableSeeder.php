@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class InvoiceTableSeeder extends Seeder
+class InvoiceLinesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class InvoiceTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\Invoice::class, 35)->make();
+        factory(App\Models\InvoiceLine::class, 150)->create();
     }
 }
