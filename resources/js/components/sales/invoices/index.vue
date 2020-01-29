@@ -39,12 +39,12 @@
                                     </label>
                             </td>
                             <td class="table-cell" data-title="Création" @click="showInvoice(row.id)">{{ displayDate(row.created_at) }}</td>
-                            <td class="table-cell" data-title="Numéro" @click="showInvoice(row.id)">{{ row.invoice_no }}</td>
-                            <td class="table-cell" data-title="Client" @click="showInvoice(row.id)">{{ row.client }}</td>
+                            <td class="table-cell" data-title="Numéro" @click="showInvoice(row.id)">{{ row.id }}</td>
+                            <td class="table-cell" data-title="Client" @click="showInvoice(row.id)"><span class="text-purple2 tracking-widest uppercase mr-2">{{ row.third.alias }}</span> {{ row.third.name }}</td>
                             <td class="table-cell" data-title="Total HT" @click="showInvoice(row.id)">{{ row.total }}</td>
                             <td class="table-cell" data-title="Statut" @click="showInvoice(row.id)">
-                                <tag :label="row.status"
-                                     :color="defineColorTag(row.status)"
+                                <tag :label="row.invoice_status"
+                                     :color="defineColorTag(row.invoice_status)"
                                 />
                             </td>
                         </tr>

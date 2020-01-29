@@ -18,13 +18,15 @@ class InvoiceRepository
         $exported = $filters['exported'];
         $deliveryNumber = $filters['deliveryNumber'];
 
-        $allInvoices = Invoice::select('id', 'created_at', 'invoice_no', 'client', 'total', 'status');
+        $allInvoices = Invoice::select('id', 'created_at', 'third_id', 'total', 'invoice_status');
 
         if (!empty($invoiceNo)) {
-            $allInvoices = $allInvoices->where('invoice_no', $invoiceNo);
+            $allInvoices = $allInvoices->where('id', $invoiceNo);
         }
 
-        $allInvoices = $allInvoices->orderBy('created_at', 'desc')
+        $allInvoices = $allInvoices->with('third')
+            ->with('lines') // TODO : to remove after
+            ->orderBy('created_at', 'desc')
             ->paginate(15);
         return ArrayCollection::collection($allInvoices);
     }

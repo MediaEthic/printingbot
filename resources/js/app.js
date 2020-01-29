@@ -31,9 +31,12 @@ localize('fr', fr);
 // Toastr
 var toastrConfigs = {
     position: 'bottom right',
+    showMethod: 'slideInUp',
+    hideMethod: 'slideOutRight',
     showDuration: 2000,
     timeOut: 5000,
-    progressBar: true
+    progressBar: true,
+    closeButton: "true"
 };
 Vue.use(CxltToastr, toastrConfigs);
 
