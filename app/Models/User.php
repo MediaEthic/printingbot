@@ -10,14 +10,58 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'civility',
+        'alias',
+        'name',
+        'surname',
+        'establishment_id',
+        'email',
+        'password',
+        'mobile',
+        'phone',
+        'accounting',
+        'trade',
+        'quotation',
+        'operator',
+        'supervisor',
+        'manager',
+        'active',
     ];
+
 
     /**
      * The attributes that should be hidden for arrays.
@@ -28,6 +72,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -36,4 +81,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * Get the establishment of the user.
+     */
+    public function establishment()
+    {
+        return $this->belongsTo(Establishment::class);
+    }
+
+
+    /**
+     * Get all of the thirds for the user.
+     */
+    public function thirds()
+    {
+        return $this->hasMany(Third::class);
+    }
+
+    /**
+     * Get all of the invoices for the user.
+     */
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }
