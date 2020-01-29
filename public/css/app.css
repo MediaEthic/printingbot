@@ -4952,7 +4952,7 @@ body {
   height: 2.5rem;
   -webkit-transform-origin: center;
           transform-origin: center;
-  border: 0.2rem solid #E6E2E7;
+  border: 0.2rem solid #C3A5BF;
   border-radius: 50%;
   vertical-align: -6px;
   margin-right: 10px;
@@ -4967,7 +4967,7 @@ body {
   width: 0;
   height: 0.2rem;
   border-radius: 0.2rem;
-  background: #E6E2E7;
+  background: #C3A5BF;
   position: absolute;
   -webkit-transform: rotate(45deg);
           transform: rotate(45deg);
@@ -4984,7 +4984,7 @@ body {
   width: 0;
   height: 0.2rem;
   border-radius: 0.2rem;
-  background: #E6E2E7;
+  background: #C3A5BF;
   position: absolute;
   -webkit-transform: rotate(305deg);
           transform: rotate(305deg);
@@ -5096,6 +5096,7 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   color: #E2D1DE;
+  vertical-align: middle;
 }
 
 .container-table .wrap-table .table-body .table-row {
@@ -5122,6 +5123,7 @@ body {
   font-size: 1.4rem;
   line-height: 1.8rem;
   text-align: left;
+  vertical-align: middle;
   /*color: theme('colors.black');*/
 }
 
@@ -5161,12 +5163,138 @@ body {
   }
 }
 
+.wrap-tabs {
+  margin-top: 2rem;
+}
+
+.wrap-tabs .nav-tabs {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: end;
+          align-items: flex-end;
+  border-bottom: 0.2rem solid #E6E2E7;
+  margin-left: -2rem;
+  width: calc(100% + 4rem);
+}
+
+.wrap-tabs .nav-tabs .nav-item {
+  margin-right: 1rem;
+}
+
+.wrap-tabs .nav-tabs .nav-item:first-child {
+  margin-left: 2rem;
+}
+
+.wrap-tabs .nav-tabs .nav-item .nav-link {
+  display: block;
+  font-size: 1.875rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  background-color: #E6E2E7;
+  padding: 0.5rem 1.5rem;
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  margin-bottom: -0.2rem;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+}
+
+.wrap-tabs .nav-tabs .nav-item .nav-link:hover, .wrap-tabs .nav-tabs .nav-item .nav-link.active {
+  color: #672767;
+  border-bottom: 0.2rem solid #672767;
+  background-color: #E2D1DE;
+}
+
+.wrap-tabs .nav-tabs .nav-item .nav-link.active {
+  padding: 1rem 2rem;
+}
+
+.wrap-tabs .content-tabs {
+  padding: 2rem 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+  -webkit-transition-property: height, opacity;
+  transition-property: height, opacity;
+  -webkit-transition-timing-function: ease;
+          transition-timing-function: ease;
+  overflow: hidden;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
+  -webkit-transition-property: height, opacity, -webkit-transform;
+  transition-property: height, opacity, -webkit-transform;
+  transition-property: height, opacity, transform;
+  transition-property: height, opacity, transform, -webkit-transform;
+  -webkit-transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+          transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+  overflow: hidden;
+}
+
+.slide-left-enter,
+.slide-right-leave-active {
+  opacity: 0;
+  -webkit-transform: translate(2em, 0);
+          transform: translate(2em, 0);
+}
+
+.slide-left-leave-active,
+.slide-right-enter {
+  opacity: 0;
+  -webkit-transform: translate(-2em, 0);
+          transform: translate(-2em, 0);
+}
+
 .component-fade-enter-active, .component-fade-leave-active {
   -webkit-transition: opacity 0.3s ease;
   transition: opacity 0.3s ease;
 }
 
 .component-fade-enter, .component-fade-leave-to {
+  opacity: 0;
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+  -webkit-transition-property: height, opacity;
+  transition-property: height, opacity;
+  -webkit-transition-timing-function: ease;
+          transition-timing-function: ease;
+  overflow: hidden;
+}
+
+.expand-enter,
+.expand-leave-active {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-in;
+  transition-timing-function: ease-in;
+}
+
+.slide-enter,
+.slide-leave-active {
   opacity: 0;
 }
 
