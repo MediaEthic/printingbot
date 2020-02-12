@@ -56,6 +56,7 @@ module.exports = {
             inset: {
                 '7': '1.75rem',
                 '12': '3rem',
+                '14': '3.5rem',
                 '20': '5rem',
             }
         }
