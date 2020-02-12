@@ -27,7 +27,7 @@ $factory->define(Third::class, function (Faker $faker) {
         'ape' => Str::random(5),
         'siret' => $siret,
         'intracommunity_no' => $intercommunity,
-        'user_id' => App\Models\User::all()->random()->id,
+        'user_id' => App\Models\User::whereTrade(true)->get()->random()->id,
         'commission_rate' => $faker->numberBetween($min = 0, $max = 100),
         'discount_rate' => $faker->numberBetween($min = 0, $max = 100),
         'bank_rate' => $faker->numberBetween($min = 0, $max = 100),

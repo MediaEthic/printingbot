@@ -16,6 +16,7 @@ class VatsTableSeeder extends Seeder
             'rate' => '20',
             'collected' => '445710000',
             'deductible' => '445660000',
+            'default' => true,
         ]);
 
         DB::table('vats')->insert([
