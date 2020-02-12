@@ -41,6 +41,7 @@ class InvoiceLine extends Model
     protected $fillable = [
         'invoice_id',
         'establishment_id',
+        'type',
         'name',
         'description',
         'order_line_id',
@@ -49,8 +50,10 @@ class InvoiceLine extends Model
         'vat_id',
         'quantity',
         'unit_price',
-        'discount_rate',
         'subtotal',
+        'discount_rate',
+        'discount_amount',
+        'total_pretax',
         'vat',
         'total',
     ];

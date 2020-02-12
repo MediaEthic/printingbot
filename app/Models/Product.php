@@ -40,7 +40,9 @@ class Product extends Model
      */
     protected $fillable = [
         'name',
+        'alias',
         'description',
+        'active',
     ];
 
 

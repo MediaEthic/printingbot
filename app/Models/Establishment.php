@@ -106,6 +106,13 @@ class Establishment extends Model
     }
 
     /**
+     * Get all of the invoices for the establishment.
+     */
+    public function invoices() {
+        return $this->hasMany(Invoice::class);
+    }
+
+    /**
      * Get all of the lines for the establishment.
      */
     public function lines() {

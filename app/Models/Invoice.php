@@ -39,18 +39,21 @@ class Invoice extends Model
      * @var array
      */
     protected $fillable = [
+        'establishment_id',
+        'invoice_no',
         'updated_by',
         'name',
         'invoice_date',
         'due_date',
         'invoice_status',
         'third_id',
+        'third_alias',
         'third_name',
         'third_address_line1',
         'third_address_line2',
         'third_address_line3',
-        'zipcode',
-        'city',
+        'third_zipcode',
+        'third_city',
         'country_id',
         'language_id',
         'time_zone_id',
@@ -66,11 +69,21 @@ class Invoice extends Model
         'payment_id',
         'settlement_id',
         'subtotal',
+        'discount_amount',
+        'total_pretax',
         'vat',
         'total',
         'sales_id',
     ];
 
+
+    /**
+     * Get the establishment of the invoice.
+     */
+    public function establishment()
+    {
+        return $this->belongsTo(Establishment::class);
+    }
 
     /**
      * Get the user of the invoice.

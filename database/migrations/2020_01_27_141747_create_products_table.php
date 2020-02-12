@@ -17,7 +17,9 @@ class CreateProductsTable extends Migration
             $table->bigIncrements('id');
             $table->nullableTimestamps();
             $table->string('name', 80)->nullable()->default(null);
+            $table->string('alias', 10)->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
+            $table->boolean('active')->default(true);
         });
     }
 

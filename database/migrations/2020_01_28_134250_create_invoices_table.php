@@ -16,6 +16,13 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->nullableTimestamps();
+            $table->unsignedBigInteger('establishment_id')->nullable()->default(null);
+            $table->foreign('establishment_id')
+                ->references('id')
+                ->on('establishments')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
+            $table->string('invoice_no')->nullable()->default(null);
             $table->unsignedBigInteger('updated_by')->nullable()->default(null);
             $table->foreign('updated_by')
                 ->references('id')
@@ -32,12 +39,13 @@ class CreateInvoicesTable extends Migration
                 ->on('thirds')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
+            $table->string('third_alias', 10)->nullable()->default(null);
             $table->string('third_name', 38)->nullable()->default(null);
             $table->string('third_address_line1')->nullable()->default(null);
             $table->string('third_address_line2')->nullable()->default(null);
             $table->string('third_address_line3')->nullable()->default(null);
-            $table->string('zipcode', 10)->nullable()->default(null);
-            $table->string('city', 38)->nullable()->default(null);
+            $table->string('third_zipcode', 10)->nullable()->default(null);
+            $table->string('third_city', 38)->nullable()->default(null);
             $table->unsignedInteger('country_id')->nullable()->default(75);
 //            $table->foreign('country_id')
 //                ->references('id')
@@ -83,6 +91,8 @@ class CreateInvoicesTable extends Migration
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
             $table->double('subtotal')->nullable()->default(null);
+            $table->double('discount_amount')->nullable()->default(null);
+            $table->double('total_pretax')->nullable()->default(null);
             $table->double('vat')->nullable()->default(null);
             $table->double('total')->nullable()->default(null);
             $table->unsignedBigInteger('sales_id')->nullable()->default(null);
@@ -97,6 +107,7 @@ class CreateInvoicesTable extends Migration
     public function down()
     {
         Schema::table('invoices', function (Blueprint $table) {
+            $table->dropForeign(['establishment_id']);
             $table->dropForeign(['updated_by']);
             $table->dropForeign(['third_id']);
 //            $table->dropForeign(['country_id']);

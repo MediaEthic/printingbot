@@ -43,6 +43,7 @@ class Vat extends Model
         'rate',
         'collected',
         'deductible',
+        'default',
         'active',
     ];
 

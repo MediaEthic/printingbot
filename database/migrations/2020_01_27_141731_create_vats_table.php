@@ -20,6 +20,7 @@ class CreateVatsTable extends Migration
             $table->double('rate');
             $table->unsignedInteger('collected')->nullable()->default(null);
             $table->unsignedInteger('deductible')->nullable()->default(null);
+            $table->boolean('default')->default(false);
             $table->boolean('active')->default(true);
         });
     }

@@ -22,12 +22,13 @@ class CreateInvoiceLinesTable extends Migration
                 ->on('invoices')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
-            $table->unsignedBigInteger('establishment_id')->nullable()->default(null);
+            $table->unsignedBigInteger('establishment_id')->nullable()->default(1);
             $table->foreign('establishment_id')
                 ->references('id')
                 ->on('establishments')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
+            $table->enum('type', ['comment', 'product'])->default('product');
             $table->string('name')->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
             $table->unsignedBigInteger('order_line_id')->nullable()->default(null);
@@ -46,8 +47,10 @@ class CreateInvoiceLinesTable extends Migration
                 ->onUpdate('restrict');
             $table->unsignedBigInteger('quantity')->nullable()->default(null);
             $table->double('unit_price')->nullable()->default(null);
-            $table->double('discount_rate')->nullable()->default(null);
             $table->double('subtotal')->nullable()->default(null);
+            $table->double('discount_rate')->nullable()->default(null);
+            $table->double('discount_amount')->nullable()->default(null);
+            $table->double('total_pretax')->nullable()->default(null);
             $table->double('vat')->nullable()->default(null);
             $table->double('total')->nullable()->default(null);
         });
