@@ -11,7 +11,9 @@ import { messages } from 'vee-validate/dist/locale/fr.json';
 import en from 'vee-validate/dist/locale/en.json';
 import fr from 'vee-validate/dist/locale/fr.json';
 
-import CxltToastr from 'cxlt-vue2-toastr';
+import VModal from 'vue-js-modal';
+import VueAnimateNumber from 'vue-animate-number'
+import VueSweetalert2 from 'vue-sweetalert2';
 
 require('./bootstrap');
 
@@ -28,17 +30,14 @@ Object.keys(rules).forEach(rule => {
 localize('fr', fr);
 
 
-// Toastr
-var toastrConfigs = {
-    position: 'bottom right',
-    showMethod: 'slideInUp',
-    hideMethod: 'slideOutRight',
-    showDuration: 2000,
-    timeOut: 5000,
-    progressBar: true,
-    closeButton: "true"
+Vue.use(VModal);
+Vue.use(VueAnimateNumber);
+
+const options = {
+    confirmButtonColor: '#672767',
+    cancelButtonColor: '#E8004C',
 };
-Vue.use(CxltToastr, toastrConfigs);
+Vue.use(VueSweetalert2, options);
 
 
 

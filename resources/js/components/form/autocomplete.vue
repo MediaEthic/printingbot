@@ -3,7 +3,7 @@
                         :name="id"
                         v-slot="{ errors }"
                         class="wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl">
-        <span class="btn-right-field" v-if="isLoading">
+        <span class="icon-right-field" v-if="isLoading">
             <spinner />
         </span>
         <input
@@ -11,6 +11,7 @@
             v-model="search"
             :id="id"
             :name="id"
+            @focus="isOpen = true"
             @input="onChange"
             @keydown.down="onArrowDown"
             @keydown.up="onArrowUp"
@@ -24,22 +25,35 @@
         >
         <span class="focus-field absolute block border border-solid border-purple1 rounded-xl invisible opacity-0 pointer-events-none"></span>
         <label :for="id" class="label-field absolute left-0 block w-full pl-10 text-black pointer-events-none">{{ label }}</label>
-        <span class="absolute top-20 px-5 text-red1 text-xs tracking-wider font-semibold mt-1">{{ errors[0] }}</span>
+        <span class="symbol-left-field"><i :class="iconLeft"></i></span>
+        <span class="absolute top-14 px-5 text-red1 text-xs leading-tight tracking-wider font-semibold mt-1">{{ errors[0] }}</span>
         <div v-show="isOpen"
-             class="wrap-autocomplete-results">
+             class="wrap-autocomplete-results shadow-md">
             <ul class="list-autocomplete-results">
+                <li v-if="search.length < 3 && matches.length < 1"
+                    class="item-autocomplete-result disabled">
+                    Type at least 3 characters...
+                </li>
                 <li v-if="isLoading"
-                    class="item-autocomplete-result">
+                    class="item-autocomplete-result disabled">
                     Loading results...
                 </li>
-                <li v-else
+                <li v-else-if="!isLoading"
                     v-for="(suggestion, i) in matches"
                     :key="i"
                     @click="setResult(suggestion)"
                     class="item-autocomplete-result"
                     :class="{ 'is-active': i === arrowCounter }"
                 >
+                    <span class="block text-purple2 tracking-widest uppercase mr-2">[{{ suggestion.alias }}]</span>
+                    <br>
                     {{ suggestion.name }}
+                </li>
+
+                <li v-if="searchMore"
+                    @click="searchForMore"
+                    class="item-autocomplete-result">
+                    Chercher plus...
                 </li>
             </ul>
         </div>
@@ -47,11 +61,13 @@
 </template>
 
 <script>
-    import spinner from '../elements/spinner';
+    import spinner from '../elements/loader';
+    import Button from "../elements/link";
 
     export default {
         name: "autocomplete",
         components: {
+            Button,
             spinner
         },
         props: {
@@ -71,7 +87,7 @@
                 default: false
             },
             items: {
-                type: Array,
+                type: [Array, Object],
                 required: false,
                 default: () => []
             },
@@ -84,6 +100,16 @@
                 type: Boolean,
                 required: false,
                 default: false
+            },
+            searchMore: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            iconLeft: {
+                type: String,
+                required: false,
+                default: ''
             },
         },
         data() {
@@ -99,8 +125,12 @@
         mounted() {
             if (this.focus) {
                 this.$refs.search.focus();
+                this.isOpen = true;
             }
             document.addEventListener('click', this.handleClickOutside);
+        },
+        created() {
+
         },
         watch: {
             items(value, oldValue) {
@@ -134,7 +164,6 @@
                 this.arrowCounter = -1;
             },
             onChange() {
-                this.$emit('search', this.search);
                 if (this.search.length > 2) {
                     if (this.isAsync) {
                         this.isLoading = true;
@@ -142,16 +171,20 @@
                         this.filterResults();
                         this.isOpen = true;
                     }
+                    this.$emit('search', this.search);
                 }
             },
             filterResults() {
                 this.matches = this.items.filter(item => item.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
             },
             setResult(result) {
-                this.$emit('input', result.name);
+                this.$emit('input', result);
                 this.search = result.name;
                 this.isOpen = false;
-            }
+            },
+            searchForMore(result) {
+                this.$emit('searchForMore');
+            },
         },
         destroyed() {
             document.removeEventListener('click', this.handleClickOutside);
@@ -160,33 +193,59 @@
 </script>
 
 <style lang="scss" scoped>
+    .icon-right-field {
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        > * {
+            position: relative !important;
+            top: -.25rem;
+            right: .25rem;
+            transform: scale(0.5);
+        }
+    }
     .wrap-autocomplete-results {
         position: absolute;
+        z-index: 1;
         top: 5rem;
         width: 100%;
         border-radius: 1rem;
-        // box-shadow: 0 .5rem 1rem -.125rem rgba($primary-color-dark, .1), 0 0 0 .1rem rgba($primary-color-dark, .2);
-        font-size: 1rem;
-        //background-color: $white;
+        font-size: 1.25rem;
+        background-color: theme('colors.white');
 
         .list-autocomplete-results {
             .item-autocomplete-result {
-                //color: $grey-dark;
                 cursor: pointer;
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
-                padding: .5rem .75rem;
+                padding: 1rem 2rem;
+
+                &.disabled {
+                    cursor: initial;
+                    rev
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
 
                 &.is-active,
                 &:hover {
-                    //background-color: rgba($primary-color-dark, .2);
+                    background-color: theme('colors.gray.200');
                 }
 
                 &:not(:last-child) {
-                    //border-bottom: .1rem solid $primary-color-light;
+                    border-bottom: .1rem solid theme('colors.grey');
                 }
             }
+        }
+    }
+
+    .field-are-small .wrap-field,
+    .field-is-small.wrap-field {
+        .wrap-autocomplete-results {
+            top: 3.5rem;
         }
     }
 </style>

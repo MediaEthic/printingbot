@@ -1,112 +1,158 @@
 <template>
-    <ValidationProvider v-if="type === 'select'"
-                         tag="div"
+    <ValidationProvider tag="div"
                         :name="id"
-                         v-slot="{ errors }"
-                         class="wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl">
-        <select v-model="input"
-                @change="onChange"
-                :id="id"
+                        v-slot="{ errors }"
+                        :class="{ 'textarea': type === 'textarea', 'disabled': disabled }"
+                        class="wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl">
+        <select v-if="type === 'select'"
+                v-bind="$attrs"
+                :type="type"
+                v-on="$listeners"
+                :value="value"
+                @input="$emit('updateField', $event.target.value)"
                 :name="id"
+                :id="id"
                 class="field select has-val block w-full h-full bg-transparent text-black px-10 outline-none"
-                :class="{ 'input-error': errors[0] }"
-                :required="required">
-            <option disabled value="">Choisir</option>
+                :class="{ 'has-val': value, 'input-error': errors[0] }"
+                :required="required"
+                :disabled="disabled"
+                :readonly="readonly"
+        >
+            <option v-if="choose" value="" :disabled="disabledChoose">Choisir</option>
             <option v-for="(item, index) in items"
-                    :value="item.id">
+                    :value="item.id" >
                 {{ item.name }}
             </option>
         </select>
-        <span class="focus-field absolute block border border-solid border-purple1 rounded-xl invisible opacity-0 pointer-events-none"></span>
-        <label class="label-field absolute left-0 block w-full pl-10 text-black pointer-events-none">{{ label }}</label>
-        <span class="absolute top-20 px-5 text-red1 text-xs tracking-wider font-semibold mt-1">{{ errors[0] }}</span>
-    </ValidationProvider>
 
-    <ValidationProvider v-else-if="type === 'textarea'"
-                         tag="div"
-                        :name="id"
-                         v-slot="{ errors }"
-                        :class="{'disabled': disabled}"
-                         class="wrap-field textarea validate-input relative flex flex-wrap items-end w-full bg-white border border-solid border-grey rounded-xl">
-        <textarea @input="onChange"
-                  v-model="input"
-                  :id="id"
+        <textarea v-else-if="type === 'textarea'"
+                  v-bind="$attrs"
+                  :type="type"
+                  v-on="$listeners"
+                  :value="value"
+                  @input="$emit('updateField', $event.target.value)"
                   :name="id"
-                  class="field block w-full h-full bg-transparent text-black px-10 outline-none"
-                  :class="{ 'has-val': input, 'input-error': errors[0] }"
-                  :disabled="disabled"
+                  :id="id"
+                  class="textarea field block w-full h-full bg-transparent text-black px-10 outline-none"
+                  :class="{ 'has-val': value, 'input-error': errors[0] }"
                   :required="required"
+                  :disabled="disabled"
+                  :readonly="readonly"
                   @keydown="textareaAutosize"
         ></textarea>
-        <span class="focus-field absolute block border border-solid border-purple1 rounded-xl invisible opacity-0 pointer-events-none"></span>
-        <label :for="id" class="label-field absolute left-0 block w-full pl-10 text-black pointer-events-none">{{ label }}</label>
-        <span class="absolute top-20 px-5 text-red1 text-xs tracking-wider font-semibold mt-1">{{ errors[0] }}</span>
-    </ValidationProvider>
 
-    <ValidationProvider v-else
-                         tag="div"
-                        :name="id"
-                         v-slot="{ errors }"
-                        :class="{'disabled': disabled}"
-                         class="wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl">
-        <input :type="type"
-               @input="onChange"
-               v-model="input"
-               :id="id"
+        <input v-else
+               v-bind="$attrs"
+               :type="type"
+               v-on="$listeners"
+               :value="value"
+               @input="$emit('updateField', $event.target.value)"
                :name="id"
+               :id="id"
                class="field block w-full h-full bg-transparent text-black px-10 outline-none"
-               :class="{ 'has-val': input, 'input-error': errors[0] }"
-               :disabled="disabled"
+               :class="{ 'has-val': value, 'input-error': errors[0] }"
+               step="0.0001"
                :required="required"
+               :disabled="disabled"
+               :readonly="readonly"
         >
         <span class="focus-field absolute block border border-solid border-purple1 rounded-xl invisible opacity-0 pointer-events-none"></span>
-        <label :for="id" class="label-field absolute left-0 block w-full pl-10 text-black pointer-events-none">{{ label }}</label>
-        <span class="absolute top-20 px-5 text-red1 text-xs tracking-wider font-semibold mt-1">{{ errors[0] }}</span>
+        <label class="label-field absolute left-0 block w-full pl-10 text-black pointer-events-none">{{ label }}</label>
+        <span class="vee-validate absolute top-20 px-5 text-red1 text-xs tracking-wider font-semibold mt-1">{{ errors[0] }}</span>
     </ValidationProvider>
 </template>
 
 <script>
+    const TYPES = [
+        'text',
+        'password',
+        'email',
+        'number',
+        'url',
+        'tel',
+        'search',
+        'color',
+        'select',
+        'textarea'
+    ];
+    const includes = types => type => types.includes(type);
+
     export default {
         name: "formInput",
+        inheritAttrs: false,
         props: {
-            type: {
-                type: String,
-                required: true,
-                default: "text"
-            },
-            id: {
-                type: String,
-                required: false,
-                default: ""
-            },
             label: {
                 type: String,
                 required: true,
-                default: "Input"
+                default: 'Input'
             },
-            disabled: {
-                type: Boolean,
+            value: {
+                type: [String, Number],
                 required: false,
-                default: false
+                default: ''
+            },
+            type: {
+                type: String,
+                required: true,
+                default: 'text',
+                validator (value) {
+                    const isValid = includes(TYPES)(value);
+                    if (!isValid) {
+                        console.warn(`allowed types are ${TYPES}`);
+                    }
+                    return isValid;
+                }
+            },
+            id: {
+                type: String,
+                required: true,
+                default: ''
             },
             required: {
                 type: Boolean,
                 required: false,
                 default: false
             },
-            items: {
-                type: Array,
+            disabled: {
+                type: Boolean,
                 required: false,
-                default: () => []
+                default: false
             },
+            readonly: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            items: {
+                type: [Object, Array],
+                required: false,
+                default: () => {}
+            },
+            choose: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+            disabledChoose: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+        },
+        model: {
+            prop: "value",
+            event: "updateField"
         },
         data() {
             return {
-                input: "",
+                //
             }
         },
         created() {
-
+            //
+        },
+        computed: {
+            //
         },
         methods: {
             textareaAutosize() {
@@ -115,16 +161,13 @@
                     let el = textareaList[i];
                     setTimeout(() => {
                         el.style.cssText = 'height:auto !important; padding:0 !important;';
-                        let scrollHeight = el.scrollHeight + 10;
+                        let scrollHeight = el.scrollHeight;
                         el.style.cssText = 'height:' + scrollHeight + 'px !important; ';
                         if (el.value === "") {
                             el.style.cssText = 'height:100% !important; ';
                         }
                     }, 0);
                 }
-            },
-            onChange() {
-                this.$emit('input', this.input);
             },
         }
     }
@@ -138,17 +181,12 @@
         width: calc(100% - 1rem) !important;
         margin: .5rem;
 
+        &.textarea {
+            height: auto !important;
+        }
+
         &.disabled {
-            background-color: transparent;
-            border-color: theme('colors.purple4');
-
-            .field {
-                color: theme('colors.white');
-
-                & + .focus-field + .label-field {
-                    color: theme('colors.purple4');
-                }
-            }
+            background-color: theme('colors.gray.200');
         }
 
         .label-field {
@@ -188,6 +226,17 @@
                     color: theme('colors.purple2');
                 }
             }
+
+            &[required] {
+                &+ .focus-field + .label-field {
+                    &:after {
+                        content: "*";
+                        margin-left: .25rem;
+                        font-weight: bold;
+                        color: theme('colors.red1');
+                    }
+                }
+            }
         }
 
         .focus-field {
@@ -206,6 +255,16 @@
             -ms-transform: scaleX(1.1) scaleY(1.3);
             -o-transform: scaleX(1.1) scaleY(1.3);
             transform: scaleX(1.1) scaleY(1.3);
+        }
+
+        .symbol-left-field {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2.5rem;
+            height: 5rem;
+            font-size: 2rem;
+            color: theme('colors.purple1');
         }
 
         .field:focus + .focus-field {
@@ -235,6 +294,39 @@
 
     // input date
     .mx-datepicker {
+        position: relative;
+
+        &.disabled {
+            &.has-val:before {
+                color: theme('colors.purple4');
+            }
+
+            .field {
+                height: 5rem;
+                background-color: transparent;
+                border-color: theme('colors.purple4');
+            }
+        }
+
+        &.has-val {
+            &::before {
+                content: attr(data-title);
+                z-index: 1;
+                position: absolute;
+                top: .5rem;
+                padding: 0 2.5rem;
+                font-size: 1.2rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: theme('colors.purple2');
+            }
+
+            .field {
+                padding: 1.5rem 2.5rem .5rem 2.5rem;
+            }
+        }
+
         .field {
             outline: none;
             width: 100%;
@@ -246,8 +338,10 @@
             color: theme('colors.purple1');
 
             &::before {
+                display: block;
                 content: attr(placeholder);
                 position: absolute;
+                top: 0;
                 font-size: 2rem;
                 letter-spacing: .1em;
                 font-weight: 700;
@@ -265,26 +359,41 @@
                 height: 5rem;
             }
         }
+
+        .mx-icon-calendar {
+            color: theme('colors.purple2');
+        }
     }
 
 
+    // into table
+    .fields-are-small > .table-cell > .wrap-field > .field {
+        padding: 0 1rem;
+    }
+    .fields-are-small .wrap-field,
+    .wrap-field.field-is-small {
+        margin: 0;
+        width: 100% !important;
+        height: 3.5rem;
 
-    .table-cell {
-        > .wrap-field {
-            margin: 0;
-            width: 100% !important;
-            height: 3.5rem;
+        .field {
+            min-height: 3.5rem;
 
-            .field {
-                padding: 0 1.5rem;
+            &.textarea {
+                resize: none;
+                padding: .75rem 1rem;
             }
-            .label-field {
-                display: none;
+
+            ~ .vee-validate {
+                top: 3.5rem
             }
         }
+        .label-field {
+            display: none;
+        }
 
-        > .textarea {
-            height: auto;
+        .symbol-left-field {
+            height: 3.5rem;
         }
     }
 </style>

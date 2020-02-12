@@ -1,5 +1,24 @@
 <template>
-    <button type="button"
+    <div v-if="type === 'cta' || type === 'submit'" class="w-full text-center mt-4">
+        <button :type="type === 'submit' ? 'submit' : 'button'"
+                @click="clicked"
+                class="cta nav-link"
+                :class="{ 'primary': primary }"
+                :disabled="disabled"
+        >
+            <div class="bottom"></div>
+            <div class="top">
+                <div class="label">{{ label }}</div>
+
+                <div class="button-border button-border-left"></div>
+                <div class="button-border button-border-top"></div>
+                <div class="button-border button-border-right"></div>
+                <div class="button-border button-border-bottom"></div>
+            </div>
+        </button>
+    </div>
+
+    <button v-else-if="type === 'button'" type="button"
             class="button"
             @click="clicked">
         <span class="wrap-icon icon-arrow before">
@@ -10,21 +29,65 @@
             <i class="icon" :class="icon"></i>
         </span>
     </button>
+
+    <button v-else-if="type === 'delete'"
+            class="button-delete"
+            @click="clicked">
+        <div class="bin-icon">
+            <div class="lid"></div>
+            <div class="box">
+                <div class="box-inner">
+                    <div class="bin-lines"></div>
+                </div>
+            </div>
+        </div>
+    </button>
 </template>
 
 <script>
+    const TYPES = [
+        'cta',
+        'submit',
+        'button',
+        'link',
+        'delete',
+    ];
+    const includes = types => type => types.includes(type);
+
     export default {
         name: "Button",
         props: {
+            type: {
+                type: String,
+                required: true,
+                default: 'button',
+                validator (value) {
+                    const isValid = includes(TYPES)(value);
+                    if (!isValid) {
+                        console.warn(`allowed types are ${TYPES}`);
+                    }
+                    return isValid;
+                }
+            },
             label: {
                 type: String,
                 required: false,
                 default: "Link"
             },
+            primary: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
             icon: {
                 type: String,
                 required: false,
                 default: "icon-arrow-right"
+            },
+            disabled: {
+                type: Boolean,
+                required: false,
+                default: false
             },
         },
         data() {
@@ -44,6 +107,129 @@
 </script>
 
 <style lang="scss" scoped>
+    button:disabled,
+    button[disabled] {
+        cursor: not-allowed;
+    }
+    .cta {
+        display: inline-block;
+        position: relative;
+
+        .bottom {
+            position: absolute;
+            left: .5rem;
+            top: .5rem;
+            width: 100%;
+            height: 100%;
+            border-radius: 2rem;
+            background-color: theme('colors.purple3');
+            display: block;
+            -webkit-transition: all .15s ease-out;
+            -moz-transition: all .15s ease-out;
+            -o-transition: all .15s ease-out;
+            transition: all .15s ease-out;
+        }
+
+        .top {
+            position: relative;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding: 1rem 3rem;
+            border-radius: 2rem;
+            border: .2rem solid theme('colors.black');
+
+            .label {
+                font-family: sans-serif;
+                font-weight: 700;
+                color: theme('colors.black');
+                font-size: 12px;
+                line-height: 110%;
+                letter-spacing: 0.1em;
+                text-align: center;
+                text-transform: uppercase;
+                -webkit-transition: all .15s ease-out;
+                -moz-transition: all .15s ease-out;
+                -o-transition: all .15s ease-out;
+                transition: all .15s ease-out;
+            }
+        }
+
+        .button-border {
+            position: absolute;
+            /*background-color: theme('colors.red1');*/
+            -webkit-transition: all .25s ease-out;
+            -moz-transition: all .25s ease-out;
+            -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+        }
+
+        .button-border-left {
+            left: -2px;
+            bottom: -2px;
+            width: 2px;
+            height: 0;
+        }
+
+        .button-border-top {
+            left: -2px;
+            top: -2px;
+            width: 0;
+            height: 2px;
+        }
+
+        .button-border-right {
+            right: -2px;
+            top: -2px;
+            width: 2px;
+            height: 0;
+        }
+
+        .button-border-bottom {
+            right: -2px;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+        }
+
+        &:hover {
+            .bottom {
+                left: 0;
+                top: 0;
+                background-color: theme('colors.purple4'); // white
+            }
+
+            .top {
+                .label {
+                    color: theme('colors.purple1');
+                }
+
+                .button-border-left,
+                .button-border-right {
+                    height: calc(100% + 2px);
+                }
+
+                .button-border-top,
+                .button-border-bottom {
+                    width: calc(100% + 2px);
+                }
+            }
+        }
+
+        &.primary:not([disabled]) {
+            .bottom {
+                background-color: theme('colors.yellow1');
+            }
+
+            &:hover {
+                .bottom {
+                    background-color: theme('colors.purple4');
+                }
+            }
+        }
+    }
+
     .button {
         position: relative;
         margin: 0 0 .5rem 0;
@@ -159,6 +345,169 @@
             svg {
                 stroke: theme('colors.purple2');
             }
+        }
+    }
+
+
+    .button-delete {
+        z-index: 1;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        width: 6rem;
+        height: 15rem;
+        margin: 0 auto;
+        /*background-color: theme('colors.white');*/
+        border-radius: 50%;
+        overflow: hidden;
+        transform-origin: 0 0;
+        transform: scale(.3);
+
+        .bin-icon {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            left: 0;
+            width: 42px;
+            height: 58px;
+            margin: 0 auto;
+            border-radius: 50%;
+            z-index: 2;
+
+            .lid {
+                position: relative;
+                width: 50px;
+                height: 4px;
+                left: -4px;
+                border-radius: 4px;
+
+                &:before {
+                    content: '';
+                    position: absolute;
+                    top: -4px;
+                    right: 0;
+                    left: 0;
+                    width: 10px;
+                    height: 6px;
+                    margin: 0 auto;
+                    border-radius: 10px 10px 0 0;
+                }
+            }
+
+            .box {
+                position: relative;
+                height: 52px;
+                margin-top: 2px;
+                border-radius: 0 0 8px 8px;
+
+                .box-inner {
+                    position: relative;
+                    top: 4px;
+                    width: 34px;
+                    height: 44px;
+                    margin: 0 auto;
+                    background-color: theme('colors.white');
+                    border-radius: 0 0 5px 5px;
+
+                    .bin-lines {
+                        position: relative;
+                        top: 7px;
+                        margin: 0 auto;
+
+                        &:before,
+                        &:after {
+                            content: '';
+                            position: absolute;
+                        }
+
+                        &:before {
+                            left: 1rem;
+                        }
+
+                        &:after {
+                            left: 2rem;
+                        }
+                    }
+
+                    .bin-lines {
+                        &:before,
+                        &:after {
+                            width: 3px;
+                            height: 30px;
+                            border-radius: 4px;
+                        }
+                    }
+                }
+            }
+
+            .lid,
+            .lid:before,
+            .box,
+            .bin-lines,
+            .bin-lines:before,
+            .bin-lines:after {
+                background-color: theme('colors.red1');
+                transition: 0.2s ease background-color;
+            }
+        }
+
+        &:hover {
+            .bin-icon {
+                .lid,
+                .lid:before,
+                .box,
+                .box-inner {
+                    background-color: theme('colors.red1');
+                }
+
+                .bin-lines,
+                .bin-lines:before,
+                .bin-lines:after {
+                    background-color: theme('colors.white');
+                }
+            }
+
+            .bin-icon {
+                .box {
+                    animation: shake 0.2s ease 0.1s;
+                }
+
+                .lid {
+                    animation: lift-up 0.8s ease 0.1s, shake_u 0.8s ease 0.1s, shake_l 0.2s ease 0.8s;
+                }
+            }
+        }
+
+        @keyframes shake
+        {
+            0%{  transform: rotateZ(3deg); }
+            25%{  transform: rotateZ(0);}
+            75%{ transform: rotateZ(-3deg); }
+            100%{ transform: rotateZ(0); }
+        }
+
+        @keyframes lift-up
+        {
+            0%{ top:0; }
+            50%{ top:-35px;}
+            100%{ top:0; }
+        }
+
+        @keyframes shake_u
+        {
+            0%{ transform: rotateZ(0); }
+            25%{ transform:rotateZ(-15deg); }
+            50%{ transform:rotateZ(0deg); }
+            75%{ transform:rotateZ(15deg); }
+            100%{ transform:rotateZ(0); }
+        }
+
+        @keyframes shake_l
+        {
+            0%{ transform:rotateZ(0); }
+            80%{ transform:rotateZ(3deg); }
+            90%{ transform:rotateZ(-3deg); }
+            100%{ transform:rotateZ(0); }
         }
     }
 </style>

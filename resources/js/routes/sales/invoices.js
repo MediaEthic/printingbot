@@ -21,6 +21,15 @@ export default [
             requiresAuth: true
         }
     },
+    // {
+    //     path: '/sales/invoices/:id/show',
+    //     name: 'invoices.show',
+    //     component: show,
+    //     meta: {
+    //         title: "Edition d'une facture - PrintingBot",
+    //         requiresAuth: true
+    //     }
+    // },
     {
         path: '/sales/invoices/:id/edit',
         name: 'invoices.edit',

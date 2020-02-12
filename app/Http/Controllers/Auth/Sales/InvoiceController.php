@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Sales;
+namespace App\Http\Controllers\Auth\Sales;
 
+use App\Http\Resources\ArrayCollection;
+use App\Models\Invoice;
 use App\Repositories\Sales\InvoiceRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -34,7 +36,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->repository->index($request->all());
+        return $this->repository->paginate($request->all());
     }
 
     /**
@@ -55,18 +57,18 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->repository->store($request->all());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Invoice $invoice
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Invoice $invoice)
     {
-        //
+        return new ArrayCollection($invoice);
     }
 
     /**
@@ -77,32 +79,51 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
-        //
+        return $this->repository->getById($id);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Invoice $invoice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Invoice $invoice)
     {
-        //
+        return $this->repository->update($invoice, $request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Invoice $invoice
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->delete();
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function filtered(Request $request)
+    {
+        return $this->repository->paginate($request->all());
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editStatus(Request $request)
+    {
+        return $this->repository->editStatus($request->all());
+    }
 
     public function generatePDF($invoices)
     {

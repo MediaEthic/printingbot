@@ -9,52 +9,85 @@
                 </div>
             </hero>
 
-            <div class="container-table">
-                <table class="wrap-table">
-                    <thead class="table-header">
-                        <tr class="table-row">
-                            <th scope="col" class="table-cell checkAll" @click="checkAll">
-                                <i class="icon-check-circle text-2xl"></i>
-                            </th>
-                            <th scope="col" class="table-cell">Création</th>
-                            <th scope="col" class="table-cell">Numéro</th>
-                            <th scope="col" class="table-cell">Client</th>
-                            <th scope="col" class="table-cell">Total HT</th>
-                            <th scope="col" class="table-cell">Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-body">
-                        <tr v-for="(row, index) in allInvoices.data"
-                            :key="index"
-                            class="table-row"
-                        >
-                            <td class="table-cell checkbox" data-title="">
-                                    <input type="checkbox"
-                                           :id="'check' + index"
-                                           :name="'check' + index"
-                                           :value="row.id"
-                                           v-model="checkedInvoices" />
-                                    <label :for="'check' + index">
-                                        <span><!-- This span is needed to create the "checkbox" element --></span>
-                                    </label>
-                            </td>
-                            <td class="table-cell" data-title="Création" @click="showInvoice(row.id)">{{ displayDate(row.created_at) }}</td>
-                            <td class="table-cell" data-title="Numéro" @click="showInvoice(row.id)">{{ row.id }}</td>
-                            <td class="table-cell" data-title="Client" @click="showInvoice(row.id)"><span class="text-purple2 tracking-widest uppercase mr-2">{{ row.third.alias }}</span> {{ row.third.name }}</td>
-                            <td class="table-cell" data-title="Total HT" @click="showInvoice(row.id)">{{ row.total }}</td>
-                            <td class="table-cell" data-title="Statut" @click="showInvoice(row.id)">
-                                <tag :label="row.invoice_status"
-                                     :color="defineColorTag(row.invoice_status)"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div v-if="allInvoices.data">
+                <div class="container-table">
+                    <table class="wrap-table">
+                        <thead class="table-header">
+                            <tr class="table-row">
+                                <th scope="col" class="table-cell checkAll" @click="checkAll">
+                                    <i class="icon-check-circle text-2xl"></i>
+                                </th>
+                                <th scope="col" class="table-cell">Création</th>
+                                <th scope="col" class="table-cell">Numéro</th>
+                                <th scope="col" class="table-cell">Client</th>
+                                <th scope="col" class="table-cell">Total HT</th>
+                                <th scope="col" class="table-cell">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <tr v-for="(row, index) in allInvoices.data"
+                                :to="{ name: 'invoices.edit', params: { id: row.id } }"
+                                :key="index"
+                                class="table-row"
+                            >
+                                <td class="table-cell checkbox" data-title="">
+                                        <input type="checkbox"
+                                               :id="'check' + index"
+                                               :name="'check' + index"
+                                               :value="row.id"
+                                               v-model="checkedInvoices" />
+                                        <label :for="'check' + index">
+                                            <span><!-- This span is needed to create the "checkbox" element --></span>
+                                        </label>
+                                </td>
+                                <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
+                                             tag="td"
+                                             class="table-cell cursor-pointer"
+                                             data-title="Création">
+                                    <time :datetime="row.invoice_date">{{ displayDate(row.invoice_date) }}</time>
+                                </router-link>
+                                <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
+                                             tag="td"
+                                             class="table-cell cursor-pointer"
+                                             data-title="Numéro">
+                                    {{ row.invoice_no }}
+                                </router-link>
+                                <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
+                                             tag="td"
+                                             class="table-cell cursor-pointer"
+                                             data-title="Client">
+                                    <span class="text-purple2 tracking-widest uppercase mr-2">
+                                        [{{ row.third_alias }}]
+                                    </span>
+                                    {{ row.third_name }}
+                                </router-link>
+                                <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
+                                             tag="td"
+                                             class="table-cell cursor-pointer"
+                                             data-title="Total HT">
+                                    {{ row.total }}
+                                </router-link>
+                                <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
+                                             tag="td"
+                                             class="table-cell cursor-pointer"
+                                             data-title="Statut">
+                                    <tag :label="row.invoice_status"
+                                         :color="defineColorTag(row.invoice_status)"
+                                    />
+                                </router-link>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <pagination :pagination="pagination" v-on:pagechanged="fetchInvoices"></pagination>
             </div>
-
-
-            <pagination :pagination="pagination" v-on:pagechanged="fetchInvoices"></pagination>
+            <div v-else>
+                <img :src="'/assets/img/empty_no_data.svg'"
+                     alt="No date for the moment" class="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto" />
+            </div>
         </div>
+
         <div slot="sidebar">
             <section>
                 <transition name="slide-right"
@@ -71,8 +104,11 @@
                              :icon="`icon-printer`">
                         </btnLink>
 
-                        <btn :label="`Facturer`"
-                             :icon="`icon-edit`">
+                        <btn type="button"
+                             :label="`Facturer`"
+                             :icon="`icon-edit`"
+                             v-on:click="editStatusInvoices"
+                        >
                         </btn>
                     </fieldset>
                 </transition>
@@ -93,14 +129,19 @@
                                      range
                                      clearable
                                      :shortcuts="shortcuts"
+                                     data-title="Date de facturation"
                                      placeholder="Date de facturation"
                                      confirm
+                                     value-type="YYYY-MM-DD"
+                                     format="DD/MM/YYYY"
                                      input-class="field" />
 
                         <date-picker v-model="filters.dueDate"
                                      lang="en"
                                      type="date"
-                                     format="YYYY-MM-dd"
+                                     value-type="YYYY-MM-DD"
+                                     format="DD/MM/YYYY"
+                                     data-title="Date d'échéance"
                                      placeholder="Date d'échéance"
                                      input-class="field" />
 
@@ -113,14 +154,13 @@
                                       v-on:input="setCustomerName"
                         />
 
-                        </formInput>
-
                         <formInput :type="`select`"
                                    :id="`status`"
                                    :label="`Statut`"
                                    :items="statuses"
                                    :required="false"
                                    v-model="filters.status"
+                                   :disabledChoose="false"
                         >
                         </formInput>
 
@@ -130,6 +170,7 @@
                                    :items="exports"
                                    :required="false"
                                    v-model="filters.exported"
+                                   :disabledChoose="false"
                         >
                         </formInput>
 
@@ -206,9 +247,9 @@
                     }
                 ],
                 statuses: [
-                    { id: "draft", name: "draft" },
-                    { id: "edited", name: "edited" },
-                    { id: "payed", name: "payed" },
+                    { id: "draft", name: "Saisie" },
+                    { id: "edited", name: "Editée" },
+                    { id: "payed", name: "Payée" },
                 ],
                 exports: [
                     { id: "true", name: "Oui" },
@@ -236,7 +277,6 @@
                 allInvoices: 'invoices/allInvoices',
             }),
         },
-
         methods: {
             beforeLeave(element) {
                 this.prevHeight = getComputedStyle(element).height;
@@ -263,20 +303,36 @@
                 }
             },
             fetchInvoices(pageNumber) {
+                console.log("fetchInvoices");
+                console.log("this.filters");
+                console.log(this.filters);
                 this.isLoading = true;
 
-                let pageUrlBase = "/api/auth/sales/invoices?page=";
+                let pageUrlBase = "/api/auth/sales/invoices/filtered?page=";
                 pageNumber = pageNumber || 1;
                 let pageURL = pageUrlBase + pageNumber;
 
-                this.$store.dispatch("invoices/fetchInvoices", {
+                this.$store.dispatch("invoices/index", {
                     url: pageURL,
                     filters: this.filters
                 }).then(() => {
                     this.makePagination(this.allInvoices.meta, this.allInvoices.links);
                 }).catch(error => {
                     this.isLoading = false;
-                    this.$toast.error("Oups, un problème est survenu pour charger les factures");
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Un problème est survenu pour charger les factures',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
                 });
             },
             makePagination(meta, links) {
@@ -287,6 +343,9 @@
                     previous_page: links.previous,
                     total: meta.total,
                 };
+
+                console.log("allInvoices");
+                console.log(this.allInvoices.data);
 
                 this.pagination = pagination;
                 this.isLoading = false;
@@ -303,9 +362,6 @@
                     return "purple";
                 }
             },
-            showInvoice(invoice) {
-                this.$router.push({ name: 'invoices.edit', params: { id: invoice } });
-            },
             searchCustomersForAutocomplete(query) {
                 console.log("searchCustomersForAutocomplete");
                 console.log(query);
@@ -316,16 +372,41 @@
                         queryString: query,
                     }).then(response => {
                         console.log(response);
-                        this.customers = response;
+                        this.customers = response.data;
                         console.log(this.customers);
-                    }).catch(() => {
-                        this.$toast.error("Oups, un problème est survenu pour charger les clients");
+                    }).catch(error => {
+                        console.log(error.response);
                     });
                 }
             },
             setCustomerName(value) {
-                this.filters.customer = value.toUpperCase();
+                console.log(value);
+                this.filters.customer = value.name;
             },
+            editStatusInvoices() {
+                this.$store.dispatch("invoices/editStatus", {
+                    invoices: this.checkedInvoices,
+                    filters: this.filters
+                }).then(response => {
+
+                }).catch(error => {
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oops',
+                        text: 'Un problème est survenu pour modifier les factures',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+
+            }
         }
     }
 </script>
