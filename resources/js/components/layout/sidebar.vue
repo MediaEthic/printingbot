@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar fixed top-0 right-0 min-w-120 max-w-120 min-h-screen p-12 bg-purple1 rounded-tl-4xl rounded-bl-4xl">
+    <div class="sidebar fixed top-0 bottom-0 right-0 min-w-120 max-w-120 min-h-screen overflow-y-scroll overflow-x-hidden p-12 bg-purple1 rounded-tl-4xl rounded-bl-4xl">
         <slot name="sidebar">
             Sidebar sidebar
         </slot>
@@ -9,13 +9,26 @@
 <script>
     export default {
         mounted() {
-            console.log('Dashboard component mounted.')
+            //
         }
     }
 </script>
 
 <style lang="scss">
     .sidebar {
+        scrollbar-color: theme('colors.black') theme('colors.purple5');
+        scrollbar-width: thin;
+
+        &::-webkit-scrollbar {
+            width: 1.25rem;
+            background-color: theme('colors.purple5');
+            border-radius: 1rem;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: theme('colors.black');
+            border-radius: 1rem;
+        }
+
         .fieldset {
             padding: 3rem 0 5rem 0;
 
@@ -37,8 +50,24 @@
                 }
             }
 
-            .focus-field {
-                border-color: theme('colors.purple5');
+            .wrap-field,
+            .mx-datepicker {
+                .focus-field {
+                    border-color: theme('colors.purple5');
+                }
+
+                &.disabled {
+                    background-color: transparent;
+                    border-color: theme('colors.purple4');
+
+                    .field {
+                        color: theme('colors.white');
+
+                        & + .focus-field + .label-field {
+                            color: theme('colors.purple4');
+                        }
+                    }
+                }
             }
 
             .line-break {

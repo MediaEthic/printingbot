@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-2xl shadow-md p-8">
+    <div class="bg-white rounded-2xl shadow-md p-8" style="height: calc(100vh - 20rem);">
         <slot name="content">
             Box container
         </slot>
