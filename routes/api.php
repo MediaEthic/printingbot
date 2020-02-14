@@ -37,7 +37,9 @@ Route::middleware('api')->prefix('auth')->namespace('Auth')->group(function() {
 
         Route::namespace('Third')->prefix('/third')->group(function () {
             Route::prefix('/customers')->group(function () {
+                Route::post('/paginate', 'CustomerController@paginate');
                 Route::post('/search', 'CustomerController@search');
+                Route::post('/contacts/search', 'CustomerController@searchContacts');
             });
         });
 

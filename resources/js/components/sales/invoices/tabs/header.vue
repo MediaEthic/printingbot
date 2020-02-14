@@ -1,27 +1,30 @@
 <template>
     <div>
         <fieldset class="fieldset">
-            <formInput :type="`text`"
-                       :id="`name`"
-                       v-model="invoice[0].name"
-                       label="Référence" />
+            <field
+                :type="`text`"
+                :id="`name`"
+                v-model="invoice[0].name"
+                label="Référence"
+            />
 
             <div class="flex items-start mt-8">
                 <div class="w-full mr-12">
                     <div class="flex justify-between items-center w-full pb-4 border-b border-solid border-grey">
                         <h3 class="mr-4 text-lg font-black tracking-wide">Client</h3>
-                        <autocomplete class="field-is-small"
-                                      id="customers"
-                                      :items="customers"
-                                      :isAsync="true"
-                                      :label="`Client`"
-                                      :focus="false"
-                                      :required="false"
-                                      :searchMore="true"
-                                      iconLeft="icon-search"
-                                      v-on:search="searchCustomersForAutocomplete"
-                                      v-on:input="setCustomer"
-                                      v-on:searchForMore="show"
+                        <autocomplete
+                            class="field-is-small"
+                            id="customers"
+                            :suggestions="customers"
+                            label="Client"
+                            v-model="filters.customer"
+                            :isAsync="true"
+                            :focus="false"
+                            :required="false"
+                            :searchMore="true"
+                            v-on:search="searchCustomersForAutocomplete"
+                            @setResult="setCustomer"
+                            v-on:searchForMore="show"
                         />
                         <button type="button"
                                 @click.stop.prevent="resetCustomer"
@@ -31,123 +34,152 @@
                         </button>
                     </div>
                     <div class="flex mt-6">
-                        <formInput :type="`number`"
-                                   id="third_id"
-                                   v-model="invoice[0].third_id"
-                                   label="Compte"
-                                   :disabled="true" />
+                        <field
+                            :type="`number`"
+                            id="third_id"
+                            v-model="invoice[0].third_id"
+                            label="Compte"
+                            :disabled="true"
+                        />
 
-                        <formInput :type="`text`"
-                                   id="third_alias"
-                                   label="Abrégé"
-                                   v-model="invoice[0].third_alias"
-                                   :disabled="true" />
+                        <field
+                            :type="`text`"
+                            id="third_alias"
+                            label="Abrégé"
+                            v-model="invoice[0].third_alias"
+                            :disabled="true"
+                        />
                     </div>
 
-                    <formInput :type="`text`"
-                               id="third_name"
-                               label="Raison sociale"
-                               v-model="invoice[0].third_name"
-                               :required="true" />
+                    <field
+                        :type="`text`"
+                        id="third_name"
+                        label="Raison sociale"
+                        v-model="invoice[0].third_name"
+                        :required="true"
+                    />
 
-                    <formInput :type="`text`"
-                               id="third_address_line1"
-                               v-model="invoice[0].third_address_line1"
-                               label="Numéro + Libellé de la voie"
-                               :required="true" />
+                    <field
+                        :type="`text`"
+                        id="third_address_line1"
+                        v-model="invoice[0].third_address_line1"
+                        label="Numéro + Libellé de la voie"
+                        :required="true"
+                    />
 
-                    <formInput :type="`text`"
-                               id="third_address_line2"
-                               v-model="invoice[0].third_address_line2"
-                               label="Complément de localisation" />
+                    <field
+                        :type="`text`"
+                        id="third_address_line2"
+                        v-model="invoice[0].third_address_line2"
+                        label="Complément de localisation"
+                    />
 
-                    <formInput :type="`text`"
-                               id="third_address_line3"
-                               v-model="invoice[0].third_address_line3"
-                               label="BP - Lieu dit" />
+                    <field
+                        :type="`text`"
+                        id="third_address_line3"
+                        v-model="invoice[0].third_address_line3"
+                        label="BP - Lieu dit"
+                    />
 
                     <div class="flex">
-                        <formInput :type="`text`"
-                                   id="third_zipcode"
-                                   v-model="invoice[0].third_zipcode"
-                                   label="Code postal"
-                                   :required="true" />
+                        <field
+                            :type="`text`"
+                            id="third_postcode"
+                            v-model="invoice[0].third_postcode"
+                            label="Code postal"
+                            :required="true"
+                        />
 
-                        <formInput :type="`text`"
-                                   id="third_city"
-                                   v-model="invoice[0].third_city"
-                                   label="Ville"
-                                   :required="true" />
+                        <field
+                            :type="`text`"
+                            id="third_city"
+                            v-model="invoice[0].third_city"
+                            label="Ville"
+                            :required="true"
+                        />
                     </div>
 
-                    <formInput :type="`text`"
-                               id="third_intracommunity_no"
-                               v-model="invoice[0].third_intracommunity_no"
-                               label="TVA intracommunautaire" />
+                    <field
+                        :type="`text`"
+                        id="third_intracommunity_no"
+                        v-model="invoice[0].third_intracommunity_no"
+                        label="TVA intracommunautaire"
+                    />
 
                 </div>
                 <div class="w-full">
                     <div class="flex items-center w-full mb-6 pb-4 border-b border-solid border-grey" style="height: 4.6rem;">
                         <h3 class="text-lg font-black tracking-wide">Commercial</h3>
                     </div>
-                    <formInput :type="`select`" class="mt-6"
-                               id="user_id"
-                               v-model="invoice[0].user_id"
-                               label="Commercial en charge"
-                               :items="salespersons" />
+                    <field
+                        :type="`select`" class="mt-6"
+                        id="user_id"
+                        v-model="invoice[0].user_id"
+                        label="Commercial en charge"
+                        :items="salespersons"
+                    />
 
-                    <formInput :type="`number`"
-                               id="user_commission_base"
-                               v-model="invoice[0].user_commission_base"
-                               label="Base de commission" />
+                    <field
+                        :type="`number`"
+                        id="user_commission_base"
+                        v-model="invoice[0].user_commission_base"
+                        label="Base de commission"
+                    />
 
-                    <formInput :type="`number`"
-                               id="user_commission_rate"
-                               v-model="invoice[0].user_commission_rate"
-                               label="Taux de commission" />
+                    <field
+                        :type="`number`"
+                        id="user_commission_rate"
+                        v-model="invoice[0].user_commission_rate"
+                        label="Taux de commission"
+                    />
 
-                    <formInput :type="`number`"
-                               id="user_commission_amount"
-                               v-model="invoice[0].user_commission_amount"
-                               label="Montant de commission" />
+                    <field
+                        :type="`number`"
+                        id="user_commission_amount"
+                        v-model="invoice[0].user_commission_amount"
+                        label="Montant de commission"
+                    />
 
-                    <formInput :type="`number`"
+                    <field :type="`number`"
                                id="discount_rate"
                                label="Taux de remise"
                                v-model="invoice[0].discount_rate" />
 
-                    <formInput :type="`number`"
-                               id="bank_rate"
-                               v-model="invoice[0].bank_rate"
-                               label="Taux d'escompte" />
+                    <field
+                        :type="`number`"
+                        id="bank_rate"
+                        v-model="invoice[0].bank_rate"
+                        label="Taux d'escompte"
+                    />
 
-                    <formInput :type="`number`"
-                               id="discount_duration"
-                               v-model="invoice[0].discount_duration"
-                               label="Durée de l'escompte" />
+                    <field
+                        :type="`number`"
+                        id="discount_duration"
+                        v-model="invoice[0].discount_duration"
+                        label="Durée de l'escompte"
+                    />
                 </div>
             </div>
         </fieldset>
 
-        <modal name="search-customers" @opened="opened" :adaptive="true" :width="1180" :height="640">
-        </modal>
+        <searchCustomer v-on:selection="setCustomer" />
     </div>
 </template>
 
 <script>
     import { mapGetters } from 'vuex';
     import { mapMultiRowFields } from 'vuex-map-fields';
-    import formInput from "../../../form/input";
+    import field from "../../../elements/field";
     import autocomplete from '../../../form/autocomplete';
     import DatePicker from 'vue2-datepicker';
-    import Button from "../../../elements/cta";
+    import searchCustomer from '../../../settings/third/customers/search';
 
     export default {
         components: {
-            Button,
-            formInput,
+            field,
             autocomplete,
             DatePicker,
+            searchCustomer,
         },
         data() {
             return {
@@ -172,11 +204,13 @@
             notBeforeToday(date) {
                 return date < new Date();
             },
+            show() {
+                this.$modal.show('search-customers');
+            },
             searchCustomersForAutocomplete(query) {
                 this.customers = [];
-                // this.filters.customer = query.toUpperCase();
                 this.$store.dispatch("customers/search", {
-                    queryString: query,
+                    queryString: this.filters.customer,
                 }).then(response => {
                     this.customers = response;
                 }).catch(error => {
@@ -197,7 +231,7 @@
                 this.invoice[0].third_address_line1 = value.address_line1;
                 this.invoice[0].third_address_line2 = value.address_line2;
                 this.invoice[0].third_address_line3 = value.address_line3;
-                this.invoice[0].third_zipcode = value.zipcode;
+                this.invoice[0].third_postcode = value.postcode;
                 this.invoice[0].third_city = value.city;
                 this.invoice[0].third_intracommunity_no = value.intracommunity_no;
                 this.invoice[0].user_id = value.user_id;
@@ -218,7 +252,7 @@
                 this.invoice[0].third_address_line1 = "";
                 this.invoice[0].third_address_line2 = "";
                 this.invoice[0].third_address_line3 = "";
-                this.invoice[0].third_zipcode = "";
+                this.invoice[0].third_postcode = "";
                 this.invoice[0].third_city = "";
                 this.invoice[0].third_intracommunity_no = "";
                 this.invoice[0].user_id = "";

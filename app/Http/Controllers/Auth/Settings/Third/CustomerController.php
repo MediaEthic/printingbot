@@ -25,6 +25,7 @@ class CustomerController extends Controller
     {
         $this->repository = $repository;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -106,8 +107,28 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function paginate(Request $request)
+    {
+        return $this->repository->paginate($request->all());
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function search(Request $request)
     {
         return $this->repository->search($request->all());
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function searchContacts(Request $request)
+    {
+        return $this->repository->searchContacts($request->all());
     }
 }
