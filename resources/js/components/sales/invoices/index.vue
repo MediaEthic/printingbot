@@ -4,8 +4,9 @@
             <hero :illustration="`index.svg`">
                 <h1 slot="title">Factures</h1>
                 <div slot="action">
-                    <cta :label="`Créer`"
-                         :path="`invoices.create`"></cta>
+                    <btn type="cta"
+                         label="Créer"
+                         v-on:click="pathToCreate" />
                 </div>
             </hero>
 
@@ -26,7 +27,6 @@
                         </thead>
                         <tbody class="table-body">
                             <tr v-for="(row, index) in allInvoices.data"
-                                :to="{ name: 'invoices.edit', params: { id: row.id } }"
                                 :key="index"
                                 class="table-row"
                             >
@@ -98,11 +98,12 @@
                     <fieldset class="fieldset" v-if="checkedInvoices.length">
                         <legend class="legend">Actions</legend>
 
-                        <btnLink :target="`_blank`"
+                        <btn type="link"
+                             :target="`_blank`"
                              :path="`/api/auth/sales/invoices/`+JSON.stringify(this.checkedInvoices)+`/pdf`"
                              :label="`Imprimer`"
                              :icon="`icon-printer`">
-                        </btnLink>
+                        </btn>
 
                         <btn type="button"
                              :label="`Facturer`"
@@ -116,89 +117,98 @@
                 <form>
                     <fieldset class="fieldset">
                         <legend class="legend">Filtres</legend>
-                        <formInput :type="`number`"
-                                   :id="`invoiceNumber`"
-                                   :label="`Numéro de facture`"
-                                   :required="false"
-                                   v-model="filters.invoiceNumber"
-                        >
-                        </formInput>
-
-                        <date-picker v-model="filters.invoiceDate"
-                                     lang="en"
-                                     range
-                                     clearable
-                                     :shortcuts="shortcuts"
-                                     data-title="Date de facturation"
-                                     placeholder="Date de facturation"
-                                     confirm
-                                     value-type="YYYY-MM-DD"
-                                     format="DD/MM/YYYY"
-                                     input-class="field" />
-
-                        <date-picker v-model="filters.dueDate"
-                                     lang="en"
-                                     type="date"
-                                     value-type="YYYY-MM-DD"
-                                     format="DD/MM/YYYY"
-                                     data-title="Date d'échéance"
-                                     placeholder="Date d'échéance"
-                                     input-class="field" />
-
-                        <autocomplete :items="customers"
-                                      :isAsync="true"
-                                      :label="`Client`"
-                                      :focus="false"
-                                      :required="false"
-                                      v-on:search="searchCustomersForAutocomplete"
-                                      v-on:input="setCustomerName"
+                        <field
+                            :type="`number`"
+                            :id="`invoiceNumber`"
+                            :label="`Numéro de facture`"
+                            :required="false"
+                            v-model="filters.invoiceNumber"
                         />
 
-                        <formInput :type="`select`"
-                                   :id="`status`"
-                                   :label="`Statut`"
-                                   :items="statuses"
-                                   :required="false"
-                                   v-model="filters.status"
-                                   :disabledChoose="false"
-                        >
-                        </formInput>
+                        <date-picker
+                            v-model="filters.invoiceDate"
+                            lang="en"
+                            range
+                            clearable
+                            :shortcuts="shortcuts"
+                            data-title="Date de facturation"
+                            placeholder="Date de facturation"
+                            confirm
+                            value-type="YYYY-MM-DD"
+                            format="DD/MM/YYYY"
+                            input-class="field"
+                        />
 
-                        <formInput :type="`select`"
-                                   :id="`exported`"
-                                   :label="`Exporté`"
-                                   :items="exports"
-                                   :required="false"
-                                   v-model="filters.exported"
-                                   :disabledChoose="false"
-                        >
-                        </formInput>
+                        <date-picker
+                            v-model="filters.dueDate"
+                            lang="en"
+                            type="date"
+                            value-type="YYYY-MM-DD"
+                            format="DD/MM/YYYY"
+                            data-title="Date d'échéance"
+                            placeholder="Date d'échéance"
+                            input-class="field"
+                        />
+
+                        <autocomplete
+                            id="customers"
+                            :suggestions="customers"
+                            label="Client"
+                            v-model="filters.customer"
+                            :isAsync="true"
+                            :focus="false"
+                            :required="false"
+                            :searchMore="true"
+                            v-on:search="searchCustomersForAutocomplete"
+                            v-on:searchForMore="show"
+                        />
+
+                        <field
+                            :type="`select`"
+                            :id="`status`"
+                            :label="`Statut`"
+                            :items="statuses"
+                            :required="false"
+                            v-model="filters.status"
+                            :disabledChoose="false"
+                        />
+
+                        <field
+                            :type="`select`"
+                            :id="`exported`"
+                            :label="`Exporté`"
+                            :items="exports"
+                            :required="false"
+                            v-model="filters.exported"
+                            :disabledChoose="false"
+                        />
 
                         <hr class="line-break" />
 
-                        <formInput :type="`number`"
-                                   :id="`orderNumber`"
-                                   :label="`Numéro de commande`"
-                                   :required="false"
-                                   v-model="filters.orderNumber"
-                        >
-                        </formInput>
+                        <field
+                            :type="`number`"
+                            :id="`orderNumber`"
+                            :label="`Numéro de commande`"
+                            :required="false"
+                            v-model="filters.orderNumber"
+                        />
 
 
-                        <formInput :type="`number`"
-                                   :id="`deliveryNumber`"
-                                   :label="`Numéro de BL`"
-                                   :required="false"
-                                   v-model="filters.deliveryNumber"
-                        >
-                        </formInput>
+                        <field
+                            :type="`number`"
+                            :id="`deliveryNumber`"
+                            :label="`Numéro de BL`"
+                            :required="false"
+                            v-model="filters.deliveryNumber"
+                        />
 
-                        <cta :label="`Rechercher`"
-                             v-on:click="fetchInvoices"
-                        ></cta>
+                        <btn type="cta"
+                             label="Rechercher"
+                             v-on:click="fetchInvoices" />
                     </fieldset>
                 </form>
             </section>
+            <searchCustomer v-on:selection="setCustomerName" />
         </div>
     </container>
 </template>
@@ -209,27 +219,25 @@
 
     import container from '../../layout/container';
     import hero from '../../layout/hero';
-    import cta from '../../elements/cta';
     import btn from '../../elements/button';
-    import btnLink from '../../elements/link';
     import tag from '../../elements/tag';
     import pagination from '../../elements/pagination';
-    import formInput from '../../form/input';
+    import field from '../../elements/field';
     import autocomplete from '../../form/autocomplete';
     import DatePicker from 'vue2-datepicker';
+    import searchCustomer from '../../settings/third/customers/search';
 
     export default {
         components: {
             container,
             hero,
-            cta,
             btn,
-            btnLink,
             tag,
             pagination,
-            formInput,
+            field,
             autocomplete,
             DatePicker,
+            searchCustomer,
         },
         data() {
             return {
@@ -265,11 +273,12 @@
                     orderNumber: "",
                     deliveryNumber: "",
                 },
-                customers: []
+                customers: [],
             }
         },
         created() {
             this.isLoading = true;
+            this.searchCustomersForAutocomplete();
             this.fetchInvoices();
         },
         computed: {
@@ -278,6 +287,9 @@
             }),
         },
         methods: {
+            pathToCreate() {
+                this.$router.push({ name: 'invoices.create' })
+            },
             beforeLeave(element) {
                 this.prevHeight = getComputedStyle(element).height;
             },
@@ -303,9 +315,6 @@
                 }
             },
             fetchInvoices(pageNumber) {
-                console.log("fetchInvoices");
-                console.log("this.filters");
-                console.log(this.filters);
                 this.isLoading = true;
 
                 let pageUrlBase = "/api/auth/sales/invoices/filtered?page=";
@@ -344,9 +353,6 @@
                     total: meta.total,
                 };
 
-                console.log("allInvoices");
-                console.log(this.allInvoices.data);
-
                 this.pagination = pagination;
                 this.isLoading = false;
             },
@@ -362,25 +368,20 @@
                     return "purple";
                 }
             },
-            searchCustomersForAutocomplete(query) {
-                console.log("searchCustomersForAutocomplete");
-                console.log(query);
+            show() {
+                this.$modal.show('search-customers');
+            },
+            searchCustomersForAutocomplete() {
                 this.customers = [];
-                this.filters.customer = query.toUpperCase();
-                if (query.length > 2) {
-                    this.$store.dispatch("invoices/searchCustomersForAutocomplete", {
-                        queryString: query,
-                    }).then(response => {
-                        console.log(response);
-                        this.customers = response.data;
-                        console.log(this.customers);
-                    }).catch(error => {
-                        console.log(error.response);
-                    });
-                }
+                this.$store.dispatch("invoices/searchCustomers", {
+                    queryString: this.filters.customer,
+                }).then(response => {
+                    this.customers = response.data;
+                }).catch(error => {
+                    console.log(error.response);
+                });
             },
             setCustomerName(value) {
-                console.log(value);
                 this.filters.customer = value.name;
             },
             editStatusInvoices() {
@@ -393,7 +394,7 @@
                     this.$swal({
                         position: 'top-end',
                         icon: 'error',
-                        title: 'Oops',
+                        title: 'Oops...',
                         text: 'Un problème est survenu pour modifier les factures',
                         showClass: {
                             popup: 'animated slideInUp faster'
@@ -405,7 +406,6 @@
                         timerProgressBar: true,
                     });
                 });
-
             }
         }
     }

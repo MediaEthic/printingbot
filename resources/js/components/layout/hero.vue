@@ -13,7 +13,7 @@
             </div>
             <div>
                 <slot name="action">
-                    <cta></cta>
+
                 </slot>
             </div>
         </div>
@@ -21,13 +21,8 @@
 </template>
 
 <script>
-    import cta from '../elements/cta';
-
     export default {
         name: "Hero",
-        components: {
-            cta
-        },
         props: {
             illustration: {
                 type: String,

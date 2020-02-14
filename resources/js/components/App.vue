@@ -23,10 +23,10 @@
                     </div>
                 </div>
                 <navbar></navbar>
-                <cta :label="`Déconnexion`"
+                <btn type="cta"
+                     label="Déconnexion"
                      v-on:click="logout"
-                     class="absolute bottom-12"
-                ></cta>
+                     class="absolute bottom-12" />
             </header>
         </div>
         <main class="table-cell align-top w-full min-h-screen bg-gray-200 rounded-tl-4xl rounded-bl-4xl shadow-md">
@@ -45,7 +45,7 @@
 
 <script>
     import navbar from './layout/navbar';
-    import cta from './elements/cta';
+    import btn from './elements/button';
 
     const DEFAULT_TRANSITION = 'fade';
 
@@ -53,7 +53,7 @@
         name: "App",
         components: {
             navbar,
-            cta,
+            btn,
         },
         data() {
             return {

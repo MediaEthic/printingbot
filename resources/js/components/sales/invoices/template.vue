@@ -17,7 +17,7 @@
                         <div class="flex justify-start items-center">
                             <h2 class="font-serif text-3xl tracking-tighter mr-12">Facture</h2>
                             <tag :label="setInvoiceStatus()"
-                                 :color="`yellow`" />
+                                 :color="defineColorTag()" />
                             <nav class="menu">
                                 <input id="menu-toggler" class="menu-toggler" type="checkbox">
                                 <label for="menu-toggler"><i class="icon-settings"></i></label>
@@ -85,13 +85,14 @@
                     <fieldset class="fieldset">
                         <legend class="legend">Modalités</legend>
 
-                        <formInput :type="`select`"
-                                   id="invoice_status"
-                                   label="Statut"
-                                   :items="statuses"
-                                   :required="true"
-                                   v-model="invoice[0].invoice_status"
-                                   :disabledChoose="true"
+                        <field
+                            :type="`select`"
+                            id="invoice_status"
+                            label="Statut"
+                            :items="statuses"
+                            :required="true"
+                            v-model="invoice[0].invoice_status"
+                            :disabledChoose="true"
                         />
 
                         <DatePicker v-model="invoice[0].invoice_date"
@@ -106,20 +107,24 @@
                                     input-class="field"
                                     @change="changeInvoiceDueDate"/>
 
-                        <formInput :type="`select`"
-                                   id="payment_id"
-                                   v-model="invoice[0].payment_id"
-                                   label="Mode de règlement"
-                                   :required="true"
-                                   :items="payments" />
+                        <field
+                            :type="`select`"
+                            id="payment_id"
+                            v-model="invoice[0].payment_id"
+                            label="Mode de règlement"
+                            :required="true"
+                            :items="payments"
+                        />
 
-                        <formInput :type="`select`"
-                                   id="settlement_id"
-                                   v-model="invoice[0].settlement_id"
-                                   label="Conditions de règlement"
-                                   :required="true"
-                                   :items="settlements"
-                                   v-on:update="changeInvoiceDueDate" />
+                        <field
+                            :type="`select`"
+                            id="settlement_id"
+                            v-model="invoice[0].settlement_id"
+                            label="Conditions de règlement"
+                            :required="true"
+                            :items="settlements"
+                            v-on:update="changeInvoiceDueDate"
+                        />
 
                         <DatePicker v-model="invoice[0].due_date"
                                     :class="{ 'has-val': invoice[0].due_date }"
@@ -240,7 +245,7 @@
     import tabHeader from "./tabs/header";
     import tabBody from "./tabs/body";
     import DatePicker from 'vue2-datepicker';
-    import formInput from "../../form/input";
+    import field from "../../elements/field";
 
     const today = moment().format('YYYY-MM-DD');
 
@@ -261,7 +266,7 @@
             tabHeader,
             tabBody,
             DatePicker,
-            formInput,
+            field,
         },
         data() {
             return {
@@ -290,26 +295,8 @@
                         this.$store.dispatch("vats/fetchVats", {
                             url: '/api/auth/settings/accounting/vats',
                         }).then(() => {
-                            this.$store.dispatch("products/searchProducts", {
-                                pagination: 15
-                            }).then(() => {
-                                this.isLoading = false;
-                                this.startAnimate();
-                            }).catch(error => {
-                                this.$swal({
-                                    position: 'top-end',
-                                    icon: 'error',
-                                    title: 'Oups, un problème est survenu pour charger les articles',
-                                    showClass: {
-                                        popup: 'animated slideInUp faster'
-                                    },
-                                    hideClass: {
-                                        popup: 'animated slideOutRight faster'
-                                    },
-                                    timer: 5000,
-                                    timerProgressBar: true,
-                                });
-                            });
+                            this.isLoading = false;
+                            this.startAnimate();
                         }).catch(error => {
                             this.$swal({
                                 position: 'top-end',
@@ -424,6 +411,16 @@
                     return 'facturée';
                 } else {
                     return 'saisie';
+                }
+            },
+            defineColorTag() {
+                const status = this.invoice[0].invoice_status;
+                if (status === "draft") {
+                    return "yellow";
+                } else if (status === "edited") {
+                    return "red";
+                } else {
+                    return "purple";
                 }
             },
             formatter(num) {

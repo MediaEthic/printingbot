@@ -21,7 +21,7 @@ const blankInvoice = {
     third_address_line1: "",
     third_address_line2: "",
     third_address_line3: "",
-    third_zipcode: "",
+    third_postcode: "",
     third_city: "",
     third_intracommunity_no: "",
     third_reference: "",
@@ -59,7 +59,7 @@ const getters = {
 
 const mutations = {
     updateField,
-    setInvoices(state, invoices) {
+    SET_INVOICES(state, invoices) {
         state.invoices = invoices;
     },
     SET_DUE_DATE : (state, payload) => {
@@ -88,7 +88,7 @@ const actions = {
         let data = (await axios.post(credentials.url, { // invoices.index
             filters: credentials.filters
         })).data;
-        commit('setInvoices', data);
+        commit('SET_INVOICES', data);
     },
     async editStatus({ commit }, credentials) {
         let data = (await axios.post('/api/auth/sales/invoices/status/edit', { // invoices.index
@@ -96,9 +96,9 @@ const actions = {
             filters: credentials.filters
         })).data;
         console.log(data);
-        commit('setInvoices', data);
+        commit('SET_INVOICES', data);
     },
-    searchCustomersForAutocomplete(context, credentials) {
+    searchCustomers(context, credentials) {
         return new Promise((resolve, reject) => {
             axios.post('/api/auth/sales/invoices/customers/search', {
                 query: credentials.queryString

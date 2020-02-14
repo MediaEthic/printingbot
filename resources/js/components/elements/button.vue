@@ -30,6 +30,19 @@
         </span>
     </button>
 
+    <a v-else-if="type === 'link'" role="button"
+       :href="path"
+       :target="target"
+       class="button">
+        <span class="wrap-icon icon-arrow before">
+            <i class="icon" :class="icon"></i>
+        </span>
+        <span class="label">{{ label }}</span>
+        <span class="wrap-icon icon-arrow after">
+            <i class="icon" :class="icon"></i>
+        </span>
+    </a>
+
     <button v-else-if="type === 'delete'"
             class="button-delete"
             @click="clicked">
@@ -73,6 +86,17 @@
                 type: String,
                 required: false,
                 default: "Link"
+            },
+
+            path: {
+                type: String,
+                required: false,
+                default: "/"
+            },
+            target: {
+                type: String,
+                required: false,
+                default: "_self"
             },
             primary: {
                 type: Boolean,
@@ -231,6 +255,7 @@
     }
 
     .button {
+        display: block;
         position: relative;
         margin: 0 0 .5rem 0;
         padding: 1.4rem 1.25rem 1.4rem 6.5rem;
@@ -238,6 +263,12 @@
         border: 0;
         background: transparent;
         transition: all 0.2s ease;
+        outline: none;
+
+        &:focus {
+            border: .1rem solid theme('colors.black');
+            border-radius: 3rem;
+        }
 
         &:not(:disabled) {
             cursor: pointer;
