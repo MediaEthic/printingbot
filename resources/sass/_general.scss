@@ -10,93 +10,6 @@ body {
 
 
 
-// search box
-.searchBox {
-    position: relative;
-    transition: all 1s;
-    width: 3.5rem;
-    height: 3.5rem;
-    box-sizing: border-box;
-    border-radius: 50%;
-    /*border: .1rem solid theme('colors.purple1');*/
-    padding: .5rem;
-    margin-bottom: .5rem;
-
-    .searchInput {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0 !important;
-        height: 3.5rem;
-        outline: 0;
-        display: none;
-        border-radius: 3rem;
-        padding: 0 !important;
-        border-width: 0 !important;
-        margin: 0 !important;
-        background: none;
-        outline:none;
-        float:left;
-        transition: all 0.4s;
-
-        .label-field {
-            display: none;
-
-            ~ .focus-field {
-                border-width: 0;
-            }
-        }
-    }
-
-    .searchToggle {
-        width: 0;
-        height: 0;
-        opacity: 0;
-    }
-
-    .searchButton {
-        cursor: pointer;
-        position: absolute;
-        top: 0;
-        right: 0;
-        border-radius: 50%;
-        color: theme('colors.purple1');
-        text-align: center;
-        font-size: 2rem;
-
-        float: right;
-        width: 3.5rem;
-        height: 3.5rem;
-        background: theme('colors.purple5');
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.4s;
-    }
-
-    &:hover {
-        width: 100%;
-        cursor: pointer;
-        background-color: transparent;
-
-        .searchInput {
-            width: 100% !important;
-            display: block;
-            border-width: .1rem !important;
-
-            .focus-field {
-                border-radius: 3rem !important;
-            }
-        }
-
-        .searchButton {
-            color: theme('colors.purple1');
-        }
-    }
-}
-
-
-
 // checkbox
 .checkbox {
     label {
@@ -201,6 +114,121 @@ body {
                     }
                 }
             }
+        }
+    }
+}
+
+
+
+// Modal component
+.v--modal {
+    overflow-y: auto !important;
+    max-width: 150rem !important;
+    background-position: bottom right;
+    background-size: auto 25rem;
+    background-repeat: no-repeat;
+    transition: all .3s ease !important;
+    border-top: 3rem solid theme('colors.purple1');
+    border-radius: 2rem !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+
+    scrollbar-color: theme('colors.purple1') theme('colors.purple5');
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: 1.25rem;
+        background-color: theme('colors.purple5');
+        border-radius: 1rem;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: theme('colors.black');
+        border-radius: 1rem;
+    }
+
+    .modal-container {
+        .modal-header {
+            padding: 3rem;
+            background-color: theme('colors.gray.200');
+            border-radius: 0 0 1rem 1rem;
+
+            .modal-close {
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                background-color: theme('colors.purple1');
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                pointer-events: auto;
+                display: inline-block;
+                flex-grow: 0;
+                flex-shrink: 0;
+                font-size: 1rem;
+                width: 2rem;
+                height: 2rem;
+                max-width: 2rem;
+                max-height: 2rem;
+                outline: 0;
+                vertical-align: top;
+                position: absolute;
+                right: .5rem;
+                top: -2.5rem;
+                font-weight: 700;
+                color: #fff;
+
+                &:before {
+                    background-color: theme('colors.white');
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    height: .2rem;
+                    width: 50%;
+                    -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                    -webkit-transform-origin: center center;
+                    transform-origin: center center;
+                }
+
+                &:after {
+                    background-color: #fff;
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    height: 50%;
+                    width: .2rem;
+                    -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                    -webkit-transform-origin: center center;
+                    transform-origin: center center;
+                }
+            }
+
+            .modal-title {
+                font-size: 3rem;
+                font-family: theme('fontFamily.serif');
+                letter-spacing: -0.05em;
+                padding-bottom: 1rem;
+                border-bottom: .1rem solid theme('colors.black');
+                margin-bottom: 2rem;
+            }
+
+            .modal-submit {
+                display: block;
+                margin-top: 1rem;
+                margin-left: auto;
+
+                .label {
+                    color: theme('colors.black');
+                }
+            }
+        }
+
+        .modal-body {
+            margin: 2rem 0;
+            padding: 0 3rem;
         }
     }
 }
