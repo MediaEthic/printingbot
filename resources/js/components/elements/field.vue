@@ -1,6 +1,7 @@
 <template>
     <ValidationProvider tag="div"
                         :name="id"
+                        :rules="rules"
                         v-slot="{ errors }"
                         :class="{ 'textarea': type === 'textarea', 'disabled': disabled }"
                         class="wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl">
@@ -21,7 +22,7 @@
             <option v-if="choose" value="" :disabled="disabledChoose">Choisir</option>
             <option v-for="(item, index) in items"
                     :value="item.id" >
-                {{ item.name }}
+                {{ item.name }} {{ item.lastname || '' }}
             </option>
         </select>
 
@@ -42,16 +43,16 @@
         ></textarea>
 
         <input v-else
-               v-bind="$attrs"
                :type="type"
+               :name="id"
+               :id="id"
+               v-bind="$attrs"
                v-on="$listeners"
                :value="value"
                @input="$emit('updateField', $event.target.value)"
-               :name="id"
-               :id="id"
                class="field block w-full h-full bg-transparent text-black px-10 outline-none"
                :class="{ 'has-val': value, 'input-error': errors[0] }"
-               step="0.0001"
+               :step="type === 'number' ? 0.0001 : ''"
                :required="required"
                :disabled="disabled"
                :readonly="readonly"
@@ -78,7 +79,7 @@
     const includes = types => type => types.includes(type);
 
     export default {
-        name: "formInput",
+        name: "field",
         inheritAttrs: false,
         props: {
             label: {
@@ -137,6 +138,11 @@
                 type: Boolean,
                 required: false,
                 default: true
+            },
+            rules: {
+                type: String,
+                required: false,
+                default: ''
             },
         },
         model: {
@@ -263,7 +269,7 @@
             align-items: center;
             width: 2.5rem;
             height: 5rem;
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: theme('colors.purple1');
         }
 
