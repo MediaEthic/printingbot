@@ -16,10 +16,10 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->nullableTimestamps();
-            $table->enum('civility', ['Mr', 'Mrs'])->default('Mr');
+            $table->enum('title', ['Mr.', 'Ms.'])->nullable()->default('Mr.');
             $table->string('alias', 10)->nullable()->default(null);
             $table->string('name', 38)->nullable()->default(null);
-            $table->string('surname', 38)->nullable()->default(null);
+            $table->string('lastname', 38)->nullable()->default(null);
             $table->unsignedBigInteger('establishment_id')->nullable()->default(null);
             $table->foreign('establishment_id')
                 ->references('id')

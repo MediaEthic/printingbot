@@ -44,7 +44,7 @@ class CreateInvoicesTable extends Migration
             $table->string('third_address_line1')->nullable()->default(null);
             $table->string('third_address_line2')->nullable()->default(null);
             $table->string('third_address_line3')->nullable()->default(null);
-            $table->string('third_zipcode', 10)->nullable()->default(null);
+            $table->string('third_postcode', 10)->nullable()->default(null);
             $table->string('third_city', 38)->nullable()->default(null);
             $table->unsignedInteger('country_id')->nullable()->default(75);
 //            $table->foreign('country_id')

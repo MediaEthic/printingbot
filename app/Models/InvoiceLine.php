@@ -40,7 +40,6 @@ class InvoiceLine extends Model
      */
     protected $fillable = [
         'invoice_id',
-        'establishment_id',
         'type',
         'name',
         'description',
@@ -65,14 +64,6 @@ class InvoiceLine extends Model
     public function invoice()
     {
         return $this->belongsTo(Invoice::class);
-    }
-
-    /**
-     * Get the establishment of the invoice line.
-     */
-    public function establishment()
-    {
-        return $this->belongsTo(Establishment::class);
     }
 
     /**

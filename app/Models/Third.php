@@ -7,6 +7,33 @@ use Illuminate\Database\Eloquent\Model;
 class Third extends Model
 {
     /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'thirds';
+
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -25,7 +52,7 @@ class Third extends Model
         'address_line1',
         'address_line2',
         'address_line3',
-        'zipcode',
+        'postcode',
         'city',
         'country_id',
         'language_id',
@@ -73,33 +100,6 @@ class Third extends Model
         'accounting_remarks',
         'mention_id',
         'active',
-    ];
-
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'thirds';
-
-
-    /**
-     * The primary key for the model.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-        'updated_at',
     ];
 
 
@@ -167,6 +167,22 @@ class Third extends Model
         return $this->belongsTo(Vat::class);
     }
 
+
+    /**
+     * Get all of the addresses for the third.
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    /**
+     * Get all of the contacts for the third.
+     */
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
 
     /**
      * Get all of the invoices for the third.

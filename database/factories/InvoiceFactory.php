@@ -52,7 +52,6 @@ $factory->define(Invoice::class, function (Faker $faker) {
 
 
         $lines->push(new InvoiceLine([
-            'establishment_id' => App\Models\Establishment::all()->random()->id,
             'type' => $type,
             'description' => $faker->sentence,
             'product_id' => $product,
@@ -79,7 +78,7 @@ $factory->define(Invoice::class, function (Faker $faker) {
     }
     $invoiceNo = date("ym", strtotime($invoiceDate)) . str_pad($id, 6, 0, STR_PAD_LEFT);
 
-    $third = App\Models\Third::all()->random();
+    $third = App\Models\Third::where('type', 'customer')->get()->random();
 
     $invoiceSubtotal = $lines->sum('subtotal');
     $invoiceDiscountAmount = $lines->sum('discount_amount');
@@ -107,7 +106,7 @@ $factory->define(Invoice::class, function (Faker $faker) {
         'third_address_line1' => $third->address_line1,
         'third_address_line2' => $third->address_line2,
         'third_address_line3' => $third->address_line3,
-        'third_zipcode' => $third->zipcode,
+        'third_postcode' => $third->postcode,
         'third_city' => $third->city,
         'country_id' => $third->country_id,
         'third_intracommunity_no' => $third->intracommunity_no,

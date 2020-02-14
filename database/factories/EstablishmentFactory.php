@@ -13,7 +13,7 @@ $factory->define(Establishment::class, function (Faker $faker) {
         'address_line1' => $faker->address,
         'address_line2' => $faker->address,
         'address_line3' => $faker->address,
-        'zipcode' => $faker->randomNumber($nbDigits = 5),
+        'postcode' => $faker->randomNumber($nbDigits = 5),
         'city' => Str::random(10),
         'phone' => $faker->numberBetween($min = 0000000000, $max = 9999999999),
         'email' => $faker->email,

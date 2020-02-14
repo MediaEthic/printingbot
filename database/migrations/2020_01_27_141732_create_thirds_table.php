@@ -40,7 +40,7 @@ class CreateThirdsTable extends Migration
             $table->string('address_line1')->nullable()->default(null);
             $table->string('address_line2')->nullable()->default(null);
             $table->string('address_line3')->nullable()->default(null);
-            $table->string('zipcode', 10)->nullable()->default(null);
+            $table->string('postcode', 10)->nullable()->default(null);
             $table->string('city', 38)->nullable()->default(null);
             $table->unsignedInteger('country_id')->nullable()->default(75);
 //            $table->foreign('country_id')

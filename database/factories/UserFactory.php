@@ -18,18 +18,18 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'civility' => $faker->randomElement(['Mr', 'Mrs']),
+        'title' => $faker->randomElement(['Mr.', 'Ms.']),
         'alias' => Str::random(5),
-        'name' => $faker->name,
-        'surname' => $faker->name,
+        'name' => $faker->firstName,
+        'lastname' => $faker->lastName,
         'establishment_id' => App\Models\Establishment::all()->random()->id,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
         'api_token' => Str::random(80),
-        'mobile' => $faker->numberBetween($min = 0000000000, $max = 9999999999),
-        'phone' => $faker->numberBetween($min = 0000000000, $max = 9999999999),
+        'mobile' => $faker->e164PhoneNumber ,
+        'phone' => $faker->e164PhoneNumber ,
         'accounting' => $faker->randomElement([true, false]),
         'trade' => $faker->randomElement([true, false]),
         'quotation' => $faker->randomElement([true, false]),

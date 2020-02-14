@@ -7,26 +7,21 @@ use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
 $factory->define(Third::class, function (Faker $faker) {
-    $siren = $faker->randomNumber($nbDigits = 9);
-    $siret = $siren . $faker->randomNumber($nbDigits = 5);
-    $key = 12 + 3 * ($siren % 97) % 97;
-    $intercommunity = "FR " . $key . " " . $siren;
     return [
         'updated_by' => App\Models\User::all()->random()->id,
         'type' => $faker->randomElement(['supplier', 'prospect', 'customer']),
-        'name' => $faker->name,
+        'name' => $faker->company,
         'alias' => Str::random(5),
         'logo' => $faker->randomElement(['logo-aviron-bayonnais.jpg', 'logo-ethic-software.png', 'logo-igp-bayonne.jpg', 'logo-ville-bayonne.jpg']),
-        'address_line1' => $faker->address,
-        'address_line2' => $faker->address,
-        'address_line3' => $faker->address,
-        'zipcode' => $faker->randomNumber($nbDigits = 5),
-        'city' => Str::random(10),
-        'phone' => $faker->numberBetween($min = 0000000000, $max = 9999999999),
+        'address_line1' => $faker->streetAddress,
+        'address_line2' => $faker->secondaryAddress,
+        'postcode' => $faker->postcode,
+        'city' => $faker->city,
+        'phone' => $faker->serviceNumber,
         'email' => $faker->email,
         'ape' => Str::random(5),
-        'siret' => $siret,
-        'intracommunity_no' => $intercommunity,
+        'siret' => $faker->siret,
+        'intracommunity_no' => $faker->vat,
         'user_id' => App\Models\User::whereTrade(true)->get()->random()->id,
         'commission_rate' => $faker->numberBetween($min = 0, $max = 100),
         'discount_rate' => $faker->numberBetween($min = 0, $max = 100),

@@ -45,7 +45,7 @@ class Establishment extends Model
         'address_line1',
         'address_line2',
         'address_line3',
-        'zipcode',
+        'postcode',
         'city',
         'country_id',
         'language_id',
@@ -110,12 +110,5 @@ class Establishment extends Model
      */
     public function invoices() {
         return $this->hasMany(Invoice::class);
-    }
-
-    /**
-     * Get all of the lines for the establishment.
-     */
-    public function lines() {
-        return $this->hasMany(InvoiceLine::class);
     }
 }

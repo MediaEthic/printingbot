@@ -52,7 +52,7 @@ class Invoice extends Model
         'third_address_line1',
         'third_address_line2',
         'third_address_line3',
-        'third_zipcode',
+        'third_postcode',
         'third_city',
         'country_id',
         'language_id',

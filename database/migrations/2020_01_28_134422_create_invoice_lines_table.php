@@ -22,12 +22,6 @@ class CreateInvoiceLinesTable extends Migration
                 ->on('invoices')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
-            $table->unsignedBigInteger('establishment_id')->nullable()->default(1);
-            $table->foreign('establishment_id')
-                ->references('id')
-                ->on('establishments')
-                ->onDelete('restrict')
-                ->onUpdate('restrict');
             $table->enum('type', ['comment', 'product'])->default('product');
             $table->string('name')->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
@@ -65,7 +59,6 @@ class CreateInvoiceLinesTable extends Migration
     {
         Schema::table('invoice_lines', function (Blueprint $table) {
             $table->dropForeign(['invoice_id']);
-            $table->dropForeign(['establishment_id']);
             $table->dropForeign(['product_id']);
             $table->dropForeign(['vat_id']);
         });
