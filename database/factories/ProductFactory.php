@@ -8,7 +8,8 @@ use Illuminate\Support\Str;
 
 $factory->define(Product::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'image' => $faker->randomElement(['undraw_images_aef7.svg', 'undraw_photo_4yb9.svg', 'undraw_tabs_jf82.svg']),
+        'name' => $faker->word,
         'alias' => Str::random(5),
         'description' => $faker->sentence,
     ];

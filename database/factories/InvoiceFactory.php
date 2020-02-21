@@ -19,8 +19,11 @@ $factory->define(Invoice::class, function (Faker $faker) {
                 $vat = App\Models\Vat::all()->random();
                 $vatID = $vat->id;
                 $quantity = $faker->numberBetween(1, 100);
-                $product = App\Models\Product::all()->random()->id;
-                $productPrice = App\Models\ProductQuantity::where('id', $product)
+                $product = App\Models\Product::all()->random();
+                $productID = $product->id;
+                $productName = $product->name;
+                $productDescription = $product->description;
+                $productPrice = App\Models\ProductQuantity::where('id', $productID)
                     ->where('quantity_minimum','<=', $quantity)
                     ->where('quantity_maximum','>=', $quantity)
                     ->first();
@@ -38,7 +41,9 @@ $factory->define(Invoice::class, function (Faker $faker) {
                 $vatAmount = round($totalPretax * ($vat->rate / 100), 2);
                 $total = round($totalPretax + $vatAmount, 2);
             } else {
-                $product = null;
+                $productID = null;
+                $productName = null;
+                $productDescription = $faker->sentence;
                 $vatID = null;
                 $quantity = null;
                 $unitPrice = null;
@@ -53,8 +58,9 @@ $factory->define(Invoice::class, function (Faker $faker) {
 
         $lines->push(new InvoiceLine([
             'type' => $type,
-            'description' => $faker->sentence,
-            'product_id' => $product,
+            'name' => $productName,
+            'description' => $productDescription,
+            'product_id' => $productID,
             'vat_id' => $vatID,
             'quantity' => $quantity,
             'unit_price' => $unitPrice,
@@ -76,17 +82,17 @@ $factory->define(Invoice::class, function (Faker $faker) {
     } else {
         $id = 1;
     }
-    $invoiceNo = date("ym", strtotime($invoiceDate)) . str_pad($id, 6, 0, STR_PAD_LEFT);
+    $invoiceNo = date("y/m/", strtotime($invoiceDate)) . str_pad($id, 5, 0, STR_PAD_LEFT);
 
     $third = App\Models\Third::where('type', 'customer')->get()->random();
 
-    $invoiceSubtotal = $lines->sum('subtotal');
-    $invoiceDiscountAmount = $lines->sum('discount_amount');
-    $invoiceTotalPretax = $lines->sum('total_pretax');
-    $invoiceVat = $lines->sum('vat');
+    $invoiceSubtotal = round($lines->sum('subtotal'), 2);
+    $invoiceDiscountAmount = round($lines->sum('discount_amount'), 2);
+    $invoiceTotalPretax = round($lines->sum('total_pretax'), 2);
+    $invoiceVat = round($lines->sum('vat'), 2);
 
     $commission_rate = $third->commission_rate;
-    $commission_amount = round($invoiceSubtotal * ($commission_rate / 100),2);
+    $commission_amount = round($invoiceTotalPretax * ($commission_rate / 100),2);
     $invoiceTotal = round($invoiceTotalPretax + $invoiceVat, 2);
 
 
@@ -112,7 +118,7 @@ $factory->define(Invoice::class, function (Faker $faker) {
         'third_intracommunity_no' => $third->intracommunity_no,
         'third_reference' => $faker->sentence,
         'user_id' => $third->user_id,
-        'user_commission_base' => $invoiceSubtotal,
+        'user_commission_base' => $invoiceTotalPretax,
         'user_commission_rate' => $commission_rate,
         'user_commission_amount' => $commission_amount,
         'discount_rate' => $third->discount_rate,
