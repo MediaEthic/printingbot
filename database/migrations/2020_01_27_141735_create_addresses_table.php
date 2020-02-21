@@ -46,10 +46,10 @@ class CreateAddressesTable extends Migration
 //                ->onDelete('restrict')
 //                ->onUpdate('restrict');
             $table->boolean('order')->nullable()->default(true);
-            $table->tinyInteger('delivery')->nullable()->default(true);
-            $table->tinyInteger('invoicing')->nullable()->default(true);
-            $table->tinyInteger('default')->nullable()->default(false);
-            $table->tinyInteger('active')->nullable()->default(true);
+            $table->boolean('delivery')->nullable()->default(true);
+            $table->boolean('invoicing')->nullable()->default(true);
+            $table->boolean('default')->nullable()->default(false);
+            $table->boolean('active')->nullable()->default(true);
         });
     }
 
