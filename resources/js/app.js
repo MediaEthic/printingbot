@@ -12,7 +12,6 @@ import en from 'vee-validate/dist/locale/en.json';
 import fr from 'vee-validate/dist/locale/fr.json';
 
 import VModal from 'vue-js-modal';
-import VueAnimateNumber from 'vue-animate-number'
 import VueSweetalert2 from 'vue-sweetalert2';
 
 require('./bootstrap');
@@ -31,7 +30,6 @@ localize('fr', fr);
 
 
 Vue.use(VModal);
-Vue.use(VueAnimateNumber);
 
 const options = {
     confirmButtonColor: '#672767',

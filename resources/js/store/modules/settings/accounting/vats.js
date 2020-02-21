@@ -10,16 +10,16 @@ const getters = {
     },
 };
 
+const mutations = {
+    setVats(state, vats) {
+        state.vats = vats;
+    },
+};
+
 const actions = {
     async fetchVats(context, credentials) {
         let data = (await axios.get(credentials.url)).data;
         context.commit('setVats', data);
-    },
-};
-
-const mutations = {
-    setVats(state, vats) {
-        state.vats = vats;
     },
 };
 

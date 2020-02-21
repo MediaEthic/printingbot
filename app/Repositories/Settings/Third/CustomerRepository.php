@@ -25,9 +25,6 @@ class CustomerRepository
         $salesperson = $filters['salesperson'];
 
         $filteredCustomers = Third::where('type', 'customer')
-            ->with(['contacts' => function($query) {
-                $query->whereDefault(true);
-            }])
             ->whereActive(true);
 
 
@@ -54,11 +51,16 @@ class CustomerRepository
         }
 
         $filteredCustomers = $filteredCustomers
+            ->with(['contacts' => function($query) {
+                $query->whereDefault(true);
+            }])
+            ->with(['addresses' => function($query) {
+                $query->whereInvoicing(true)->whereActive(true);
+            }])
             ->orderBy('name', 'asc')
             ->orderBy('id', 'desc')
             ->paginate(15);
         return ArrayCollection::collection($filteredCustomers);
-
     }
 
     public function getById($id)
@@ -75,6 +77,9 @@ class CustomerRepository
             ->where('alias', 'LIKE', '%' . $query . '%')
             ->orWhere('name', 'LIKE', '%' . $query . '%')
             ->distinct('id')
+            ->with(['addresses' => function($query) {
+                $query->whereInvoicing(true)->whereActive(true);
+            }])
             ->orderBy('name', 'asc')
             ->take(5)
             ->get());

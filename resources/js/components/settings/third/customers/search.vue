@@ -65,7 +65,7 @@
             </div>
 
             <div class="modal-body">
-                <div v-if="allCustomers.data.length || Object.keys(allCustomers.data.length).length">
+                <div v-if="allCustomers.data">
                     <div class="container-table">
                         <table class="wrap-table">
                             <thead class="table-header">
@@ -180,20 +180,20 @@
                     this.makePagination(this.allCustomers.meta, this.allCustomers.links);
                 }).catch(error => {
                     this.isLoading = false;
-                    this.$swal({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Un problème est survenu pour charger les clients',
-                        showClass: {
-                            popup: 'animated slideInUp faster'
-                        },
-                        hideClass: {
-                            popup: 'animated slideOutRight faster'
-                        },
-                        timer: 5000,
-                        timerProgressBar: true,
-                    });
+                    // this.$swal({
+                    //     position: 'top-end',
+                    //     icon: 'error',
+                    //     title: 'Oops...',
+                    //     text: 'Un problème est survenu pour charger les clients',
+                    //     showClass: {
+                    //         popup: 'animated slideInUp faster'
+                    //     },
+                    //     hideClass: {
+                    //         popup: 'animated slideOutRight faster'
+                    //     },
+                    //     timer: 5000,
+                    //     timerProgressBar: true,
+                    // });
                 });
             },
             makePagination(meta, links) {
@@ -229,6 +229,8 @@
                 });
             },
             setSelection(row) {
+                console.log("setSelection row");
+                console.log(row);
                 this.$emit('selection', row);
                 this.hide();
             }

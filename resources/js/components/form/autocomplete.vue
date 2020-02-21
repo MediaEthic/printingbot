@@ -11,16 +11,17 @@
             v-model="search"
             :id="id"
             :name="id"
-            @focus="isOpen = true"
+            @focus="handleFocus"
+            @blur="focusOut"
             @input="onChange"
             @keydown.down="onArrowDown"
             @keydown.up="onArrowUp"
             @keydown.enter="onEnter"
-            class="field block w-full h-full bg-transparent text-black px-10 outline-none"
+            class="search field block w-full h-full bg-transparent text-black px-10 outline-none"
             :class="{ 'has-val': search, 'input-error': errors[0] }"
             autocomplete="off"
             @keydown.shift.tab.prevent=""
-            ref="search"
+            :ref="'search'+id"
             :required="required"
         >
         <span class="focus-field absolute block border border-solid border-purple1 rounded-xl invisible opacity-0 pointer-events-none"></span>
@@ -38,8 +39,7 @@
                     class="item-autocomplete-result disabled">
                     Loading results...
                 </li>
-                <li v-else-if="!isLoading"
-                    v-for="(suggestion, i) in matches"
+                <li v-for="(suggestion, i) in matches"
                     :key="i"
                     @click="setResult(suggestion)"
                     class="item-autocomplete-result"
@@ -87,7 +87,7 @@
             },
             suggestions: {
                 type: [Array, Object],
-                required: false,
+                required: true,
                 default: () => []
             },
             value: {
@@ -113,19 +113,25 @@
         },
         data() {
             return {
+                modelValue: this.value,
                 isOpen: false,
                 matches: [],
                 hasValue: false,
                 isLoading: false,
                 arrowCounter: -1,
                 placeholder: true,
+                productSelected: false,
+                isFocus: false,
             }
         },
         mounted() {
             this.placeholder = true;
             if (this.focus) {
-                this.$refs.search.focus();
+                this.$refs['search' + this.id].focus();
                 this.isOpen = true;
+            }
+            if (!this.matches.length && this.suggestions.length) {
+                this.matches = this.suggestions;
             }
             document.addEventListener('click', this.handleClickOutside);
         },
@@ -137,30 +143,35 @@
                 this.isLoading = false;
                 if (value.length !== oldValue.length) {
                     this.matches = value;
-                    if (this.$refs.search.hasFocus) this.isOpen = true;
+                    if (this.$refs['search' + this.id].hasFocus) this.isOpen = true;
                 }
             },
         },
         computed: {
             search: {
                 get() {
-                    console.log("computed get search");
-                    console.log(this.value);
+                    this.test = this.value;
                     return this.value;
                 },
                 set(search) {
-                    console.log("computed set search");
-                    console.log(search);
                     this.$emit('input', search);
                 }
-            }
+            },
         },
         methods: {
+            handleFocus() {
+                this.isFocus = true;
+                this.isOpen = true;
+            },
             handleClickOutside(evt) {
-                if (!this.$el.contains(evt.target)) {
+                if (!this.$el.contains(evt.target) && !this.isFocus) {
                     this.isOpen = false;
                     this.arrowCounter = -1;
+                    this.$emit('focusOut', this.productSelected);
                 }
+            },
+            focusOut() {
+                this.isFocus = false;
             },
             onArrowDown() {
                 if (this.arrowCounter < this.matches.length) {
@@ -173,25 +184,35 @@
                 }
             },
             onEnter() {
-                this.search = this.matches[this.arrowCounter].name;
+                this.$refs['search' + this.id].value = this.matches[this.arrowCounter].name;
+                this.productSelected = true;
+                this.setResult(this.matches[this.arrowCounter]);
                 this.isOpen = false;
                 this.arrowCounter = -1;
-                this.setResult(this.matches[this.arrowCounter]);
             },
             onChange() {
-                if (this.$refs.search.value.length > 2) {
+                if (this.modelValue) { // difference between product enter and no product
+                    this.productSelected = true;
+                } else {
+                    this.productSelected = false
+                }
+                if (this.$refs['search' + this.id].value.length > 2) {
                     this.placeholder = false;
-
-                    if (this.isAsync) {
-                        this.isLoading = true;
-                        this.$emit('search');
-                    } else {
-                        this.filterResults();
-                        this.isOpen = true;
-                    }
-
+                    this.searchResults();
                 } else {
                     this.placeholder = true;
+                    if (!this.matches.length) {
+                        this.searchResults();
+                    }
+                }
+            },
+            searchResults() {
+                if (this.isAsync) {
+                    this.isLoading = true;
+                    this.$emit('search');
+                } else {
+                    this.filterResults();
+                    this.isOpen = true;
                 }
             },
             filterResults() {
@@ -199,7 +220,7 @@
             },
             setResult(result) {
                 this.$emit('setResult', result);
-                this.search = result.name;
+                this.$refs['search' + this.id].value = result.name;
                 this.isOpen = false;
             },
             searchForMore() {
@@ -269,7 +290,7 @@
         }
     }
 
-    .field-are-small .wrap-field,
+    .fields-are-small .wrap-field,
     .field-is-small.wrap-field {
         .wrap-autocomplete-results {
             top: 3.5rem;

@@ -20,7 +20,7 @@
 
     <button v-else-if="type === 'button'" type="button"
             class="button"
-            @click="clicked">
+            @click.prevent="clicked">
         <span class="wrap-icon icon-arrow before">
             <i class="icon" :class="icon"></i>
         </span>
@@ -44,8 +44,9 @@
     </a>
 
     <button v-else-if="type === 'delete'"
+            type="button"
             class="button-delete"
-            @click="clicked">
+            @click.prevent="clicked">
         <div class="bin-icon">
             <div class="lid"></div>
             <div class="box">

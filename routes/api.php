@@ -45,6 +45,7 @@ Route::middleware('api')->prefix('auth')->namespace('Auth')->group(function() {
 
         Route::namespace('Item')->prefix('/item')->group(function () {
             Route::prefix('/products')->group(function () {
+                Route::post('/paginate', 'ProductController@paginate');
                 Route::get('/{pagination?}', 'ProductController@index');
                 Route::post('/search', 'ProductController@search');
             });

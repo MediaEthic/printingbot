@@ -277,13 +277,111 @@
             }
         },
         created() {
-            this.isLoading = true;
+            if (this.payments.length < 1) {
+                this.isLoading = true;
+                this.$store.dispatch("payments/fetchPayments", {
+                    url: '/api/auth/settings/accounting/payments',
+                }).then(() => {
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.isLoading = false;
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oups, un problème est survenu pour charger les modes de règlement',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            }
+
+            if (this.settlements.length < 1) {
+                this.isLoading = true;
+                this.$store.dispatch("settlements/fetchSettlements", {
+                    url: '/api/auth/settings/accounting/settlements',
+                }).then(() => {
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.isLoading = false;
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oups, un problème est survenu pour charger les conditions de règlement',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            }
+
+            if (this.salespersons.length < 1) {
+                this.isLoading = true;
+                this.$store.dispatch("users/fetchUsers", {
+                    url: '/api/auth/settings/company/users',
+                }).then(() => {
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oups, un problème est survenu pour charger les commerciaux',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            }
+
+            if (this.vats.length < 1) {
+                this.isLoading = true;
+                this.$store.dispatch("vats/fetchVats", {
+                    url: '/api/auth/settings/accounting/vats',
+                }).then(() => {
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oups, un problème est survenu pour charger les taux de TVA',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            }
+
+
             this.searchCustomersForAutocomplete();
             this.fetchInvoices();
         },
         computed: {
             ...mapGetters({
                 allInvoices: 'invoices/allInvoices',
+                payments: 'payments/allPayments',
+                settlements: 'settlements/allSettlements',
+                salespersons: 'users/salespersons',
+                vats: 'vats/allVats',
             }),
         },
         methods: {

@@ -60,7 +60,7 @@
                         @isset($invoice->establishment->address_line1){{ $invoice->establishment->address_line1 }}, @endisset
                         @isset($invoice->establishment->address_line2){{ $invoice->establishment->address_line2 }}, @endisset
                         @isset($invoice->establishment->address_line3){{ $invoice->establishment->address_line3 }}, @endisset
-                        {{ $invoice->establishment->zipcode }} {{ $invoice->establishment->city }}<br>
+                        {{ $invoice->establishment->postcode }} {{ $invoice->establishment->city }}<br>
                         @isset($invoice->establishment->phone)<abbr title="Téléphone">Tél.</abbr> {{ $invoice->establishment->phone }} | @endisset
                         @isset($invoice->establishment->email)<a href="mailto:{{ $invoice->establishment->email }}" class="small">{{ $invoice->establishment->email }}</a>@endisset
                     </address>
@@ -87,7 +87,7 @@
                             </tr>
                             <tr>
                                 <th>Suivi par</th>
-                                <td class="text-right">{{ $invoice->salesperson->name }} {{ $invoice->salesperson->surname }}</td>
+                                <td class="text-right">{{ $invoice->salesperson->name }} {{ $invoice->salesperson->lastname }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -102,7 +102,7 @@
                         @isset($invoice->third->address_line1){{ $invoice->third->address_line1 }}, @endisset
                         @isset($invoice->third->address_line2){{ $invoice->third->address_line2 }}, @endisset
                         @isset($invoice->third->address_line3){{ $invoice->third->address_line3 }}, @endisset
-                        {{ $invoice->third->zipcode }} {{ $invoice->third->city }}
+                        {{ $invoice->third->postcode }} {{ $invoice->third->city }}
                     </address>
                 </div>
             </div>

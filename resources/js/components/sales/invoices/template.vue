@@ -23,10 +23,10 @@
                                 <label for="menu-toggler"><i class="icon-settings"></i></label>
                                 <ul class="menu-list">
                                     <li class="menu-item">
-                                        <a class="menu-action icon-printer" target="_blank" :href="'/api/auth/sales/invoices/' + JSON.stringify([invoice[0].id]) + '/pdf'"></a>
+                                        <a class="menu-action icon-printer" target="_blank" :href="'/api/auth/sales/invoices/' + JSON.stringify([invoice[0].id]) + '/pdf'" title="Imprimer la facture"></a>
                                     </li>
                                     <li class="menu-item">
-                                        <a class="menu-action icon-printer" :href="'/api/auth/sales/invoices/' + JSON.stringify([invoice[0].id]) + '/pdf'"></a>
+                                        <button type="button" @click.prevent="" class="menu-action icon-copy" title="Dupliquer la facture"></button>
                                     </li>
                                 </ul>
                             </nav>
@@ -48,7 +48,6 @@
                                          v-if="currentTab === 'body'"
                                          :class="{ 'active show': isActive('body') }"
                                          id="body"
-                                         v-on:animation="startAnimate"
                                 />
                             </div>
                         </div>
@@ -63,22 +62,24 @@
                                 @beforeLeave="beforeLeave"
                                 @enter="enter"
                                 @afterEnter="afterEnter">
-                        <fieldset class="fieldset" v-if="isActive('body')">
+                        <fieldset class="fieldset" v-if="isActive('body') && invoice[0].invoice_status === 'draft'">
                             <legend class="legend">Actions</legend>
 
-                            <btn v-if="isActive('body')"
-                                 type="button"
-                                 :label="`Commentaire`"
-                                 :icon="`icon-message-circle`"
-                                 v-on:click="addLine('comment')">
-                            </btn>
+                            <btn
+                                v-if="isActive('body')"
+                                type="button"
+                                :label="`Commentaire`"
+                                :icon="`icon-message-circle`"
+                                v-on:click="addLine('comment')"
+                            />
 
-                            <btn v-if="isActive('body')"
-                                 type="button"
-                                 :label="`Produit`"
-                                 :icon="`icon-file-plus`"
-                                 v-on:click="addLine('product')">
-                            </btn>
+                            <btn
+                                v-if="isActive('body')"
+                                type="button"
+                                :label="`Produit`"
+                                :icon="`icon-file-plus`"
+                                v-on:click="addLine('product')"
+                            />
                         </fieldset>
                     </transition>
 
@@ -93,19 +94,23 @@
                             :required="true"
                             v-model="invoice[0].invoice_status"
                             :disabledChoose="true"
+                            :disabled="invoice[0].invoice_status === 'draft' ? false : true"
                         />
 
-                        <DatePicker v-model="invoice[0].invoice_date"
-                                    :class="{ 'has-val': invoice[0].invoice_date }"
-                                    data-title="Date de facture"
-                                    placeholder="Date de facture"
-                                    :disabled-date="notAfterToday"
-                                    lang="fr"
-                                    type="date"
-                                    value-type="YYYY-MM-DD"
-                                    format="DD/MM/YYYY"
-                                    input-class="field"
-                                    @change="changeInvoiceDueDate"/>
+                        <DatePicker
+                            v-model="invoice[0].invoice_date"
+                            :class="{ 'has-val': invoice[0].invoice_date }"
+                            data-title="Date de facture"
+                            placeholder="Date de facture"
+                            :disabled-date="notAfterToday"
+                            lang="fr"
+                            type="date"
+                            value-type="YYYY-MM-DD"
+                            format="DD/MM/YYYY"
+                            input-class="field"
+                            @change="changeInvoiceDueDate"
+                            :disabled="invoice[0].invoice_status === 'draft' ? false : true"
+                        />
 
                         <field
                             :type="`select`"
@@ -114,6 +119,7 @@
                             label="Mode de règlement"
                             :required="true"
                             :items="payments"
+                            :disabled="invoice[0].invoice_status === 'draft' ? false : true"
                         />
 
                         <field
@@ -123,21 +129,24 @@
                             label="Conditions de règlement"
                             :required="true"
                             :items="settlements"
-                            v-on:update="changeInvoiceDueDate"
+                            v-on:updateField="changeInvoiceDueDate"
+                            :disabled="invoice[0].invoice_status === 'draft' ? false : true"
                         />
 
-                        <DatePicker v-model="invoice[0].due_date"
-                                    :class="{ 'has-val': invoice[0].due_date }"
-                                    data-title="Date d'échéance"
-                                    placeholder="Date d'échéance"
-                                    disabled
-                                    :editable="false"
-                                    :clearable="false"
-                                    lang="fr"
-                                    type="date"
-                                    value-type="YYYY-MM-DD"
-                                    format="DD/MM/YYYY"
-                                    input-class="field" />
+                        <DatePicker
+                            v-model="invoice[0].due_date"
+                            :class="{ 'has-val': invoice[0].due_date }"
+                            data-title="Date d'échéance"
+                            placeholder="Date d'échéance"
+                            disabled
+                            :editable="false"
+                            :clearable="false"
+                            lang="fr"
+                            type="date"
+                            value-type="YYYY-MM-DD"
+                            format="DD/MM/YYYY"
+                            input-class="field"
+                        />
                     </fieldset>
 
                     <fieldset class="fieldset">
@@ -147,29 +156,13 @@
                                 <span class="text-base font-semibold uppercase tracking-widest text-purple4 mr-4">
                                     Sous-total
                                 </span>
-                                <animate-number class="text-white text-lg font-bold tracking-widest"
-                                                ref="subtotal"
-                                                from="0"
-                                                :to="invoice[0].subtotal"
-                                                mode="manual"
-                                                :formatter="formatter"
-                                                :animate-end="accumulateEnd">
-
-                                </animate-number>
+                                <span class="text-white text-lg font-bold tracking-widest">{{ invoice[0].subtotal }}</span>
                             </li>
                             <li class="flex justify-between mt-8">
                                 <span class="text-base font-semibold uppercase tracking-widest text-purple4 mr-4">
                                     Remise
                                 </span>
-                                <animate-number class="text-white text-lg font-bold tracking-widest"
-                                                ref="discount_amount"
-                                                from="0"
-                                                :to="invoice[0].discount_amount"
-                                                mode="manual"
-                                                :formatter="formatter"
-                                                :animate-end="accumulateEnd">
-
-                                </animate-number>
+                                <span class="text-white text-lg font-bold tracking-widest">{{ invoice[0].discount_amount }}</span>
                             </li>
                         </ul>
 
@@ -180,48 +173,24 @@
                                 <span class="text-base font-semibold uppercase tracking-widest text-purple4 mr-4">
                                     Total HT
                                 </span>
-                                <animate-number class="text-white text-lg font-bold tracking-widest"
-                                                ref="total_pretax"
-                                                from="0"
-                                                :to="invoice[0].total_pretax"
-                                                mode="manual"
-                                                :formatter="formatter"
-                                                :animate-end="accumulateEnd">
-
-                                </animate-number>
+                                <span class="text-white text-lg font-bold tracking-widest">{{ invoice[0].total_pretax }}</span>
                             </li>
                             <li class="flex justify-between mt-8">
                                 <span class="text-base font-semibold uppercase tracking-widest text-purple4 mr-4">
                                     Total TVA
                                 </span>
-                                <animate-number class="text-white text-lg font-bold tracking-widest"
-                                                ref="vat"
-                                                from="0"
-                                                :to="invoice[0].vat"
-                                                mode="manual"
-                                                :formatter="formatter"
-                                                :animate-end="accumulateEnd">
-
-                                </animate-number>
+                                <span class="text-white text-lg font-bold tracking-widest">{{ invoice[0].vat }}</span>
                             </li>
                             <li class="flex justify-between mt-8">
                                 <span class="text-base font-semibold uppercase tracking-widest text-purple4 mr-4">
                                     Total TTC
                                 </span>
-                                <animate-number class="text-white text-lg font-bold tracking-widest"
-                                                ref="total"
-                                                from="0"
-                                                :to="invoice[0].total"
-                                                mode="manual"
-                                                :formatter="formatter"
-                                                :animate-end="accumulateEnd">
-
-                                </animate-number>
+                                <span class="text-white text-lg font-bold tracking-widest">{{ invoice[0].total }}</span>
                             </li>
                         </ul>
 
                         <btn type="submit"
-                             :disabled="invalid"
+                             :disabled="invalid || invoice[0].invoice_status !== 'draft'"
                              :label="`Sauvegarder`"
                              :primary="true" />
                     </fieldset>
@@ -270,7 +239,7 @@
         },
         data() {
             return {
-                isLoading: true,
+                isLoading: false,
                 statuses: [
                     { id: "draft", name: "Brouillon" },
                     { id: "edited", name: "Edité" },
@@ -280,53 +249,36 @@
             }
         },
         created() {
-            // this.startAnimate();
+            if (this.payments.length < 1) {
+                this.isLoading = true;
+                this.$store.dispatch("payments/fetchPayments", {
+                    url: '/api/auth/settings/accounting/payments',
+                }).then(() => {
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.isLoading = false;
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oups, un problème est survenu pour charger les modes de règlement',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            }
 
-            this.$store.dispatch("payments/fetchPayments", {
-                url: '/api/auth/settings/accounting/payments',
-            }).then(() => {
+            if (this.settlements.length < 1) {
+                this.isLoading = true;
                 this.$store.dispatch("settlements/fetchSettlements", {
                     url: '/api/auth/settings/accounting/settlements',
                 }).then(() => {
-                    this.$store.dispatch("users/fetchUsers", {
-                        url: '/api/auth/settings/company/users',
-                    }).then(() => {
-
-                        this.$store.dispatch("vats/fetchVats", {
-                            url: '/api/auth/settings/accounting/vats',
-                        }).then(() => {
-                            this.isLoading = false;
-                            this.startAnimate();
-                        }).catch(error => {
-                            this.$swal({
-                                position: 'top-end',
-                                icon: 'error',
-                                title: 'Oups, un problème est survenu pour charger les taux de TVA',
-                                showClass: {
-                                    popup: 'animated slideInUp faster'
-                                },
-                                hideClass: {
-                                    popup: 'animated slideOutRight faster'
-                                },
-                                timer: 5000,
-                                timerProgressBar: true,
-                            });
-                        });
-                    }).catch(error => {
-                        this.$swal({
-                            position: 'top-end',
-                            icon: 'error',
-                            title: 'Oups, un problème est survenu pour charger les commerciaux',
-                            showClass: {
-                                popup: 'animated slideInUp faster'
-                            },
-                            hideClass: {
-                                popup: 'animated slideOutRight faster'
-                            },
-                            timer: 5000,
-                            timerProgressBar: true,
-                        });
-                    });
+                    this.isLoading = false;
                 }).catch(error => {
                     this.isLoading = false;
                     this.$swal({
@@ -343,30 +295,60 @@
                         timerProgressBar: true,
                     });
                 });
-            }).catch(error => {
-                this.isLoading = false;
-                this.$swal({
-                    position: 'top-end',
-                    icon: 'error',
-                    title: 'Oups, un problème est survenu pour charger les modes de règlement',
-                    showClass: {
-                        popup: 'animated slideInUp faster'
-                    },
-                    hideClass: {
-                        popup: 'animated slideOutRight faster'
-                    },
-                    timer: 5000,
-                    timerProgressBar: true,
+            }
+
+            if (this.salespersons.length < 1) {
+                this.isLoading = true;
+                this.$store.dispatch("users/fetchUsers", {
+                    url: '/api/auth/settings/company/users',
+                }).then(() => {
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oups, un problème est survenu pour charger les commerciaux',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
                 });
-            });
+            }
 
-
+            if (this.vats.length < 1) {
+                this.isLoading = true;
+                this.$store.dispatch("vats/fetchVats", {
+                    url: '/api/auth/settings/accounting/vats',
+                }).then(() => {
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oups, un problème est survenu pour charger les taux de TVA',
+                        showClass: {
+                            popup: 'animated slideInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated slideOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            }
         },
         computed: {
-            ...mapMultiRowFields('invoices', ['invoice']),
+            ...mapMultiRowFields('invoices', ['invoice', 'lines']),
             ...mapGetters({
                 payments: 'payments/allPayments',
                 settlements: 'settlements/allSettlements',
+                salespersons: 'users/salespersons',
                 vats: 'vats/allVats',
             }),
         },
@@ -422,24 +404,6 @@
                 } else {
                     return "purple";
                 }
-            },
-            formatter(num) {
-                return num.toFixed(2)
-            },
-            startAnimate() {
-                // this.$refs.subtotal.start();
-                // this.$refs.discount_amount.start();
-                // this.$refs.total_pretax.start();
-                // this.$refs.vat.start();
-                this.$refs.total.start();
-            },
-            accumulateEnd(end) {
-                // console.log(this.$refs);
-                // this.$refs.subtotal.reset(end, end + 0);
-                // this.$refs.discount_amount.reset(end, end + 0);
-                // this.$refs.total_pretax.reset(end, end + 0);
-                // this.$refs.vat.reset(end, end + 0);
-                // this.$refs.total.reset(end, end + 0);
             },
             changeInvoiceDueDate() {
                 let value = parseInt(this.invoice[0].settlement_id);

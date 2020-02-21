@@ -20,9 +20,10 @@
                 :readonly="readonly"
         >
             <option v-if="choose" value="" :disabled="disabledChoose">Choisir</option>
-            <option v-for="(item, index) in items"
-                    :value="item.id" >
-                {{ item.name }} {{ item.lastname || '' }}
+            <option
+                v-for="(item, index) in items"
+                :value="item.id" >
+                {{ item.name || '' }} {{ item.lastname || '' }}
             </option>
         </select>
 
@@ -36,6 +37,7 @@
                   :id="id"
                   class="textarea field block w-full h-full bg-transparent text-black px-10 outline-none"
                   :class="{ 'has-val': value, 'input-error': errors[0] }"
+                  rows="1"
                   :required="required"
                   :disabled="disabled"
                   :readonly="readonly"
@@ -373,9 +375,24 @@
 
 
     // into table
-    .fields-are-small > .table-cell > .wrap-field > .field {
-        padding: 0 1rem;
+    .fields-are-small > .table-cell {
+        > .wrap-field {
+            & + .textarea {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                border-top: 0;
+            }
+
+            > .field {
+                padding: 0 1rem;
+
+                &.search {
+                    padding: 0 2.5rem;
+                }
+            }
+        }
     }
+
     .fields-are-small .wrap-field,
     .wrap-field.field-is-small {
         margin: 0;

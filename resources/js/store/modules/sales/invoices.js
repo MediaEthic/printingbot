@@ -72,13 +72,9 @@ const mutations = {
         state.lines.splice(payload, 1);
     },
     SET_INVOICE: (state, payload) => {
-        console.log("SET_INVOICE");
-        console.log(payload);
         state.invoice[0] = payload;
     },
     SET_LINES: (state, payload) => {
-        console.log("SET_LINES");
-        console.log(payload);
         state.lines = payload;
     },
 };
@@ -95,7 +91,6 @@ const actions = {
             invoices: credentials.invoices,
             filters: credentials.filters
         })).data;
-        console.log(data);
         commit('SET_INVOICES', data);
     },
     searchCustomers(context, credentials) {
@@ -109,7 +104,7 @@ const actions = {
             });
         });
     },
-    async create({ commit }) {
+    create({ commit }) {
         let data = blankInvoice;
         commit('SET_INVOICE', data);
         commit('SET_LINES', []);
@@ -124,19 +119,14 @@ const actions = {
     },
     async edit({ commit }, credentials) { // invoices.edit
         let data = (await axios.get('/api/auth/sales/invoices/' + credentials.id + '/edit'));
-        console.log("this.invoice");
-        console.log(data.data.data);
         commit('SET_INVOICE', data.data.data);
         commit('SET_LINES', data.data.data.lines);
     },
     async update({ state, commit }) { // invoices.update
-        console.log("state.invoice[0].id");
-        console.log(state.invoice[0].id);
         let data = (await axios.put('/api/auth/sales/invoices/' + state.invoice[0].id, {
             invoice: state.invoice[0],
             lines: state.lines
         })).data;
-        console.log(data);
         commit('SET_INVOICE', data.data);
         commit('SET_LINES', data.data.lines);
     },

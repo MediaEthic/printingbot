@@ -6,6 +6,7 @@
                 :id="`name`"
                 v-model="invoice[0].name"
                 label="Référence"
+                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
             />
 
             <div class="flex items-start mt-8">
@@ -13,9 +14,10 @@
                     <div class="flex justify-between items-center w-full pb-4 border-b border-solid border-grey">
                         <h3 class="mr-4 text-lg font-black tracking-wide">Client</h3>
                         <autocomplete
+                            v-if="invoice[0].invoice_status === 'draft'"
                             class="field-is-small"
                             id="customers"
-                            :suggestions="customers"
+                            :suggestions="datas.customers"
                             label="Client"
                             v-model="filters.customer"
                             :isAsync="true"
@@ -26,10 +28,13 @@
                             @setResult="setCustomer"
                             v-on:searchForMore="show"
                         />
-                        <button type="button"
-                                @click.stop.prevent="resetCustomer"
-                                aria-label="Réinitialiser"
-                                class="ml-4 text-lg text-purple1">
+                        <button
+                            v-if="invoice[0].invoice_status === 'draft'"
+                            type="button"
+                            @click.stop.prevent="resetCustomer"
+                            aria-label="Réinitialiser"
+                            title="Réinitialiser"
+                            class="ml-4 text-lg text-purple1">
                             <i class="icon-refresh-cw"></i>
                         </button>
                     </div>
@@ -57,46 +62,64 @@
                         label="Raison sociale"
                         v-model="invoice[0].third_name"
                         :required="true"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
 
-                    <field
-                        :type="`text`"
-                        id="third_address_line1"
-                        v-model="invoice[0].third_address_line1"
-                        label="Numéro + Libellé de la voie"
-                        :required="true"
-                    />
+<!--                    <field-->
+<!--                        v-if="datas.addresses.length"-->
+<!--                        :type="`select`"-->
+<!--                        id="addresses"-->
+<!--                        v-model="datas.customer_address"-->
+<!--                        label="Adresse de facturation"-->
+<!--                        :items="datas.addresses"-->
+<!--                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"-->
+<!--                    />-->
 
-                    <field
-                        :type="`text`"
-                        id="third_address_line2"
-                        v-model="invoice[0].third_address_line2"
-                        label="Complément de localisation"
-                    />
-
-                    <field
-                        :type="`text`"
-                        id="third_address_line3"
-                        v-model="invoice[0].third_address_line3"
-                        label="BP - Lieu dit"
-                    />
-
-                    <div class="flex">
+                    <div v-if="datas.customer_address === ''">
                         <field
                             :type="`text`"
-                            id="third_postcode"
-                            v-model="invoice[0].third_postcode"
-                            label="Code postal"
+                            id="third_address_line1"
+                            v-model="invoice[0].third_address_line1"
+                            label="Numéro + Libellé de la voie"
                             :required="true"
+                            :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                         />
 
                         <field
                             :type="`text`"
-                            id="third_city"
-                            v-model="invoice[0].third_city"
-                            label="Ville"
-                            :required="true"
+                            id="third_address_line2"
+                            v-model="invoice[0].third_address_line2"
+                            label="Complément de localisation"
+                            :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                         />
+
+                        <field
+                            :type="`text`"
+                            id="third_address_line3"
+                            v-model="invoice[0].third_address_line3"
+                            label="BP - Lieu dit"
+                            :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                        />
+
+                        <div class="flex">
+                            <field
+                                :type="`text`"
+                                id="third_postcode"
+                                v-model="invoice[0].third_postcode"
+                                label="Code postal"
+                                :required="true"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                            />
+
+                            <field
+                                :type="`text`"
+                                id="third_city"
+                                v-model="invoice[0].third_city"
+                                label="Ville"
+                                :required="true"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                            />
+                        </div>
                     </div>
 
                     <field
@@ -104,11 +127,12 @@
                         id="third_intracommunity_no"
                         v-model="invoice[0].third_intracommunity_no"
                         label="TVA intracommunautaire"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
 
                 </div>
                 <div class="w-full">
-                    <div class="flex items-center w-full mb-6 pb-4 border-b border-solid border-grey" style="height: 4.6rem;">
+                    <div class="flex items-center w-full mb-6 pb-4 border-b border-solid border-grey" :style="invoice[0].invoice_status === 'draft' ? 'height: 4.6rem;' : ''">
                         <h3 class="text-lg font-black tracking-wide">Commercial</h3>
                     </div>
                     <field
@@ -117,6 +141,7 @@
                         v-model="invoice[0].user_id"
                         label="Commercial en charge"
                         :items="salespersons"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
 
                     <field
@@ -124,6 +149,7 @@
                         id="user_commission_base"
                         v-model="invoice[0].user_commission_base"
                         label="Base de commission"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
 
                     <field
@@ -131,6 +157,8 @@
                         id="user_commission_rate"
                         v-model="invoice[0].user_commission_rate"
                         label="Taux de commission"
+                        @input="setUserCommissionAmount(index)"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
 
                     <field
@@ -138,18 +166,23 @@
                         id="user_commission_amount"
                         v-model="invoice[0].user_commission_amount"
                         label="Montant de commission"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
 
-                    <field :type="`number`"
-                               id="discount_rate"
-                               label="Taux de remise"
-                               v-model="invoice[0].discount_rate" />
+                    <field
+                        :type="`number`"
+                        id="discount_rate"
+                        label="Taux de remise"
+                        v-model="invoice[0].discount_rate"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                    />
 
                     <field
                         :type="`number`"
                         id="bank_rate"
                         v-model="invoice[0].bank_rate"
                         label="Taux d'escompte"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
 
                     <field
@@ -157,6 +190,7 @@
                         id="discount_duration"
                         v-model="invoice[0].discount_duration"
                         label="Durée de l'escompte"
+                        :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                     />
                 </div>
             </div>
@@ -186,11 +220,14 @@
                 filters: {
                     customer: ""
                 },
-                customers: []
+                datas: {
+                    customers: [],
+                    customer_address: "",
+                    addresses: []
+                }
             }
         },
         created() {
-            this.invoice[0].third_name = "test";
             this.searchCustomersForAutocomplete();
         },
         computed: {
@@ -208,31 +245,29 @@
                 this.$modal.show('search-customers');
             },
             searchCustomersForAutocomplete(query) {
-                this.customers = [];
+                this.datas.customers = [];
                 this.$store.dispatch("customers/search", {
                     queryString: this.filters.customer,
                 }).then(response => {
-                    this.customers = response;
+                    this.datas.customers = response;
                 }).catch(error => {
                     console.log(error.response);
                 });
             },
             setCustomer(value) {
-                console.log("this.invoice[0].third_id");
-                console.log(this.invoice[0].third_id);
-                console.log("setCustomer");
-                console.log(value.id);
                 this.filters.customer = value.name;
                 this.invoice[0].third_id = value.id;
-                console.log("this.invoice[0].third_id");
-                console.log(this.invoice[0].third_id);
                 this.invoice[0].third_alias = value.alias;
                 this.invoice[0].third_name = value.name;
+
+                // this.datas.addresses = value.addresses;
+
                 this.invoice[0].third_address_line1 = value.address_line1;
                 this.invoice[0].third_address_line2 = value.address_line2;
                 this.invoice[0].third_address_line3 = value.address_line3;
                 this.invoice[0].third_postcode = value.postcode;
                 this.invoice[0].third_city = value.city;
+
                 this.invoice[0].third_intracommunity_no = value.intracommunity_no;
                 this.invoice[0].user_id = value.user_id;
                 this.invoice[0].user_commission_rate = value.commission_rate;
@@ -249,6 +284,8 @@
                 this.invoice[0].third_id = "";
                 this.invoice[0].third_alias = "";
                 this.invoice[0].third_name = "";
+                this.datas.addresses = [];
+                this.datas.customer_address = "";
                 this.invoice[0].third_address_line1 = "";
                 this.invoice[0].third_address_line2 = "";
                 this.invoice[0].third_address_line3 = "";
@@ -266,16 +303,13 @@
             show() {
                 this.$modal.show('search-customers');
             },
-            hide() {
-                this.$modal.hide('search-customers');
-            },
-            opened() {
-                // if (this.database.printing.substrates.search.criteria.types.length < 1) {
-                //     this.getSubstratesSearchCriteria();
-                // }
-            },
-            save() {
-
+            setUserCommissionAmount() {
+                if (parseFloat(this.invoice[0].user_commission_rate) > 0) {
+                    let userCommissionAmount = (parseFloat(this.invoice[0].total_pretax) * (parseFloat(this.invoice[0].user_commission_rate) / 100)).toFixed(2)
+                    this.invoice[0].user_commission_amount = parseFloat(userCommissionAmount);
+                } else {
+                    this.invoice[0].user_commission_amount = 0;
+                }
             },
         }
     }

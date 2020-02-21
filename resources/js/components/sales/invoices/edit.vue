@@ -1,19 +1,25 @@
 <template>
-    <show :pageTitle="'Facture #' + this.invoiceNo"
-        v-on:save="save"
-    />
+    <div>
+        <loader v-if="isLoading"></loader>
+        <show :pageTitle="'Facture #' + this.invoiceNo"
+            v-on:save="save"
+        />
+    </div>
 </template>
 
 <script>
+    import loader from '../../elements/loader';
     import show from './template';
     import { mapMultiRowFields } from 'vuex-map-fields';
 
     export default {
         components: {
+            loader,
             show
         },
         data() {
             return {
+                isLoading: false,
                 invoiceNo: ""
             }
         },
@@ -44,10 +50,11 @@
         },
         methods: {
             save() {
-                console.log("update invoice");
+                this.isLoading = true;
                 this.$store.dispatch("invoices/update").then(() => {
-
+                    this.isLoading = false;
                 }).catch(error => {
+                    this.isLoading = false;
                     this.$swal({
                         position: 'top-end',
                         icon: 'error',

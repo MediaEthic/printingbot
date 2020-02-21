@@ -95,12 +95,14 @@ class InvoiceRepository
 
     public function getById($id)
     {
-        return new ArrayCollection(Invoice::with(['lines' => function($query) {
+        $invoice = Invoice::with(['lines' => function($query) {
                     $query->with(['product' => function($query) {
                         $query->with('quantities');
-                    }])->with('vat');
+                    }]);
                 }])->with('establishment')->with('salesperson')->with('third') // things needed for pdf
-            ->findOrFail($id));
+            ->findOrFail($id);
+
+        return new ArrayCollection($invoice);
     }
 
     public function store(Array $datas)
@@ -114,7 +116,7 @@ class InvoiceRepository
             $invoiceID = 1;
         }
 
-        $datasInvoice['invoice_no'] = date("ym", strtotime($datasInvoice['invoice_date'])) . str_pad($invoiceID, 6, 0, STR_PAD_LEFT);
+        $datasInvoice['invoice_no'] = date("y/m/", strtotime($datasInvoice['invoice_date'])) . str_pad($invoiceID, 5, 0, STR_PAD_LEFT);
         $invoice = $this->model->create($datasInvoice);
 
         $datasLines = $datas['lines'];

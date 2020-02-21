@@ -1,11 +1,14 @@
 <template>
     <div>
         <fieldset class="fieldset">
-            <formInput :type="`text`"
-                       :id="`name`"
-                       :label="`Référence`"
-                       :required="false"
-                       :value="invoice[0].name" />
+            <field
+                :type="`text`"
+                :id="`name`"
+                :label="`Référence`"
+                :required="false"
+                :value="invoice[0].name"
+                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+            />
 
             <div class="container-table">
                 <table class="wrap-table">
@@ -14,8 +17,8 @@
                         <th scope="col" class="table-cell">Description</th>
                         <th scope="col" class="table-cell">TVA</th>
                         <th scope="col" class="table-cell">Quantité</th>
-                        <th scope="col" class="table-cell">Remise</th>
                         <th scope="col" class="table-cell">Prix unitaire</th>
+                        <th scope="col" class="table-cell">Remise</th>
                         <th scope="col" class="table-cell">Total HT</th>
                         <th scope="col" class="table-cell"> </th>
                     </tr>
@@ -26,71 +29,86 @@
                         class="table-row fields-are-small"
                     >
                         <td class="table-cell" data-title="Description" :colspan="line.type === 'comment' ? 6 : 0">
-                            <formInput v-if="line.type === 'comment'"
-                                       :type="`textarea`"
-                                       :id="`description` + index"
-                                       v-model="line.description"
-                                       label="Description"
-                                       :required="true" />
-
-                            <formInput v-else-if="line.description !== ''"
-                                       :type="`text`"
-                                       :id="`description` + index"
-                                       v-model="line.description"
-                                       label="Description"
-                                       :required="true" />
-
-                            <autocomplete v-else
-                                          :id="`description` + index"
-                                          label="Description"
-                                          :required="true"
-                                          :items="products"
-                                          :isAsync="true"
-                                          :focus="true"
-                                          v-on:search="searchProducts"
-                                          v-on:input="(...args)=>selectedProduct(index,...args)"
+                            <autocomplete
+                                v-if="line.type === 'product'"
+                                :id="`name` + index"
+                                :suggestions="products"
+                                label="Description"
+                                v-model="line.name"
+                                :isAsync="true"
+                                :focus="line.id !== '' ? false : true"
+                                :required="true"
+                                :searchMore="true"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                                @search="(...args)=>searchProductsForAutocomplete(index,...args)"
+                                @setResult="(...args)=>selectedProduct(index,...args)"
+                                @searchForMore="show(index)"
+                                @focusOut="(...args)=>handleBlur(index,...args)"
+                            />
+                            <field
+                                :type="`textarea`"
+                                :id="`description` + index"
+                                v-model="line.description"
+                                label="Description"
+                                :required="line.type === 'product' ? false : true"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                             />
                         </td>
                         <td class="table-cell" data-title="TVA" v-if="line.type != 'comment'">
-                            <formInput :type="`select`"
-                                       :id="`vat_id` + index"
-                                       v-model="line.vat_id"
-                                       label="TVA"
-                                       :choose="false"
-                                       :required="true"
-                                       :items="vats" />
+                            <field
+                                :type="`select`"
+                                :id="`vat_id` + index"
+                                v-model="line.vat_id"
+                                label="TVA"
+                                :choose="false"
+                                :required="true"
+                                :items="vats"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                            />
                         </td>
                         <td class="table-cell" data-title="Quantité" v-if="line.type != 'comment'">
-                            <formInput :type="`number`"
-                                       :id="`quantity` + index"
-                                       v-model="line.quantity"
-                                       label="Quantité"
-                                       :required="true"
-                                       @input="setUnitPrice(index)" />
-                        </td>
-                        <td class="table-cell" data-title="Remise" v-if="line.type != 'comment'">
-                            <formInput :type="`number`"
-                                       :id="`discount_rate` + index"
-                                       v-model="line.discount_rate"
-                                       label="Remise"
-                                       :required="false"
-                                       @input="setUnitPrice(index)" />
+                            <field
+                                :type="`number`"
+                                :id="`quantity` + index"
+                                v-model="line.quantity"
+                                label="Quantité"
+                                :required="true"
+                                @input="setUnitPrice(index)"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                            />
                         </td>
                         <td class="table-cell" data-title="PU" v-if="line.type != 'comment'">
-                            <formInput :type="`number`"
-                                       :id="`unit_price` + index"
-                                       v-model="line.unit_price"
-                                       label="Prix unitaire"
-                                       :required="false"
-                                       @input="setLineTotal(index)" />
+                            <field
+                                :type="`number`"
+                                :id="`unit_price` + index"
+                                v-model="line.unit_price"
+                                label="Prix unitaire"
+                                :required="false"
+                                @input="setLineTotal(index)"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                            />
+                        </td>
+                        <td class="table-cell" data-title="Remise" v-if="line.type != 'comment'">
+                            <field
+                                :type="`number`"
+                                :id="`discount_rate` + index"
+                                v-model="line.discount_rate"
+                                label="Remise"
+                                :required="false"
+                                @input="setLineTotal(index)"
+                                :readonly="invoice[0].invoice_status === 'draft' ? false : true"
+                            />
                         </td>
                         <td class="table-cell" data-title="Total HT" v-if="line.type != 'comment'">
-                            <formInput :type="`number`"
-                                       :id="`total_amount` + index"
-                                       v-model="line.total_pretax"
-                                       label="Total HT"
-                                       :required="false"
-                                       :readonly="true" />
+                            <field
+                                :type="`number`"
+                                :id="`total_amount` + index"
+                                v-model="line.total_pretax"
+                                label="Total HT"
+                                :required="false"
+                                :readonly="true"
+                                @input="setLineTotal(index)"
+                            />
                         </td>
                         <td class="table-cell relative" data-title="">
                             <btn :type="'delete'"
@@ -103,76 +121,7 @@
             </div>
         </fieldset>
 
-        <modal name="search-products" @opened="opened" :adaptive="true" :width="1180" :height="640">
-            <div>
-                <button type="button"
-                        class="modal-close"
-                        aria-label="Fermer la fenêtre modale"
-                        @click="hide">
-                </button>
-<!--                <Loader v-if="searchSubstrates.isLoading" />-->
-                <h3 class="page-main-title modal-header">Rechercher un article</h3>
-
-                <div class="modal-body">
-                    <form action="#" method="post" class="form-filters">
-                        <autocomplete :id="`description`"
-                                      label="Description"
-                                      :required="true"
-                                      :items="products"
-                                      :isAsync="true"
-                                      :focus="true"
-                                      v-on:search="searchProducts"
-                                      v-on:input="(...args)=>selectedProduct(index,...args)"
-                        />
-
-<!--                        <button type="submit"-->
-<!--                                class="button button-small button-primary"-->
-<!--                                style="margin-left: auto;"-->
-<!--                                @click.prevent="getFilteredSubstrates"-->
-<!--                                @keydown.tab.exact.prevent="">-->
-<!--                            Rechercher-->
-<!--                            <i class="fas fa-search"></i>-->
-<!--                        </button>-->
-                    </form>
-
-<!--                    <div class="container-table" v-if="searchSubstrates.substrates.length || Object.keys(searchSubstrates.substrates).length">-->
-<!--                        <table class="wrap-table">-->
-<!--                            <thead class="table-header">-->
-<!--                            <tr class="table-row">-->
-<!--                                <th scope="col" class="table-cell">Base Ethic</th>-->
-<!--                                <th scope="col" class="table-cell">Famille</th>-->
-<!--                                <th scope="col" class="table-cell">Type</th>-->
-<!--                                <th scope="col" class="table-cell">Désignation</th>-->
-<!--                                <th scope="col" class="table-cell">Couleur</th>-->
-<!--                                <th scope="col" class="table-cell">Grammage</th>-->
-<!--                                <th scope="col" class="table-cell">Laize</th>-->
-<!--                                <th scope="col" class="table-cell">Prix</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody class="table-body">-->
-<!--                            <tr class="table-row" v-for="(substrate, index) in searchSubstrates.substrates" :key="index" @click="selectedSubstrate(substrate)">-->
-<!--                                <td class="table-cell" data-title="Base Ethic">{{ substrate.ethic ? "Oui" : "Non" }}</td>-->
-<!--                                <td class="table-cell" data-title="Famille">{{ substrate.family }}</td>-->
-<!--                                <td class="table-cell" data-title="Type">{{ substrate.type }}</td>-->
-<!--                                <td class="table-cell" data-title="Désignation">{{ substrate.name }}</td>-->
-<!--                                <td class="table-cell" data-title="Couleur">{{ substrate.color }}</td>-->
-<!--                                <td class="table-cell" data-title="Grammage">{{ substrate.weight }}</td>-->
-<!--                                <td class="table-cell" data-title="Laize">{{ substrate.width }}</td>-->
-<!--                                <td class="table-cell" data-title="Prix">{{ substrate.price }}</td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                        <Pagination :pagination="searchSubstrates.pagination" v-on:fetchResults="getFilteredSubstrates"></Pagination>-->
-<!--                    </div>-->
-                    <div class="wrap-empty-result">
-                        <p class="text-no-data">Aucun résultat trouvé</p>
-                        <img class="image-no-data"
-                             src="/assets/img/waiting_for_search.svg"
-                             alt="En attente d'une recherche"/>
-                    </div>
-                </div>
-            </div>
-        </modal>
+        <searchProduct v-on:selection="setProduct" />
     </div>
 </template>
 
@@ -180,91 +129,86 @@
     import { mapGetters } from 'vuex';
     import { mapMultiRowFields } from 'vuex-map-fields';
 
-    import formInput from "../../../form/input";
+    import field from "../../../elements/field";
     import btn from '../../../elements/button';
     import DatePicker from 'vue2-datepicker';
     import autocomplete from "../../../form/autocomplete";
+    import searchProduct from '../../../settings/product/products/search';
 
     export default {
         components: {
             autocomplete,
-            formInput,
+            field,
             btn,
             DatePicker,
+            searchProduct,
         },
         data() {
             return {
-
+                products: [],
             }
         },
         created() {
-
+            console.log("this.lines");
+            console.log(this.lines);
+            this.searchProductsForAutocomplete();
         },
         computed: {
             ...mapMultiRowFields('invoices', ['invoice', 'lines']),
             ...mapGetters({
-                products: 'products/filteredProducts',
                 vats: 'vats/allVats',
             }),
         },
         methods: {
-            show() {
-                this.$modal.show('search-products');
+            textareaAutosize() {
+                let textareaList = document.getElementsByTagName("textarea");
+                for (let i = 0; i < textareaList.length; i++) {
+                    let el = textareaList[i];
+                    setTimeout(() => {
+                        el.style.cssText = 'height:auto !important; padding:0 !important;';
+                        let scrollHeight = el.scrollHeight;
+                        el.style.cssText = 'height:' + scrollHeight + 'px !important; ';
+                        if (el.value === "") {
+                            el.style.cssText = 'height:100% !important; ';
+                        }
+                    }, 0);
+                }
             },
-            hide() {
-                this.$modal.hide('search-products');
-            },
-            opened() {
-                // if (this.database.printing.substrates.search.criteria.types.length < 1) {
-                //     this.getSubstratesSearchCriteria();
-                // }
-            },
-            searchProducts(query) {
-                this.$store.dispatch("products/searchProducts", {
-                    query: query
-                }).then(() => {
-                    console.log(this.products);
+            searchProductsForAutocomplete(index) {
+                let query = "";
+                if (index) {
+                    query = this.lines[index].name;
+                }
+                this.$store.dispatch("products/search", {
+                    queryString: query
+                }).then(response => {
+                    this.products = response;
                 }).catch(error => {
-                    console.log(error);
                     console.log(error.response);
-                    this.$swal({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'Oups, un problème est survenu pour charger les articles',
-                        showClass: {
-                            popup: 'animated slideInUp faster'
-                        },
-                        hideClass: {
-                            popup: 'animated slideOutRight faster'
-                        },
-                        timer: 5000,
-                        timerProgressBar: true,
-                    });
                 });
             },
-            getFilteredSubstrates(page) {
-                // page = page || 1;
-                // this.$store.dispatch("getFilteredSubstrates", {
-                //     filters: this.searchSubstrates.criteria,
-                //     page: parseInt(page)
-                // }).then(response => {
-                //     this.searchSubstrates.substrates = response.data;
-                //     console.log(this.searchSubstrates.substrates);
-                //     // this.searchSubstrates.isLoading = false;
-                //     this.makePagination(response);
-                // }).catch(error => {
-                //     this.searchSubstrates.substrates = [];
-                //     this.$toast.error({
-                //         title: "Erreur",
-                //         message: "Oups, un problème est survenu pour charger les supports d'impression"
-                //     });
-                //     this.searchSubstrates.isLoading = false;
-                // });
-            },
             selectedProduct(index, value) {
-                this.lines[index].description = value.name;
+                this.lines[index].name = value.name;
+                this.lines[index].description = value.description;
                 this.lines[index].product_id = value.id;
                 this.lines[index].product = value;
+                this.setUnitPrice(index);
+                this.textareaAutosize();
+            },
+            show(lineIndex) {
+                this.$modal.show('search-products', { line: lineIndex });
+            },
+            setProduct(value) {
+                this.selectedProduct(value.line, value.row);
+            },
+            handleBlur(index, productSelected) {
+                if (!productSelected) {
+                    if (this.lines[index].product.id !== undefined) {
+                        this.lines[index].name = this.lines[index].product.name;
+                    } else {
+                        this.$store.commit('invoices/REMOVE_LINE', index);
+                    }
+                }
             },
             setUnitPrice(index) {
                 let product = this.lines[index].product;
@@ -278,12 +222,8 @@
                                 if (quantity <= item.quantity_maximum) {
                                     unitPrice = item.unit_price;
                                     break;
-                                } else {
-                                    console.log("no unit price found <= quantity")
                                 }
                             }
-                        } else {
-                            console.log("no unit price found >= quantity")
                         }
                     }
                     this.lines[index].unit_price = unitPrice;
@@ -291,7 +231,6 @@
                 }
             },
             setLineTotal(index) {
-                console.log(index);
                 let unitPrice = parseFloat(this.lines[index].unit_price);
                 let quantity = parseFloat(this.lines[index].quantity);
                 let discount = parseFloat(this.lines[index].discount_rate);
@@ -301,7 +240,7 @@
                 this.lines[index].subtotal = subtotal;
 
                 let discountAmount = parseFloat((subtotal * (discount / 100)).toFixed(2));
-                this.lines[index].discount_amount = discountAmount;
+                this.lines[index].discount_amount = -Math.abs(discountAmount);
 
                 let total_pretax = parseFloat((subtotal - discountAmount).toFixed(2));
                 this.lines[index].total_pretax = total_pretax;
@@ -321,6 +260,7 @@
                 let invoiceTotalPretax = 0;
                 let invoiceVat = 0;
                 let invoiceTotal = 0;
+
                 for (let [key, value] of Object.entries(this.lines)) {
                     if (value.type === "product") {
                         invoiceSubtotal += parseFloat(value.subtotal);
@@ -331,18 +271,19 @@
                     }
                 }
 
-                this.invoice[0].subtotal = invoiceSubtotal;
-                this.invoice[0].discount_amount = invoiceDiscountAmount;
-                this.invoice[0].total_pretax = invoiceTotalPretax;
-                this.invoice[0].vat = invoiceVat;
-                this.invoice[0].total = invoiceTotal;
+                this.invoice[0].subtotal = invoiceSubtotal.toFixed(2);
+                this.invoice[0].discount_amount = invoiceDiscountAmount.toFixed(2);
+                this.invoice[0].total_pretax = invoiceTotalPretax.toFixed(2);
+                this.invoice[0].vat = invoiceVat.toFixed(2);
+                this.invoice[0].total = invoiceTotal.toFixed(2);
 
-                this.invoice[0].user_commission_base = invoiceTotalPretax;
-                if (parseFloat(this.invoice[0].user_commission_rate > 0)) {
-                    this.invoice[0].user_commission_amount = (parseFloat(this.invoice[0].total_pretax) * (parseFloat(this.invoice[0].user_commission_rate) / 100)).toFixed(2);
+                this.invoice[0].user_commission_base = invoiceTotalPretax.toFixed(2);
+                if (parseFloat(this.invoice[0].user_commission_rate) > 0) {
+                    let userCommissionAmount = (parseFloat(this.invoice[0].total_pretax) * (parseFloat(this.invoice[0].user_commission_rate) / 100)).toFixed(2)
+                    this.invoice[0].user_commission_amount = parseFloat(userCommissionAmount);
+                } else {
+                    this.invoice[0].user_commission_amount = 0;
                 }
-
-                this.$emit('animation');
             },
             alertDisplay(lineIndex) {
                 this.$swal({
@@ -370,7 +311,6 @@
                             });
                         } else {
                             this.$store.commit('invoices/REMOVE_LINE', lineIndex);
-                            console.log(this.lines);
                             this.$swal('Deleted', 'You successfully deleted this line', 'success')
                         }
                         this.setInvoicePrices();
