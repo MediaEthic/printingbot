@@ -9,57 +9,52 @@ use App\Models\Product;
 
 class ProductRepository
 {
-    public function index($datas = null) {
-        return $datas;
-        $products = Product::whereActive(true)
-            ->orderBy('name', 'asc');
+    protected $model;
 
-        if ($pagination) {
-            $products = $products->paginate($pagination);
-        } else {
-            $products = $products->get();
+    public function __construct(Product $model)
+    {
+        $this->model = $model;
+    }
+    public function paginate(Array $datas) {
+        $filters = $datas['filters'];
+        $product = $filters['product'];
+
+        $filteredProducts = $this->model::whereActive(true);
+
+
+        if (!empty($product)) {
+            $filteredProducts = $filteredProducts
+                ->where('alias', 'LIKE', '%' . $product . '%')
+                ->orWhere('name', 'LIKE', '%' . $product . '%');
         }
 
-        return ArrayCollection::collection($products);
-
-
-//        $filters = $datas['filters'];
-//        $invoiceNo = $filters['invoiceNumber'];
-//        $invoiceDate = $filters['invoiceDate'];
-//        $dueDate = $filters['dueDate'];
-//        $customer = $filters['customer'];
-//        $status = $filters['status'];
-//        $exported = $filters['exported'];
-//        $deliveryNumber = $filters['deliveryNumber'];
-//
-//        $allInvoices = Invoice::select('id', 'created_at', 'third_id', 'total', 'invoice_status');
-//
-//        if (!empty($invoiceNo)) {
-//            $allInvoices = $allInvoices->where('id', $invoiceNo);
-//        }
-//
-//        $allInvoices = $allInvoices->with('third')
-//            ->with('lines') // TODO : to remove after
-//            ->orderBy('created_at', 'desc')
-//            ->paginate(15);
-//        return ArrayCollection::collection($allInvoices);
-    }
-
-    public function getById($id)
-    {
-        return Invoice::findOrFail($id);
+        $filteredProducts = $filteredProducts
+            ->with('quantities')
+            ->orderBy('name', 'asc')
+            ->orderBy('id', 'desc')
+            ->paginate(15);
+        return ArrayCollection::collection($filteredProducts);
     }
 
     public function search(Array $request)
     {
         $query = $request['query'];
 
-        return Product::whereActive(true)
+        $products = Product::whereActive(true)
             ->where('alias', 'LIKE', '%' . $query . '%')
             ->orWhere('name', 'LIKE', '%' . $query . '%')
             ->with('quantities')
+            ->distinct('id')
             ->orderBy('name', 'asc')
-            ->take(5)
+            ->limit(5)
             ->get();
+        if (!isset($products)) {
+            $products = Product::whereActive(true)
+                ->with('quantities')
+                ->orderBy('name', 'asc')
+                ->take(5)
+                ->get();
+        }
+        return ArrayCollection::collection($products);
     }
 }

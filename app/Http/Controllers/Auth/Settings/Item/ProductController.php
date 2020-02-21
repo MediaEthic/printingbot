@@ -110,6 +110,16 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function paginate(Request $request)
+    {
+        return $this->repository->paginate($request->all());
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function search(Request $request)
     {
         return $this->repository->search($request->all());

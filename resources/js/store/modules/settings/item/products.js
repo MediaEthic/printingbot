@@ -16,36 +16,34 @@ const getters = {
     },
 };
 
-const actions = {
-    async fetchProducts(context, credentials) {
-        let pagination = "";
-        if (credentials && credentials.pagination) {
-            pagination = "/" + credentials.pagination;
-        }
-        let data = (await axios.get('/api/auth/settings/item/products' + pagination)).data;  // products.index
-        console.log("fetchProducts");
-        console.log(data);
-        context.commit('setProducts', data);
-    },
-    async searchProducts(context, credentials) {
-        let query = "";
-        if (credentials && credentials.query) {
-            query = credentials.query;
-        }
-
-        let data = (await axios.post('/api/auth/settings/item/products/search', {
-            query: query
-        })).data;  // products.search
-        context.commit('setFilteredProducts', data);
+const mutations = {
+    SET_PRODUCTS(state, products) {
+        state.products = products;
     },
 };
 
-const mutations = {
-    setProducts(state, products) {
-        state.products = products;
+const actions = {
+    async paginate({ commit }, credentials) {
+        let data = (await axios.post(credentials.url, { // products.paginate
+            filters: credentials.filters
+        })).data;
+        commit('SET_PRODUCTS', data);
     },
-    setFilteredProducts(state, products) {
-        state.filteredProducts = products;
+    async search(context, credentials) {
+        let query = "";
+        if (credentials && credentials.queryString) {
+            query = credentials.queryString;
+        }
+
+        return new Promise((resolve, reject) => {
+            axios.post('/api/auth/settings/item/products/search', {
+                query: query
+            }).then(response => {
+                resolve(response.data.data);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     },
 };
 
