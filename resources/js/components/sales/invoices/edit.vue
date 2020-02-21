@@ -28,6 +28,7 @@
                 id: this.$route.params.id,
             }).then(() => {
                 this.invoiceNo = this.invoice[0].invoice_no;
+                this.$store.commit('invoices/SET_INVOICE_CURRENT_STATUS', this.invoice[0].invoice_status);
             }).catch(error => {
                 this.$swal({
                     position: 'top-end',
@@ -51,6 +52,7 @@
         methods: {
             save() {
                 this.isLoading = true;
+                this.invoice[0].invoice_status = this.invoice[0].status;
                 this.$store.dispatch("invoices/update").then(() => {
                     this.isLoading = false;
                 }).catch(error => {

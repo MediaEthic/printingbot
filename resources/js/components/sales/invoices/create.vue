@@ -46,28 +46,28 @@
             ...mapMultiRowFields('invoices', ['invoice']),
         },
         methods: {
-            save(invoice) {
+            save() {
                 this.isLoading = true;
+                this.invoice[0].invoice_status = this.invoice[0].status;
                 this.$store.dispatch("invoices/store").then(() => {
                     this.$router.push({ name: 'invoices.edit', params: { id: this.invoice[0].id } });
                     this.isLoading = false;
                 }).catch(error => {
                     this.isLoading = false;
-                    console.log(this.invoice[0]);
-                    // this.$swal({
-                    //     position: 'top-end',
-                    //     icon: 'error',
-                    //     title: 'Oops...',
-                    //     text: 'Un problème est survenu pour enregistrer la facture',
-                    //     showClass: {
-                    //         popup: 'animated fadeInUp faster'
-                    //     },
-                    //     hideClass: {
-                    //         popup: 'animated fadeOutRight faster'
-                    //     },
-                    //     timer: 5000,
-                    //     timerProgressBar: true,
-                    // });
+                    this.$swal({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Un problème est survenu pour enregistrer la facture',
+                        showClass: {
+                            popup: 'animated fadeInUp faster'
+                        },
+                        hideClass: {
+                            popup: 'animated fadeOutRight faster'
+                        },
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
                 });
             }
         }

@@ -39,6 +39,7 @@ const blankInvoice = {
     total_pretax: 0,
     vat: 0,
     total: 0,
+    status: "draft",
 };
 
 const state = {
@@ -64,6 +65,9 @@ const mutations = {
     },
     SET_DUE_DATE : (state, payload) => {
         state.invoice[0].due_date = payload;
+    },
+    SET_INVOICE_CURRENT_STATUS : (state, payload) => {
+        state.invoice[0].status = payload;
     },
     ADD_LINE : (state, payload) => {
         state.lines.push(payload);

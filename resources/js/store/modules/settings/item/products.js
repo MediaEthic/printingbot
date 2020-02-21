@@ -7,8 +7,6 @@ const state = {
 
 const getters = {
     allProducts(state) {
-        console.log("state.products");
-        console.log(state.products);
         return state.products;
     },
     filteredProducts(state) {

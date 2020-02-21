@@ -92,7 +92,7 @@
                             label="Statut"
                             :items="statuses"
                             :required="true"
-                            v-model="invoice[0].invoice_status"
+                            v-model="invoice[0].status"
                             :disabledChoose="true"
                             :disabled="invoice[0].invoice_status === 'draft' ? false : true"
                         />

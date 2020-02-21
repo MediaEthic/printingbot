@@ -149,8 +149,6 @@
             }
         },
         created() {
-            console.log("this.lines");
-            console.log(this.lines);
             this.searchProductsForAutocomplete();
         },
         computed: {
