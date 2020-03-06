@@ -38,11 +38,15 @@ module.exports = {
                 grey: '#E6E2E7',
                 white: '#FFFFFF',
             },
+            borderWidth: {
+                '1-5': '.15rem',
+            },
             borderRadius: {
                 'xl': '1rem',
                 '2xl': '2rem',
                 '3xl': '3rem',
                 '4xl': '4rem',
+                'circle': '50%',
             },
             minWidth: {
                 '100': '25rem',
@@ -52,8 +56,17 @@ module.exports = {
                 'initial': 'initial',
                 '100': '25rem',
                 '120': '30rem',
+                '1/4': '25%',
+                '1/3': '33%',
+                '1/2': '50%',
+                '3/4': '75%',
+            },
+            maxHeight: {
+                '32': '8rem',
+                '68': '17rem',
             },
             inset: {
+                '4': '1rem',
                 '7': '1.75rem',
                 '12': '3rem',
                 '14': '3.5rem',

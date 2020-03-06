@@ -7,8 +7,8 @@
                 :disabled="disabled"
         >
             <div class="bottom"></div>
-            <div class="top">
-                <div class="label">{{ label }}</div>
+            <div :class="[ !responsive ? 'px-12' : '' ]" class="top p-4 sm:px-12">
+                <div class="label"><i :class="[ icon, !responsive ? 'hidden' : '' ]" class="sm:hidden"></i><span :class="[ responsive ? 'hidden' : '' ]" class="sm:inline">{{ label }}</span></div>
 
                 <div class="button-border button-border-left"></div>
                 <div class="button-border button-border-top"></div>
@@ -88,7 +88,11 @@
                 required: false,
                 default: "Link"
             },
-
+            responsive: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
             path: {
                 type: String,
                 required: false,
@@ -161,7 +165,6 @@
             top: 0;
             width: 100%;
             height: 100%;
-            padding: 1rem 3rem;
             border-radius: 2rem;
             border: .2rem solid theme('colors.black');
 

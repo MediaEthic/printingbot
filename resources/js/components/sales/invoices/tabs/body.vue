@@ -28,7 +28,7 @@
                         :key="index"
                         class="table-row fields-are-small"
                     >
-                        <td class="table-cell" data-title="Description" :colspan="line.type === 'comment' ? 6 : 0">
+                        <td class="table-cell visible-title" :data-title="line.type === 'product' ? 'Article' : 'Commentaire'" :colspan="line.type === 'comment' ? 6 : 0">
                             <autocomplete
                                 v-if="line.type === 'product'"
                                 :id="`name` + index"
@@ -54,7 +54,7 @@
                                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                             />
                         </td>
-                        <td class="table-cell" data-title="TVA" v-if="line.type != 'comment'">
+                        <td class="table-cell visible-title" data-title="TVA" v-if="line.type != 'comment'">
                             <field
                                 :type="`select`"
                                 :id="`vat_id` + index"
@@ -66,7 +66,7 @@
                                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                             />
                         </td>
-                        <td class="table-cell" data-title="Quantité" v-if="line.type != 'comment'">
+                        <td class="table-cell visible-title" data-title="Quantité" v-if="line.type != 'comment'">
                             <field
                                 :type="`number`"
                                 :id="`quantity` + index"
@@ -77,7 +77,7 @@
                                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                             />
                         </td>
-                        <td class="table-cell" data-title="PU" v-if="line.type != 'comment'">
+                        <td class="table-cell visible-title" data-title="PU" v-if="line.type != 'comment'">
                             <field
                                 :type="`number`"
                                 :id="`unit_price` + index"
@@ -88,7 +88,7 @@
                                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                             />
                         </td>
-                        <td class="table-cell" data-title="Remise" v-if="line.type != 'comment'">
+                        <td class="table-cell visible-title" data-title="Remise" v-if="line.type != 'comment'">
                             <field
                                 :type="`number`"
                                 :id="`discount_rate` + index"
@@ -99,7 +99,7 @@
                                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                             />
                         </td>
-                        <td class="table-cell" data-title="Total HT" v-if="line.type != 'comment'">
+                        <td class="table-cell visible-title" data-title="Total HT" v-if="line.type != 'comment'">
                             <field
                                 :type="`number`"
                                 :id="`total_amount` + index"
@@ -110,7 +110,7 @@
                                 @input="setLineTotal(index)"
                             />
                         </td>
-                        <td class="table-cell relative" data-title="">
+                        <td class="table-cell delete relative" data-title="">
                             <btn :type="'delete'"
                                  v-on:click="alertDisplay(index)"
                             />

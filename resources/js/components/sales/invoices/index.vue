@@ -6,6 +6,7 @@
                 <div slot="action">
                     <btn type="cta"
                          label="Créer"
+                         icon="icon-plus"
                          v-on:click="pathToCreate" />
                 </div>
             </hero>
@@ -18,8 +19,8 @@
                                 <th scope="col" class="table-cell checkAll" @click="checkAll">
                                     <i class="icon-check-circle text-2xl"></i>
                                 </th>
-                                <th scope="col" class="table-cell">Création</th>
-                                <th scope="col" class="table-cell">Numéro</th>
+                                <th scope="col" class="table-cell">Facture</th>
+                                <th scope="col" class="table-cell">Créée le</th>
                                 <th scope="col" class="table-cell">Client</th>
                                 <th scope="col" class="table-cell">Total HT</th>
                                 <th scope="col" class="table-cell">Statut</th>
@@ -42,19 +43,19 @@
                                 </td>
                                 <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
                                              tag="td"
-                                             class="table-cell cursor-pointer"
-                                             data-title="Création">
+                                             class="table-cell id visible-title cursor-pointer"
+                                             data-title="Facture">
+                                    #{{ row.invoice_no }}
+                                </router-link>
+                                <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
+                                             tag="td"
+                                             class="table-cell date visible-title cursor-pointer"
+                                             data-title="Créée le">
                                     <time :datetime="row.invoice_date">{{ displayDate(row.invoice_date) }}</time>
                                 </router-link>
                                 <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
                                              tag="td"
-                                             class="table-cell cursor-pointer"
-                                             data-title="Numéro">
-                                    {{ row.invoice_no }}
-                                </router-link>
-                                <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
-                                             tag="td"
-                                             class="table-cell cursor-pointer"
+                                             class="table-cell name cursor-pointer"
                                              data-title="Client">
                                     <span class="text-purple2 tracking-widest uppercase mr-2">
                                         [{{ row.third_alias }}]
@@ -63,15 +64,15 @@
                                 </router-link>
                                 <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
                                              tag="td"
-                                             class="table-cell cursor-pointer"
+                                             class="table-cell price cursor-pointer"
                                              data-title="Total HT">
-                                    {{ row.total }}
+                                    {{ row.total }}<span class="currency-symbol">€</span>
                                 </router-link>
                                 <router-link :to="{ name: 'invoices.edit', params: { id: row.id } }"
                                              tag="td"
-                                             class="table-cell cursor-pointer"
+                                             class="table-cell status cursor-pointer"
                                              data-title="Statut">
-                                    <tag :label="row.invoice_status"
+                                    <tag :label="setInvoiceStatus(row.invoice_status)"
                                          :color="defineColorTag(row.invoice_status)"
                                     />
                                 </router-link>
@@ -204,6 +205,7 @@
 
                         <btn type="cta"
                              label="Rechercher"
+                             :responsive="false"
                              v-on:click="fetchInvoices" />
                     </fieldset>
                 </form>
@@ -456,6 +458,17 @@
             },
             displayDate(date) {
                 return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+            },
+            setInvoiceStatus(status) {
+                if (status === "draft") {
+                    return 'saisie';
+                } else if (status === "edited") {
+                    return 'éditée';
+                }  else if (status === "payed") {
+                    return 'payée';
+                } else {
+                    return 'saisie';
+                }
             },
             defineColorTag(status) {
                 if (status === "draft") {

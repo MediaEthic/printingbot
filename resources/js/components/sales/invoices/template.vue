@@ -192,6 +192,7 @@
                         <btn type="submit"
                              :disabled="invalid || invoice[0].invoice_status !== 'draft'"
                              :label="`Sauvegarder`"
+                             :responsive="false"
                              :primary="true" />
                     </fieldset>
                 </section>
@@ -241,9 +242,9 @@
             return {
                 isLoading: false,
                 statuses: [
-                    { id: "draft", name: "Brouillon" },
-                    { id: "edited", name: "Edité" },
-                    { id: "payed", name: "Payé" },
+                    { id: "draft", name: "Saisie" },
+                    { id: "edited", name: "Editée" },
+                    { id: "payed", name: "Payée" },
                 ],
                 currentTab: 'header',
             }
@@ -390,7 +391,7 @@
                 } else if (this.invoice[0].invoice_status === "edited") {
                     return 'éditée';
                 }  else if (this.invoice[0].invoice_status === "payed") {
-                    return 'facturée';
+                    return 'payée';
                 } else {
                     return 'saisie';
                 }

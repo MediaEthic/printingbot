@@ -1,15 +1,27 @@
 <template>
-    <div class="sidebar fixed top-0 bottom-0 right-0 min-w-120 max-w-120 min-h-screen overflow-y-scroll overflow-x-hidden p-12 bg-purple1 rounded-tl-4xl rounded-bl-4xl">
-        <slot name="sidebar">
-            Sidebar sidebar
-        </slot>
-    </div>
+    <modal
+        name="sidebar"
+        :adaptive="true"
+        width="100%"
+        :draggable="true"
+        :scrollable="true"
+        height="auto">
+<!--        <div class="sidebar fixed top-0 bottom-0 right-0 min-w-120 max-w-120 min-h-screen overflow-y-scroll overflow-x-hidden p-12 bg-purple1 rounded-tl-4xl rounded-bl-4xl">-->
+        <div class="sidebar z-10 md:fixed md:top-0 md:bottom-0 md:right-0 md:min-w-120 md:max-w-120 md:min-h-screen md:overflow-y-scroll md:overflow-x-hidden md:p-12 bg-purple1 rounded-tl-4xl rounded-bl-4xl">
+            <slot name="sidebar">
+                Sidebar sidebar
+            </slot>
+        </div>
+    </modal>
 </template>
 
 <script>
     export default {
-        mounted() {
-            //
+        created() {
+
+        },
+        methods: {
+
         }
     }
 </script>

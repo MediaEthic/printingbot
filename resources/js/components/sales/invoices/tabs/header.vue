@@ -9,7 +9,7 @@
                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
             />
 
-            <div class="flex items-start mt-8">
+            <div class="flex flex-wrap items-start mt-8 sm:flex-no-wrap md:flex-wrap lg:flex-no-wrap">
                 <div class="w-full mr-12">
                     <div class="flex justify-between items-center w-full pb-4 border-b border-solid border-grey">
                         <h3 class="mr-4 text-lg font-black tracking-wide">Client</h3>
@@ -131,12 +131,12 @@
                     />
 
                 </div>
-                <div class="w-full">
+                <div class="w-full mt-8 sm:mt-0 md:mt-8 lg:mt-0">
                     <div class="flex items-center w-full mb-6 pb-4 border-b border-solid border-grey" :style="invoice[0].invoice_status === 'draft' ? 'height: 4.6rem;' : ''">
                         <h3 class="text-lg font-black tracking-wide">Commercial</h3>
                     </div>
                     <field
-                        :type="`select`" class="mt-6"
+                        :type="`select`"
                         id="user_id"
                         v-model="invoice[0].user_id"
                         label="Commercial en charge"
