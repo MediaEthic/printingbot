@@ -10,7 +10,7 @@
             />
 
             <div class="flex flex-wrap items-start mt-8 sm:flex-no-wrap md:flex-wrap lg:flex-no-wrap">
-                <div class="w-full mr-12">
+                <div class="w-full sm:mr-12 md:mr-0 lg:mr-12">
                     <div class="flex justify-between items-center w-full pb-4 border-b border-solid border-grey">
                         <h3 class="mr-4 text-lg font-black tracking-wide">Client</h3>
                         <autocomplete

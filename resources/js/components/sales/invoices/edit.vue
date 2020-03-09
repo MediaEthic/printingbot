@@ -1,7 +1,7 @@
 <template>
     <div>
         <loader v-if="isLoading"></loader>
-        <show :pageTitle="'Facture #' + this.invoiceNo"
+        <show :pageTitle="'Facture'"
             v-on:save="save"
         />
     </div>
@@ -20,14 +20,12 @@
         data() {
             return {
                 isLoading: false,
-                invoiceNo: ""
             }
         },
         created() {
             this.$store.dispatch("invoices/edit", {
                 id: this.$route.params.id,
             }).then(() => {
-                this.invoiceNo = this.invoice[0].invoice_no;
                 this.$store.commit('invoices/SET_INVOICE_CURRENT_STATUS', this.invoice[0].invoice_status);
             }).catch(error => {
                 this.$swal({

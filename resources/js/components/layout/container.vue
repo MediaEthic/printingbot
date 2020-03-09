@@ -7,7 +7,7 @@
             </slot>
         </div>
 
-      <div :class="{ 'pull' : pullSidebar }" class="sidebar z-10 fixed bottom-0 right-0 w-full overflow-x-hidden px-12 pt-4 bg-purple1 rounded-t-4xl md:top-0 md:bottom-0 md:right-0 md:min-w-120 md:max-w-120 md:min-h-screen md:rounded-tr-none md:rounded-bl-4xl md:p-12">
+      <div :class="{ 'pull' : pullSidebar }" class="sidebar z-10 fixed bottom-0 right-0 w-full overflow-x-hidden px-12 pt-4 bg-purple1 rounded-t-4xl shadow md:top-0 md:bottom-0 md:right-0 md:min-w-120 md:max-w-120 md:min-h-screen md:rounded-tr-none md:rounded-bl-4xl md:p-12">
             <input type="checkbox" id="pull-sidebar" v-model="pullSidebar">
             <label for="pull-sidebar" :class="[ pullSidebar ? 'icon-arrow-down-circle' : 'icon-arrow-up-circle']"></label>
             <slot name="sidebar">
@@ -96,10 +96,6 @@
                  color: theme('colors.purple5');
                  margin-bottom: 1rem;
              }
-
-             &:checked {
-
-             }
          }
 
         .fieldset {
@@ -153,6 +149,11 @@
 
     @media (min-width: 768px) {
         .sidebar {
+            top: 0;
+
+            &.pull {
+                top: 0; // bug otherwise
+            }
             #pull-sidebar {
                 ~ label {
                     display: none;

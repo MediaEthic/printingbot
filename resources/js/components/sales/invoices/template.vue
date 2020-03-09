@@ -15,7 +15,7 @@
                 <box>
                     <div slot="content">
                         <div class="flex justify-start items-center">
-                            <h2 class="font-serif text-3xl tracking-tighter mr-12">Facture</h2>
+                            <h2 class="font-serif text-3xl tracking-tighter mr-8">#{{ invoice[0].invoice_no }}</h2>
                             <tag :label="setInvoiceStatus()"
                                  :color="defineColorTag()" />
                             <nav class="menu">
