@@ -3423,10 +3423,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     var _this = this;
 
+    this.isLoading = true;
     this.$store.dispatch("invoices/edit", {
       id: this.$route.params.id
     }).then(function () {
-      _this.$store.commit('invoices/SET_INVOICE_CURRENT_STATUS', _this.invoice[0].invoice_status);
+      // don't remember what it is for
+      // this.$store.commit('invoices/SET_INVOICE_CURRENT_STATUS', this.invoice[0].invoice_status);
+      _this.isLoading = false;
     })["catch"](function (error) {
       _this.$swal({
         position: 'top-end',
@@ -5261,6 +5264,40 @@ var today = moment__WEBPACK_IMPORTED_MODULE_2___default()().format('YYYY-MM-DD')
     },
     save: function save() {
       this.$emit('save');
+    },
+    replicateInvoice: function replicateInvoice() {
+      var _this3 = this;
+
+      this.$swal({
+        title: 'Duplication',
+        text: "Voulez-vous vraiment dupliquer cette facture ? Cela annulera les modifications en cours...",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Oui, dupliquer !'
+      }).then(function (result) {
+        if (result.value) {
+          _this3.isLoading = true;
+
+          _this3.$store.dispatch("invoices/replicate", {
+            invoice: _this3.invoice[0].id
+          }).then(function (invoiceID) {
+            _this3.$router.push({
+              name: 'invoices.edit',
+              params: {
+                id: invoiceID
+              }
+            });
+          })["catch"](function () {
+            _this3.isLoading = false;
+
+            _this3.$swal({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!'
+            });
+          });
+        }
+      });
     }
   }
 });
@@ -6708,7 +6745,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".pagination-container[data-v-3f1034b7] {\n  width: 100%;\n}\n.pagination-container .wrap-pagination[data-v-3f1034b7] {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-pack: center;\n          justify-content: center;\n  margin-top: 1rem;\n}\n.pagination-container .wrap-pagination .pagination-item[data-v-3f1034b7] {\n  background-color: #E2D1DE;\n}\n.pagination-container .wrap-pagination .pagination-item[data-v-3f1034b7]:first-child {\n  border-top-left-radius: 2rem;\n  border-bottom-left-radius: 2rem;\n}\n.pagination-container .wrap-pagination .pagination-item[data-v-3f1034b7]:last-child {\n  border-top-right-radius: 2rem;\n  border-bottom-right-radius: 2rem;\n}\n.pagination-container .wrap-pagination .pagination-item .pagination-controls[data-v-3f1034b7] {\n  cursor: pointer;\n  padding: 1rem 1.5rem;\n  color: #672767;\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n}\n.pagination-container .wrap-pagination .pagination-item .pagination-controls.active[data-v-3f1034b7] {\n  background-color: #672767;\n  color: #FFFFFF;\n  border-radius: 50%;\n}\n.pagination-container .wrap-pagination .pagination-item .pagination-controls[data-v-3f1034b7]:hover {\n  background-color: #A57AA0;\n  color: #E2D1DE;\n  border-radius: 50%;\n}", ""]);
+exports.push([module.i, ".pagination-container[data-v-3f1034b7] {\n  width: 100%;\n}\n.pagination-container .wrap-pagination[data-v-3f1034b7] {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-pack: center;\n          justify-content: center;\n  margin-top: 1rem;\n}\n.pagination-container .wrap-pagination .pagination-item[data-v-3f1034b7] {\n  background-color: #E2D1DE;\n}\n.pagination-container .wrap-pagination .pagination-item[data-v-3f1034b7]:first-child {\n  border-top-left-radius: 2rem;\n  border-bottom-left-radius: 2rem;\n}\n.pagination-container .wrap-pagination .pagination-item[data-v-3f1034b7]:last-child {\n  border-top-right-radius: 2rem;\n  border-bottom-right-radius: 2rem;\n}\n.pagination-container .wrap-pagination .pagination-item .pagination-controls[data-v-3f1034b7] {\n  cursor: pointer;\n  padding: 1rem;\n  width: 3.5rem;\n  border-radius: 50%;\n  color: #672767;\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n}\n.pagination-container .wrap-pagination .pagination-item .pagination-controls.active[data-v-3f1034b7] {\n  background-color: #672767;\n  color: #FFFFFF;\n}\n.pagination-container .wrap-pagination .pagination-item .pagination-controls[data-v-3f1034b7]:hover {\n  background-color: #A57AA0;\n  color: #E2D1DE;\n  border-radius: 50%;\n}", ""]);
 
 // exports
 
@@ -67769,7 +67806,7 @@ var render = function() {
               afterEnter: _vm.afterEnter
             }
           },
-          [_c("router-view")],
+          [_c("router-view", { key: _vm.$route.fullPath })],
           1
         )
       ],
@@ -70818,6 +70855,7 @@ var render = function() {
                                         on: {
                                           click: function($event) {
                                             $event.preventDefault()
+                                            return _vm.replicateInvoice($event)
                                           }
                                         }
                                       })
@@ -93728,11 +93766,7 @@ Object.keys(vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_6__).forEach(functi
 });
 Object(vee_validate__WEBPACK_IMPORTED_MODULE_5__["localize"])('fr', vee_validate_dist_locale_fr_json__WEBPACK_IMPORTED_MODULE_7__);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_js_modal__WEBPACK_IMPORTED_MODULE_9___default.a);
-var options = {
-  confirmButtonColor: '#672767',
-  cancelButtonColor: '#E8004C'
-};
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_sweetalert2__WEBPACK_IMPORTED_MODULE_10__["default"], options); // Document page title
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_sweetalert2__WEBPACK_IMPORTED_MODULE_10__["default"]); // Document page title
 
 _router__WEBPACK_IMPORTED_MODULE_2__["default"].beforeEach(function (to, from, next) {
   var nearestWithTitle = to.matched.slice().reverse().find(function (r) {
@@ -98636,7 +98670,18 @@ var actions = {
     }
 
     return destroyLine;
-  }()
+  }(),
+  replicate: function replicate(_ref7, credentials) {
+    var commit = _ref7.commit;
+    return new Promise(function (resolve, reject) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/api/auth/sales/invoices/' + credentials.invoice + '/replicate').then(function (response) {
+        resolve(response.data);
+      })["catch"](function (error) {
+        console.log(error);
+        reject(error);
+      });
+    }); // invoices.replicate
+  }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,

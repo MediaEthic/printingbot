@@ -138,6 +138,16 @@ const actions = {
         let data = (await axios.delete('/api/auth/sales/invoices/' + credentials.invoice + '/lines/' + credentials.line)).data; // lines.destroy
         context.commit('SET_LINES', data);
     },
+    replicate({ commit }, credentials) {
+        return new Promise((resolve, reject) => {
+            axios.get('/api/auth/sales/invoices/' + credentials.invoice + '/replicate').then(response => {
+                resolve(response.data);
+            }).catch(error => {
+                console.log(error);
+                reject(error);
+            });
+        }); // invoices.replicate
+    },
 };
 
 

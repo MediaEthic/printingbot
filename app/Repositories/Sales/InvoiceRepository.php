@@ -109,14 +109,9 @@ class InvoiceRepository
     {
         $datasInvoice = $datas['invoice'];
 
-        $lastInvoiceInserted = Invoice::latest()->first();
-        if ($lastInvoiceInserted) {
-            $invoiceID = $lastInvoiceInserted->id + 1;
-        } else {
-            $invoiceID = 1;
-        }
+        $getInvoiceNo = $this->getInvoiceNo($datasInvoice['invoice_date']);
+        $datasInvoice['invoice_no'] = $getInvoiceNo;
 
-        $datasInvoice['invoice_no'] = date("y/m/", strtotime($datasInvoice['invoice_date'])) . str_pad($invoiceID, 5, 0, STR_PAD_LEFT);
         $invoice = $this->model->create($datasInvoice);
 
         $datasLines = $datas['lines'];
@@ -181,5 +176,43 @@ class InvoiceRepository
         }
 
         return $pdf->stream($name);
+    }
+
+    public function replicate($model, Array $datas)
+    {
+        $existingInvoice = $this->model->findOrFail($model->id);
+        $existingInvoice->load('lines');
+        $newInvoice = $existingInvoice->replicate();
+
+        $newInvoice->invoice_date = date('Y-m-d');
+
+        $getInvoiceNo = $this->getInvoiceNo($newInvoice->invoice_date);
+        $newInvoice->invoice_no = $getInvoiceNo;
+
+        $newInvoice->invoice_status = "draft";
+        $newInvoice->sales_id = null;
+
+        $newInvoice->save();
+
+        foreach($existingInvoice->getRelations() as $relation => $items) {
+            foreach($items as $item){
+                unset($item->id);
+                $item->invoice_id = $newInvoice->id;
+                $newInvoice->{$relation}()->create($item->toArray());
+            }
+        }
+        return $newInvoice->id;
+    }
+
+    public function getInvoiceNo($date)
+    {
+        $lastInvoiceInserted = Invoice::latest()->first();
+        if ($lastInvoiceInserted) {
+            $invoiceID = $lastInvoiceInserted->id + 1;
+        } else {
+            $invoiceID = 1;
+        }
+
+        return date("y/m/", strtotime($date)) . str_pad($invoiceID, 5, 0, STR_PAD_LEFT);
     }
 }

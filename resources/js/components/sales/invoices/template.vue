@@ -26,7 +26,7 @@
                                         <a class="menu-action icon-printer" target="_blank" :href="'/api/auth/sales/invoices/' + JSON.stringify([invoice[0].id]) + '/pdf'" title="Imprimer la facture"></a>
                                     </li>
                                     <li class="menu-item">
-                                        <button type="button" @click.prevent="" class="menu-action icon-copy" title="Dupliquer la facture"></button>
+                                        <button type="button" @click.prevent="replicateInvoice" class="menu-action icon-copy" title="Dupliquer la facture"></button>
                                     </li>
                                 </ul>
                             </nav>
@@ -383,7 +383,7 @@
                     if (result.value) {
                         this.$router.push({ name: 'invoices.index' });
                     }
-                })
+                });
             },
             setInvoiceStatus() {
                 if (this.invoice[0].invoice_status === "draft") {
@@ -467,6 +467,31 @@
             },
             save() {
                 this.$emit('save');
+            },
+            replicateInvoice() {
+                this.$swal({
+                    title: 'Duplication',
+                    text: "Voulez-vous vraiment dupliquer cette facture ? Cela annulera les modifications en cours...",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Oui, dupliquer !'
+                }).then((result) => {
+                    if (result.value) {
+                        this.isLoading = true;
+                        this.$store.dispatch("invoices/replicate", {
+                            invoice: this.invoice[0].id,
+                        }).then(invoiceID => {
+                            this.$router.push({ name: 'invoices.edit', params: { id: invoiceID } });
+                        }).catch(() => {
+                            this.isLoading = false;
+                            this.$swal({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                            });
+                        });
+                    }
+                });
             }
         }
     }

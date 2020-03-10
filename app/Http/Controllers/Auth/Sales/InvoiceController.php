@@ -134,4 +134,9 @@ class InvoiceController extends Controller
     {
         return $this->repository->searchCustomers($request->all());
     }
+
+    public function replicate(Request $request, Invoice $invoice)
+    {
+        return $this->repository->replicate($invoice, $request->all());
+    }
 }

@@ -63,6 +63,7 @@ Route::middleware('api')->prefix('auth')->namespace('Auth')->group(function() {
             Route::get('{invoices}/pdf', 'InvoiceController@generatePDF');
             Route::post('/customers/search', 'InvoiceController@searchCustomers');
             Route::delete('/{invoice}/lines/{id}', 'InvoiceLineController@destroy');
+            Route::get('/{invoice}/replicate', 'InvoiceController@replicate');
         });
 //        Route::apiResource('/lines', 'InvoiceLineController');
     });
