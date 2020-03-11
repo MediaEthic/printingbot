@@ -2352,6 +2352,9 @@ var includes = function includes(types) {
   },
   created: function created() {//
   },
+  mounted: function mounted() {
+    this.textareaAutosize();
+  },
   computed: {//
   },
   methods: {
@@ -6726,7 +6729,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".wrap-field,\n.mx-datepicker {\n  display: inline-block !important;\n  width: calc(100% - 1rem) !important;\n  margin: 0.5rem;\n}\n.wrap-field.textarea,\n.mx-datepicker.textarea {\n  height: auto !important;\n}\n.wrap-field.disabled,\n.mx-datepicker.disabled {\n  background-color: #edf2f7;\n}\n.wrap-field .label-field,\n.mx-datepicker .label-field {\n  top: 1.65rem;\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n}\n.wrap-field .field,\n.mx-datepicker .field {\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n}\n.wrap-field .field.input-error + .focus-field,\n.mx-datepicker .field.input-error + .focus-field {\n  border-color: #E8004C;\n}\n.wrap-field .field:disabled, .wrap-field .field[disabled], .wrap-field .field.select, .wrap-field .field:focus, .wrap-field .field.has-val,\n.mx-datepicker .field:disabled,\n.mx-datepicker .field[disabled],\n.mx-datepicker .field.select,\n.mx-datepicker .field:focus,\n.mx-datepicker .field.has-val {\n  height: 3.5rem;\n}\n.wrap-field .field:disabled + .focus-field + .label-field, .wrap-field .field[disabled] + .focus-field + .label-field, .wrap-field .field.select + .focus-field + .label-field, .wrap-field .field:focus + .focus-field + .label-field, .wrap-field .field.has-val + .focus-field + .label-field,\n.mx-datepicker .field:disabled + .focus-field + .label-field,\n.mx-datepicker .field[disabled] + .focus-field + .label-field,\n.mx-datepicker .field.select + .focus-field + .label-field,\n.mx-datepicker .field:focus + .focus-field + .label-field,\n.mx-datepicker .field.has-val + .focus-field + .label-field {\n  top: 0.5rem;\n  font-size: 1.2rem;\n  font-weight: 600;\n  text-transform: uppercase;\n  letter-spacing: 0.1em;\n  color: #865083;\n}\n.wrap-field .field[required] + .focus-field + .label-field:after,\n.mx-datepicker .field[required] + .focus-field + .label-field:after {\n  content: \"*\";\n  margin-left: 0.25rem;\n  font-weight: bold;\n  color: #E8004C;\n}\n.wrap-field .focus-field,\n.mx-datepicker .focus-field {\n  width: calc(100% + .2rem);\n  height: calc(100% + .2rem);\n  top: -0.1rem;\n  left: -0.1rem;\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n  -webkit-transform: scaleX(1.1) scaleY(1.3);\n  transform: scaleX(1.1) scaleY(1.3);\n}\n.wrap-field .symbol-left-field,\n.mx-datepicker .symbol-left-field {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n          align-items: center;\n  width: 2.5rem;\n  height: 5rem;\n  font-size: 1.5rem;\n  color: #672767;\n}\n.wrap-field .field:focus + .focus-field,\n.mx-datepicker .field:focus + .focus-field {\n  visibility: visible;\n  opacity: 1;\n  -webkit-transform: scale(1);\n  transform: scale(1);\n}\n.wrap-field .field {\n  position: absolute;\n  bottom: 0;\n}\ntextarea {\n  position: initial !important;\n}\n.mx-datepicker {\n  position: relative;\n}\n.mx-datepicker.disabled.has-val:before {\n  color: #C3A5BF;\n}\n.mx-datepicker.disabled .field {\n  height: 5rem;\n  background-color: transparent;\n  border-color: #C3A5BF;\n}\n.mx-datepicker.has-val::before {\n  content: attr(data-title);\n  z-index: 1;\n  position: absolute;\n  top: 0.5rem;\n  padding: 0 2.5rem;\n  font-size: 1.2rem;\n  font-weight: 600;\n  text-transform: uppercase;\n  letter-spacing: 0.1em;\n  color: #865083;\n}\n.mx-datepicker.has-val .field {\n  padding: 1.5rem 2.5rem 0.5rem 2.5rem;\n}\n.mx-datepicker .field {\n  outline: none;\n  width: 100%;\n  height: 5rem;\n  background-color: #FFFFFF;\n  border: 0.1rem solid #E6E2E7;\n  border-radius: 1rem;\n  padding: 0.5rem 2.5rem;\n  color: #672767;\n}\n.mx-datepicker .field::before {\n  display: block;\n  content: attr(placeholder);\n  position: absolute;\n  top: 0;\n  font-size: 2rem;\n  letter-spacing: 0.1em;\n  font-weight: 700;\n  text-transform: uppercase;\n  /*color: theme('colors.black');*/\n}\n.mx-datepicker .field::-webkit-input-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field::-moz-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field:-ms-input-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field::-ms-input-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field::placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field:focus {\n  height: 5rem;\n}\n.mx-datepicker .mx-icon-calendar {\n  color: #865083;\n}\n.fields-are-small > .table-cell > .wrap-field + .textarea {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n  border-top: 0;\n}\n.fields-are-small > .table-cell > .wrap-field > .field {\n  padding: 0 1rem;\n}\n.fields-are-small > .table-cell > .wrap-field > .field.search {\n  padding: 0 2.5rem;\n}\n.fields-are-small .wrap-field,\n.wrap-field.field-is-small {\n  margin: 0;\n  width: 100% !important;\n  height: 3.5rem;\n}\n.fields-are-small .wrap-field .field,\n.wrap-field.field-is-small .field {\n  min-height: 3.5rem;\n}\n.fields-are-small .wrap-field .field.textarea,\n.wrap-field.field-is-small .field.textarea {\n  resize: none;\n  padding: 0.75rem 1rem;\n}\n.fields-are-small .wrap-field .field ~ .vee-validate,\n.wrap-field.field-is-small .field ~ .vee-validate {\n  top: 3.5rem;\n}\n.fields-are-small .wrap-field .label-field,\n.wrap-field.field-is-small .label-field {\n  display: none;\n}\n.fields-are-small .wrap-field .symbol-left-field,\n.wrap-field.field-is-small .symbol-left-field {\n  height: 3.5rem;\n}", ""]);
+exports.push([module.i, ".wrap-field,\n.mx-datepicker {\n  display: inline-block !important;\n  width: calc(100% - 1rem) !important;\n  margin: 0.5rem;\n}\n.wrap-field.textarea,\n.mx-datepicker.textarea {\n  height: auto !important;\n}\n.wrap-field.disabled,\n.mx-datepicker.disabled {\n  background-color: #edf2f7;\n}\n.wrap-field .label-field,\n.mx-datepicker .label-field {\n  top: 1.65rem;\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n}\n.wrap-field .field,\n.mx-datepicker .field {\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n}\n.wrap-field .field.input-error + .focus-field,\n.mx-datepicker .field.input-error + .focus-field {\n  border-color: #E8004C;\n}\n.wrap-field .field:disabled, .wrap-field .field[disabled], .wrap-field .field.select, .wrap-field .field:focus, .wrap-field .field.has-val,\n.mx-datepicker .field:disabled,\n.mx-datepicker .field[disabled],\n.mx-datepicker .field.select,\n.mx-datepicker .field:focus,\n.mx-datepicker .field.has-val {\n  height: 3.5rem;\n}\n.wrap-field .field:disabled + .focus-field + .label-field, .wrap-field .field[disabled] + .focus-field + .label-field, .wrap-field .field.select + .focus-field + .label-field, .wrap-field .field:focus + .focus-field + .label-field, .wrap-field .field.has-val + .focus-field + .label-field,\n.mx-datepicker .field:disabled + .focus-field + .label-field,\n.mx-datepicker .field[disabled] + .focus-field + .label-field,\n.mx-datepicker .field.select + .focus-field + .label-field,\n.mx-datepicker .field:focus + .focus-field + .label-field,\n.mx-datepicker .field.has-val + .focus-field + .label-field {\n  top: 0.5rem;\n  font-size: 1.2rem;\n  line-height: 1rem;\n  font-weight: 600;\n  text-transform: uppercase;\n  letter-spacing: 0.1em;\n  color: #865083;\n}\n.wrap-field .field[required] + .focus-field + .label-field:after,\n.mx-datepicker .field[required] + .focus-field + .label-field:after {\n  content: \"*\";\n  margin-left: 0.25rem;\n  font-weight: bold;\n  color: #E8004C;\n}\n.wrap-field .focus-field,\n.mx-datepicker .focus-field {\n  width: calc(100% + .2rem);\n  height: calc(100% + .2rem);\n  top: -0.1rem;\n  left: -0.1rem;\n  -webkit-transition: all 0.4s;\n  transition: all 0.4s;\n  -webkit-transform: scaleX(1.1) scaleY(1.3);\n  transform: scaleX(1.1) scaleY(1.3);\n}\n.wrap-field .symbol-left-field,\n.mx-datepicker .symbol-left-field {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n          align-items: center;\n  width: 2.5rem;\n  height: 5rem;\n  font-size: 1.5rem;\n  color: #672767;\n}\n.wrap-field .field:focus + .focus-field,\n.mx-datepicker .field:focus + .focus-field {\n  visibility: visible;\n  opacity: 1;\n  -webkit-transform: scale(1);\n  transform: scale(1);\n}\n.wrap-field .field {\n  position: absolute;\n  bottom: 0;\n}\ntextarea {\n  position: initial !important;\n}\n.mx-datepicker {\n  position: relative;\n}\n.mx-datepicker.disabled.has-val:before {\n  color: #C3A5BF;\n}\n.mx-datepicker.disabled .field {\n  height: 5rem;\n  background-color: transparent;\n  border-color: #C3A5BF;\n}\n.mx-datepicker.has-val::before {\n  content: attr(data-title);\n  z-index: 1;\n  position: absolute;\n  top: 0.5rem;\n  padding: 0 2.5rem;\n  font-size: 1.2rem;\n  font-weight: 600;\n  text-transform: uppercase;\n  letter-spacing: 0.1em;\n  color: #865083;\n}\n.mx-datepicker.has-val .field {\n  padding: 1.5rem 2.5rem 0.5rem 2.5rem;\n}\n.mx-datepicker .field {\n  outline: none;\n  width: 100%;\n  height: 5rem;\n  background-color: #FFFFFF;\n  border: 0.1rem solid #E6E2E7;\n  border-radius: 1rem;\n  padding: 0.5rem 2.5rem;\n  color: #672767;\n}\n.mx-datepicker .field::before {\n  display: block;\n  content: attr(placeholder);\n  position: absolute;\n  top: 0;\n  font-size: 2rem;\n  letter-spacing: 0.1em;\n  font-weight: 700;\n  text-transform: uppercase;\n  /*color: theme('colors.black');*/\n}\n.mx-datepicker .field::-webkit-input-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field::-moz-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field:-ms-input-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field::-ms-input-placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field::placeholder {\n  position: absolute;\n  top: 0;\n  color: #3D1152;\n}\n.mx-datepicker .field:focus {\n  height: 5rem;\n}\n.mx-datepicker .mx-icon-calendar {\n  color: #865083;\n}\n.fields-are-small > .table-cell > .wrap-field + .textarea {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n  border-top: 0;\n}\n.fields-are-small > .table-cell > .wrap-field > .field {\n  padding: 0 1rem;\n}\n.fields-are-small > .table-cell > .wrap-field > .field.search {\n  padding: 0 2.5rem;\n}\n.fields-are-small .wrap-field,\n.wrap-field.field-is-small {\n  margin: 0;\n  width: 100% !important;\n  height: 3.5rem;\n}\n.fields-are-small .wrap-field .field,\n.wrap-field.field-is-small .field {\n  min-height: 3.5rem;\n}\n.fields-are-small .wrap-field .field.textarea,\n.wrap-field.field-is-small .field.textarea {\n  resize: none;\n  padding: 0.75rem 1rem;\n}\n.fields-are-small .wrap-field .field ~ .vee-validate,\n.wrap-field.field-is-small .field ~ .vee-validate {\n  top: 3.5rem;\n}\n.fields-are-small .wrap-field .label-field,\n.wrap-field.field-is-small .label-field {\n  display: none;\n}\n.fields-are-small .wrap-field .symbol-left-field,\n.wrap-field.field-is-small .symbol-left-field {\n  height: 3.5rem;\n}", ""]);
 
 // exports
 
@@ -68062,7 +68065,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("ValidationProvider", {
     staticClass:
-      "wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl",
+      "wrap-field validate-input relative flex flex-wrap items-end w-full max-w-full h-20 bg-white border border-solid border-grey rounded-xl",
     class: { textarea: _vm.type === "textarea", disabled: _vm.disabled },
     attrs: { tag: "div", name: _vm.id, rules: _vm.rules },
     scopedSlots: _vm._u([
@@ -68461,7 +68464,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("ValidationProvider", {
     staticClass:
-      "wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl",
+      "wrap-field validate-input relative flex flex-wrap items-end w-full max-w-full h-20 bg-white border border-solid border-grey rounded-xl",
     attrs: { tag: "div", name: _vm.id },
     scopedSlots: _vm._u([
       {
@@ -69870,7 +69873,7 @@ var render = function() {
             }
           }),
           _vm._v(" "),
-          _c("div", { staticClass: "container-table" }, [
+          _c("div", { staticClass: "container-table has-border" }, [
             _c("table", { staticClass: "wrap-table" }, [
               _vm._m(0),
               _vm._v(" "),
@@ -71930,7 +71933,7 @@ var render = function() {
                 "div",
                 [
                   _c("div", { staticClass: "container-table" }, [
-                    _c("table", { staticClass: "wrap-table" }, [
+                    _c("table", { staticClass: "wrap-table table-selective" }, [
                       _c("thead", { staticClass: "table-header" }, [
                         _c("tr", { staticClass: "table-row" }, [
                           _c("th", {
@@ -71968,7 +71971,7 @@ var render = function() {
                               _c(
                                 "td",
                                 {
-                                  staticClass: "table-cell cursor-pointer",
+                                  staticClass: "table-cell image",
                                   attrs: { "data-title": "" }
                                 },
                                 [
@@ -71985,7 +71988,7 @@ var render = function() {
                               _c(
                                 "td",
                                 {
-                                  staticClass: "table-cell cursor-pointer",
+                                  staticClass: "table-cell name visible-title",
                                   attrs: { "data-title": "Nom" }
                                 },
                                 [
@@ -72688,16 +72691,16 @@ var render = function() {
       _vm.isLoading ? _c("loader") : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "modal-container" }, [
+        _c("button", {
+          staticClass: "modal-close",
+          attrs: { type: "button", "aria-label": "Fermer la fenêtre modale" },
+          on: { click: _vm.hide }
+        }),
+        _vm._v(" "),
         _c("div", { staticClass: "modal-header" }, [
           _c("h3", { staticClass: "modal-title" }, [
             _vm._v("Rechercher un client")
           ]),
-          _vm._v(" "),
-          _c("button", {
-            staticClass: "modal-close",
-            attrs: { type: "button", "aria-label": "Fermer la fenêtre modale" },
-            on: { click: _vm.hide }
-          }),
           _vm._v(" "),
           _c(
             "form",
@@ -72708,7 +72711,7 @@ var render = function() {
             [
               _c(
                 "div",
-                { staticClass: "flex" },
+                { staticClass: "flex flex-col sm:flex-row" },
                 [
                   _c("autocomplete", {
                     attrs: {
@@ -72753,7 +72756,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "flex" },
+                { staticClass: "flex flex-col sm:flex-row" },
                 [
                   _c("field", {
                     attrs: {
@@ -72816,7 +72819,7 @@ var render = function() {
                 "div",
                 [
                   _c("div", { staticClass: "container-table" }, [
-                    _c("table", { staticClass: "wrap-table" }, [
+                    _c("table", { staticClass: "wrap-table table-selective" }, [
                       _c("thead", { staticClass: "table-header" }, [
                         _c("tr", { staticClass: "table-row" }, [
                           _c(
@@ -72867,7 +72870,7 @@ var render = function() {
                               _c(
                                 "td",
                                 {
-                                  staticClass: "table-cell cursor-pointer",
+                                  staticClass: "table-cell image",
                                   attrs: { "data-title": "" }
                                 },
                                 [
@@ -72884,7 +72887,7 @@ var render = function() {
                               _c(
                                 "td",
                                 {
-                                  staticClass: "table-cell cursor-pointer",
+                                  staticClass: "table-cell name visible-title",
                                   attrs: { "data-title": "Raison sociale" }
                                 },
                                 [
@@ -72913,7 +72916,7 @@ var render = function() {
                               _c(
                                 "td",
                                 {
-                                  staticClass: "table-cell cursor-pointer",
+                                  staticClass: "table-cell name visible-title",
                                   attrs: { "data-title": "Contact" }
                                 },
                                 [

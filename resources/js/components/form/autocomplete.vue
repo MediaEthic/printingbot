@@ -2,7 +2,7 @@
     <ValidationProvider tag="div"
                         :name="id"
                         v-slot="{ errors }"
-                        class="wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl">
+                        class="wrap-field validate-input relative flex flex-wrap items-end w-full max-w-full h-20 bg-white border border-solid border-grey rounded-xl">
         <span class="icon-right-field" v-if="isLoading">
             <spinner />
         </span>

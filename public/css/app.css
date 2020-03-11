@@ -1339,16 +1339,15 @@ body {
 }
 
 .v--modal {
-  overflow-y: auto !important;
   max-width: 150rem !important;
   background-position: bottom right;
   background-size: auto 25rem;
   background-repeat: no-repeat;
   -webkit-transition: all 0.3s ease !important;
   transition: all 0.3s ease !important;
-  border-top: 3rem solid #672767;
   border-radius: 2rem !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  overflow-y: auto !important;
   scrollbar-color: #672767 #E2D1DE;
   scrollbar-width: thin;
 }
@@ -1364,16 +1363,14 @@ body {
   border-radius: 1rem;
 }
 
-.v--modal .modal-container .modal-header {
-  padding: 3rem;
-  background-color: #edf2f7;
-  border-radius: 0 0 1rem 1rem;
+.v--modal .modal-container {
+  border-top: 3rem solid #672767;
 }
 
-.v--modal .modal-container .modal-header .modal-close {
+.v--modal .modal-container .modal-close {
   -moz-appearance: none;
   -webkit-appearance: none;
-  background-color: #672767;
+  background-color: #E2D1DE;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -1391,13 +1388,13 @@ body {
   vertical-align: top;
   position: absolute;
   right: 0.5rem;
-  top: -2.5rem;
+  top: 0.5rem;
   font-weight: 700;
   color: #fff;
 }
 
-.v--modal .modal-container .modal-header .modal-close:before {
-  background-color: #FFFFFF;
+.v--modal .modal-container .modal-close:before {
+  background-color: #672767;
   content: "";
   display: block;
   position: absolute;
@@ -1411,8 +1408,8 @@ body {
   transform-origin: center center;
 }
 
-.v--modal .modal-container .modal-header .modal-close:after {
-  background-color: #fff;
+.v--modal .modal-container .modal-close:after {
+  background-color: #672767;
   content: "";
   display: block;
   position: absolute;
@@ -1424,6 +1421,12 @@ body {
   transform: translateX(-50%) translateY(-50%) rotate(45deg);
   -webkit-transform-origin: center center;
   transform-origin: center center;
+}
+
+.v--modal .modal-container .modal-header {
+  padding: 2rem;
+  background-color: #FFFFFF;
+  border-radius: 0 0 1rem 1rem;
 }
 
 .v--modal .modal-container .modal-header .modal-title {
@@ -1446,8 +1449,8 @@ body {
 }
 
 .v--modal .modal-container .modal-body {
-  margin: 2rem 0;
-  padding: 0 3rem;
+  background-color: #edf2f7;
+  padding: 2rem;
 }
 
 .container-table {
@@ -1458,7 +1461,10 @@ body {
   width: 100%;
   border-spacing: 0;
   border-collapse: collapse;
-  /*box-shadow: 0 0 1rem 0 rgba(theme('colors.black'), .1);*/
+}
+
+.container-table .wrap-table.table-selective .table-body .table-row {
+  cursor: pointer;
 }
 
 .container-table .wrap-table .table-cell {
@@ -1654,6 +1660,19 @@ body {
     width: 1rem;
   }
 
+  .container-table .wrap-table .table-body .table-row .table-cell.image {
+    display: inline-block;
+    margin-right: 1rem;
+  }
+
+  .container-table .wrap-table .table-body .table-row .table-cell.image ~ .table-cell {
+    display: inline-block;
+  }
+
+  .container-table .wrap-table .table-body .table-row .table-cell.image ~ .table-cell.visible-title:before {
+    display: block;
+  }
+
   .container-table .wrap-table .table-body .table-row .table-cell.name {
     padding-top: 0.75rem;
   }
@@ -1676,21 +1695,21 @@ body {
   }
 }
 
-.box .container-table {
+.box .container-table.has-border {
   margin-top: 2rem;
 }
 
 @media screen and (max-width: 1024px) {
-  .box .container-table {
+  .box .container-table.has-border {
     margin-left: -2rem;
     width: calc(100% + 4rem);
   }
 
-  .box .container-table .wrap-table .table-body {
+  .box .container-table.has-border .wrap-table .table-body {
     display: block;
   }
 
-  .box .container-table .wrap-table .table-body .table-row {
+  .box .container-table.has-border .wrap-table .table-body .table-row {
     margin: 0 !important;
     padding: 2rem 2rem 4rem 2rem;
     border-width: 0.2rem;

@@ -30,12 +30,7 @@ localize('fr', fr);
 
 
 Vue.use(VModal);
-
-const options = {
-    confirmButtonColor: '#672767',
-    cancelButtonColor: '#E8004C',
-};
-Vue.use(VueSweetalert2, options);
+Vue.use(VueSweetalert2);
 
 
 

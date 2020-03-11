@@ -34,7 +34,7 @@
             <div class="modal-body">
                 <div v-if="allProducts.data">
                     <div class="container-table">
-                        <table class="wrap-table">
+                        <table class="wrap-table table-selective">
                             <thead class="table-header">
                                 <tr class="table-row">
                                     <th scope="col" class="table-cell"></th>
@@ -47,13 +47,13 @@
                                     class="table-row"
                                     @click="setSelection(row)"
                                 >
-                                    <td class="table-cell cursor-pointer"
+                                    <td class="table-cell image"
                                         data-title="">
                                         <img class="max-w-xs h-16"
                                              :src="'/assets/img/products/' + row.image"
                                              alt="En attente d'une recherche"/>
                                     </td>
-                                    <td class="table-cell cursor-pointer"
+                                    <td class="table-cell name visible-title"
                                         data-title="Nom">
                                         <span class="text-purple2 tracking-widest uppercase mr-2">
                                             [{{ row.alias }}]

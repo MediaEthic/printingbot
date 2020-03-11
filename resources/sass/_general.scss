@@ -122,15 +122,14 @@ body {
 
 // Modal component
 .v--modal {
-    overflow-y: auto !important;
     max-width: 150rem !important;
     background-position: bottom right;
     background-size: auto 25rem;
     background-repeat: no-repeat;
     transition: all .3s ease !important;
-    border-top: 3rem solid theme('colors.purple1');
     border-radius: 2rem !important;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    overflow-y: auto !important;
 
     scrollbar-color: theme('colors.purple1') theme('colors.purple5');
     scrollbar-width: thin;
@@ -146,65 +145,66 @@ body {
     }
 
     .modal-container {
-        .modal-header {
-            padding: 3rem;
-            background-color: theme('colors.gray.200');
-            border-radius: 0 0 1rem 1rem;
+        border-top: 3rem solid theme('colors.purple1');
 
-            .modal-close {
-                -moz-appearance: none;
-                -webkit-appearance: none;
+        .modal-close {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background-color: theme('colors.purple5');
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+            display: inline-block;
+            flex-grow: 0;
+            flex-shrink: 0;
+            font-size: 1rem;
+            width: 2rem;
+            height: 2rem;
+            max-width: 2rem;
+            max-height: 2rem;
+            outline: 0;
+            vertical-align: top;
+            position: absolute;
+            right: .5rem;
+            top: .5rem;
+            font-weight: 700;
+            color: #fff;
+
+            &:before {
                 background-color: theme('colors.purple1');
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                pointer-events: auto;
-                display: inline-block;
-                flex-grow: 0;
-                flex-shrink: 0;
-                font-size: 1rem;
-                width: 2rem;
-                height: 2rem;
-                max-width: 2rem;
-                max-height: 2rem;
-                outline: 0;
-                vertical-align: top;
+                content: "";
+                display: block;
                 position: absolute;
-                right: .5rem;
-                top: -2.5rem;
-                font-weight: 700;
-                color: #fff;
-
-                &:before {
-                    background-color: theme('colors.white');
-                    content: "";
-                    display: block;
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    height: .2rem;
-                    width: 50%;
-                    -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
-                    transform: translateX(-50%) translateY(-50%) rotate(45deg);
-                    -webkit-transform-origin: center center;
-                    transform-origin: center center;
-                }
-
-                &:after {
-                    background-color: #fff;
-                    content: "";
-                    display: block;
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    height: 50%;
-                    width: .2rem;
-                    -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
-                    transform: translateX(-50%) translateY(-50%) rotate(45deg);
-                    -webkit-transform-origin: center center;
-                    transform-origin: center center;
-                }
+                top: 50%;
+                left: 50%;
+                height: .2rem;
+                width: 50%;
+                -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                -webkit-transform-origin: center center;
+                transform-origin: center center;
             }
+
+            &:after {
+                background-color: theme('colors.purple1');
+                content: "";
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                height: 50%;
+                width: .2rem;
+                -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                -webkit-transform-origin: center center;
+                transform-origin: center center;
+            }
+        }
+        .modal-header {
+            padding: 2rem;
+            background-color: theme('colors.white');
+            border-radius: 0 0 1rem 1rem;
 
             .modal-title {
                 font-size: 3rem;
@@ -227,8 +227,8 @@ body {
         }
 
         .modal-body {
-            margin: 2rem 0;
-            padding: 0 3rem;
+            background-color: theme('colors.gray.200');
+            padding: 2rem;
         }
     }
 }
@@ -241,13 +241,17 @@ body {
     //overflow-x: scroll;
 
     .wrap-table {
-        //position: relative;
         width: 100%;
-        //height: 100%;
-        //overflow-x: hidden;
         border-spacing: 0;
         border-collapse: collapse;
-        /*box-shadow: 0 0 1rem 0 rgba(theme('colors.black'), .1);*/
+
+        &.table-selective {
+            .table-body {
+                .table-row {
+                    cursor: pointer;
+                }
+            }
+        }
 
         .table-cell {
             text-align: left;
@@ -459,6 +463,20 @@ body {
                                 }
                             }
                         }
+                        &.image {
+                            display: inline-block;
+                            margin-right: 1rem;
+
+                            ~ .table-cell {
+                                display: inline-block;
+
+                                &.visible-title {
+                                    &:before {
+                                        display: block;
+                                    }
+                                }
+                            }
+                        }
                         &.name {
                             padding-top: .75rem;
                         }
@@ -486,14 +504,14 @@ body {
 
 
 .box {
-    .container-table {
+    .container-table.has-border {
         margin-top: 2rem;
     }
 }
 
 @media screen and (max-width: 1024px) {
     .box {
-        .container-table {
+        .container-table.has-border {
             margin-left: -2rem;
             width: calc(100% + 4rem);
 

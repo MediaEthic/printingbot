@@ -4,7 +4,7 @@
                         :rules="rules"
                         v-slot="{ errors }"
                         :class="{ 'textarea': type === 'textarea', 'disabled': disabled }"
-                        class="wrap-field validate-input relative flex flex-wrap items-end w-full h-20 bg-white border border-solid border-grey rounded-xl">
+                        class="wrap-field validate-input relative flex flex-wrap items-end w-full max-w-full h-20 bg-white border border-solid border-grey rounded-xl">
         <select v-if="type === 'select'"
                 v-bind="$attrs"
                 :type="type"
@@ -159,6 +159,9 @@
         created() {
             //
         },
+        mounted() {
+            this.textareaAutosize();
+        },
         computed: {
             //
         },
@@ -228,6 +231,7 @@
                 &+ .focus-field + .label-field {
                     top: .5rem;
                     font-size: 1.2rem;
+                    line-height: 1rem;
                     font-weight: 600;
                     text-transform: uppercase;
                     letter-spacing: 0.1em;

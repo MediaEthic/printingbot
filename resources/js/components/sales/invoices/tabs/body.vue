@@ -10,7 +10,7 @@
                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
             />
 
-            <div class="container-table">
+            <div class="container-table has-border">
                 <table class="wrap-table">
                     <thead class="table-header">
                     <tr class="table-row">

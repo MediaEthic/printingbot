@@ -2,16 +2,16 @@
     <modal name="search-customers" :adaptive="true" :width="1180" :height="710">
         <loader v-if="isLoading"></loader>
         <div class="modal-container">
+            <button type="button"
+                    class="modal-close"
+                    aria-label="Fermer la fenêtre modale"
+                    @click="hide">
+            </button>
             <div class="modal-header">
                 <h3 class="modal-title">Rechercher un client</h3>
-                <button type="button"
-                        class="modal-close"
-                        aria-label="Fermer la fenêtre modale"
-                        @click="hide">
-                </button>
 
                 <form action="#" method="post" class="form-filters">
-                    <div class="flex">
+                    <div class="flex flex-col sm:flex-row">
                         <autocomplete
                             id="customers"
                             :suggestions="datas.customers"
@@ -35,7 +35,7 @@
                         />
                     </div>
 
-                    <div class="flex">
+                    <div class="flex flex-col sm:flex-row">
                         <field
                             type="number"
                             :id="'postcode'"
@@ -67,7 +67,7 @@
             <div class="modal-body">
                 <div v-if="allCustomers.data">
                     <div class="container-table">
-                        <table class="wrap-table">
+                        <table class="wrap-table table-selective">
                             <thead class="table-header">
                                 <tr class="table-row">
                                     <th scope="col" class="table-cell">Logotype</th>
@@ -81,20 +81,20 @@
                                     class="table-row"
                                     @click="setSelection(row)"
                                 >
-                                    <td class="table-cell cursor-pointer"
+                                    <td class="table-cell image"
                                         data-title="">
                                         <img class="max-w-xs h-16"
                                              :src="'/assets/img/logos/' + row.logo"
                                              alt="En attente d'une recherche"/>
                                     </td>
-                                    <td class="table-cell cursor-pointer"
+                                    <td class="table-cell name visible-title"
                                         data-title="Raison sociale">
                                         <span class="text-purple2 tracking-widest uppercase mr-2">
                                             [{{ row.alias }}]
                                         </span>
                                         {{ row.name }}
                                     </td>
-                                    <td class="table-cell cursor-pointer"
+                                    <td class="table-cell name visible-title"
                                         data-title="Contact">
                                         {{ row.contacts[0] ? row.contacts[0].name : '' }} {{ row.contacts[0] ? row.contacts[0].lastname : '' }}
                                     </td>

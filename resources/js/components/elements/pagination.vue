@@ -161,14 +161,15 @@
 
                 .pagination-controls {
                     cursor: pointer;
-                    padding: 1rem 1.5rem;
+                    padding: 1rem;
+                    width: 3.5rem;
+                    border-radius: 50%;
                     color: theme('colors.purple1');
                     transition: all .4s;
 
                     &.active {
                         background-color: theme('colors.purple1');
                         color: theme('colors.white');
-                        border-radius: 50%;
                     }
 
                     &:hover {

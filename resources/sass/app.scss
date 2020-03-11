@@ -7,7 +7,38 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '~sweetalert2/dist/sweetalert2.min.css';
+@import '~sweetalert2/src/variables';
+// CONTAINER
+$swal2-container-padding: 1rem;
+
+// BOX MODEL
+$swal2-width: 50rem;
+$swal2-padding: 2rem;
+$swal2-border-radius: 1rem;
+
+// ICONS
+$swal2-icon-size: 8rem;
+$swal2-icon-margin: 2rem auto 3rem;
+
+// TITLE
+$swal2-title-margin: 0 0 1rem;
+$swal2-title-font-size: 3rem;
+
+// CONTENT
+$swal2-content-font-size: 1.65rem;
+
+// CONFIRM BUTTON
+$swal2-confirm-button-border-radius: .75rem;
+$swal2-confirm-button-background-color: #672767;
+$swal2-confirm-button-color: $swal2-white !default;
+$swal2-confirm-button-font-size: 1.35rem;
+
+// CANCEL BUTTON
+$swal2-cancel-button-border-radius: .75rem;
+$swal2-cancel-button-background-color: #E8004C;
+$swal2-cancel-button-color: $swal2-white !default;
+$swal2-cancel-button-font-size: 1.35rem;
+@import '~sweetalert2/src/sweetalert2';
 
 
 $default-color: #3D1152;
