@@ -20,6 +20,7 @@
 
             table thead {
                 text-transform: uppercase;
+                color: #E2D1DE;
             }
         </style>
     </head>
@@ -42,16 +43,16 @@
             }
         </script>
 
+
         @foreach($invoices as $invoice)
         <div>
             <div class="row">
                 <div class="col-xs-3">
-                    <img src="{{ asset('/assets/img/logos/' . $invoice->establishment->logo) }}"
-                         alt="Logotype {{ $invoice->establishment->name }}" />
+                    <img style="width: 100%;" src="{{ public_path('assets/img/logos/' . $invoice->establishment->logo) }}" alt="Logotype {{ $invoice->establishment->name }}" />
                 </div>
             </div>
 
-            <div class="row border-bottom">
+            <div class="row">
                 <div class="col-xs-3">
                 </div>
                 <div class="col-xs-8">
@@ -71,52 +72,48 @@
 
             <div class="row">
                 <div class="col-xs-4">
-                    <table style="width: 100%">
+                    <h1><small style="color: #672767;">Facture #{{ $invoice->invoice_no }}</small></h1>
+                    <table class="table table-striped table-condensed" style="width: 100%">
                         <tbody>
                             <tr>
-                                <th>Facture</th>
-                                <td class="text-right">#{{ $invoice->id }}</td>
-                            </tr>
-                            <tr>
-                                <th>Date</th>
+                                <th>Date d'émission</th>
                                 <td class="text-right">{{ date('d/m/Y', strtotime($invoice->invoice_date)) }}</td>
                             </tr>
                             <tr>
                                 <th>Date d'échéance</th>
                                 <td class="text-right">{{ date('d/m/Y', strtotime($invoice->due_date)) }}</td>
                             </tr>
-                            <tr>
-                                <th>Suivi par</th>
-                                <td class="text-right">{{ $invoice->salesperson->name }} {{ $invoice->salesperson->lastname }}</td>
-                            </tr>
+{{--                            <tr>--}}
+{{--                                <th>Emise par</th>--}}
+{{--                                <td class="text-right">{{ date('d/m/Y', strtotime($invoice->due_date)) }}</td>--}}
+{{--                            </tr>--}}
                         </tbody>
                     </table>
                 </div>
 
-                <div class="col-xs-2">
+                <div class="col-xs-3">
                 </div>
 
-                <div class="col-xs-5">
-                    <address class="small text-right">
-                        <strong>{{ $invoice->third->name }}</strong>,
-                        @isset($invoice->third->address_line1){{ $invoice->third->address_line1 }}, @endisset
-                        @isset($invoice->third->address_line2){{ $invoice->third->address_line2 }}, @endisset
-                        @isset($invoice->third->address_line3){{ $invoice->third->address_line3 }}, @endisset
+                <div class="col-xs-4">
+                    <address class="">
+                        <strong>{{ $invoice->third->name }}</strong><br>
+                        @isset($invoice->third->address_line1){{ $invoice->third->address_line1 }}<br>@endisset
+                        @isset($invoice->third->address_line2){{ $invoice->third->address_line2 }}<br>@endisset
+                        @isset($invoice->third->address_line3){{ $invoice->third->address_line3 }}<br>@endisset
                         {{ $invoice->third->postcode }} {{ $invoice->third->city }}
                     </address>
                 </div>
             </div>
 
-            <div style="margin-bottom: 0px">&nbsp;</div>
-
-            <table class="table">
-                <thead>
-                    <tr>
+{{--            TODO: delivery address--}}
+            <table class="table table-condensed" style="border-radius: 15px; overflow: hidden;">
+                <thead style="border-bottom: 0;">
+                    <tr style="background-color: #3D1152; border-bottom: 0;">
                         <th>Description</th>
-{{--                        <th>TVA</th>--}}
-                        <th>Quantité</th>
-                        <th>Remise</th>
-                        <th>Prix unitaire</th>
+                        <th>TVA</th>
+                        <th>Qté</th>
+                        <th>Réduction</th>
+                        <th>PU</th>
                         <th class="text-right">Total HT</th>
                     </tr>
                 </thead>
@@ -124,7 +121,7 @@
                     @foreach($invoice->lines as $line)
                         <tr>
                             @if ($line->type === "comment")
-                                <td colspan="5">
+                                <td colspan="6">
                                     <dl>
                                         @foreach(explode("\n", $line->description) as $description)
                                             <dd>{{ $description }}</dd>
@@ -132,41 +129,48 @@
                                     </dl>
                                 </td>
                             @else
-                                <td colspan="5">
+                                <td>
+                                    <strong style="color: #672767;">{{ $line->name }}</strong>
                                     <dl>
                                         @foreach(explode("\n", $line->description) as $description)
                                             <dd>{{ $description }}</dd>
                                         @endforeach
                                     </dl>
                                 </td>
-                                <td>%</td>
+                                <td>{{ $line->vat->rate }}%</td>
                                 <td>{{ $line->quantity }}</td>
                                 <td>{{ $line->discount_rate }}%</td>
                                 <td>{{ round($line->unit_price, 2) }}</td>
                                 <td class="text-right">{{ round($line->total_pretax, 2) }}€</td>
                             @endif
                         </tr>
-
-                        @php echo $line @endphp
                     @endforeach
                 </tbody>
             </table>
 
             <div class="row">
-                <div class="col-xs-6">
-                    <h5>Payment terms and methods</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam cursus sem sed diam dapibus, vel eleifend enim scelerisque. Aenean id tempus enim.</p>
+                <div class="col-xs-7">
+                    <p style="margin: 0;">Règlement par {{ $invoice->third->payment->name }}</p>
+                    @isset($invoice->third->intracommunity_no)<p><small>TVA intracommunautaire : {{ $invoice->third->intracommunity_no }}</small></p>@endisset
                 </div>
-                <div class="col-xs-5">
-                    <table style="width: 100%">
+                <div class="col-xs-4">
+                    <table  style="width: 100%">
                         <tbody>
                             <tr style="padding: 5px">
-                                <th style="padding: 5px"><div>Subtotal</div></th>
+                                <th style="padding: 5px">Sous-total</th>
                                 <td style="padding: 5px" class="text-right"><strong>{{ round($invoice->total_pretax, 2) }}€</strong></td>
                             </tr>
                             <tr style="padding: 5px">
-                                <th style="padding: 5px"><div>Total TVA (20%)</div></th>
+                                <th style="padding: 5px">Réduction</th>
                                 <td style="padding: 5px" class="text-right"><strong>{{ round($invoice->discount_amount, 2) }}€</strong></td>
+                            </tr>
+                            <tr style="padding: 5px">
+                                <th style="padding: 5px">Total HT</th>
+                                <td style="padding: 5px" class="text-right"><strong>{{ round($invoice->total_pretax, 2) }}€</strong></td>
+                            </tr>
+                            <tr style="padding: 5px">
+                                <th style="padding: 5px">Total TVA</th>
+                                <td style="padding: 5px" class="text-right"><strong>{{ round($invoice->vat, 2) }}€</strong></td>
                             </tr>
                             <tr class="well" style="padding: 5px">
                                 <th style="padding: 5px"><div>Total TTC</div></th>
@@ -177,19 +181,29 @@
                 </div>
             </div>
 
-            <div style="margin-bottom: 0px">&nbsp;</div>
+            <div class="row">
+                <div class="col-xs-12">
+                    @if($invoice->third->bank_rate === 0 || $invoice->third->discount_duration === 0)
+                        <p class="small" style="margin: 0;">Pas d'escompte pour paiement anticipé</p>
+                    @else
+                        <p class="small" style="margin: 0;">Escompte de {{ $invoice->third->bank_rate }}% pour règlement anticipé avant le {{ date('d/m/Y', strtotime($invoice->invoice_date. ' + ' . $invoice->third->discount_duration . ' days')) }}.</p>
+                    @endif
+                    <p class="small" style="margin: 0;">{{ $invoice->establishment->foot_invoice }}</p>
+                </div>
+            </div>
 
-{{--            <div class="row">--}}
-{{--                <div class="col-xs-12">--}}
-{{--                    <p>{{ $invoice->user->company->foot_quotation }}</p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="row" style="position: absolute; bottom: 0;">
+                <div class="col-xs-12">
+                    <p class="small text-center" style="margin: 0;">
+                        <strong>{{ $invoice->establishment->company->name }}</strong> |
+                        {{ $invoice->establishment->company->legal_form }} au capital de {{ $invoice->establishment->company->capital }}€ |
+                        Code APE {{ $invoice->establishment->company->ape }} |
+                        RCS {{ $invoice->establishment->company->register }} |
+                        N° TVA {{ $invoice->establishment->company->tva }}
 
-{{--            <div class="row" style="border-top: 1px solid #ddd;">--}}
-{{--                <div class="col-xs-12">--}}
-{{--                    <p class="text-center">{{ $invoice->user->company->siret }} | {{ $invoice->user->company->tva }}</p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+                    </p>
+                </div>
+            </div>
         </div>
         @if (!$loop->last) <div class="page-break"></div> @endif
         @endforeach
