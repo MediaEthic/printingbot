@@ -98,8 +98,12 @@ class InvoiceRepository
         $invoice = Invoice::with(['lines' => function($query) {
                     $query->with(['product' => function($query) {
                         $query->with('quantities');
-                    }]);
-                }])->with('establishment')->with('salesperson')->with('third') // things needed for pdf
+                    }])->with('vat');
+                }])
+            ->with(['establishment' => function($query) {
+                $query->with('company');
+            }])
+            ->with('payment')->with('salesperson')->with('third') // things needed for pdf
             ->findOrFail($id);
 
         return new ArrayCollection($invoice);

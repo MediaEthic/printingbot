@@ -53,7 +53,7 @@ class InvoiceLine extends Model
         'discount_rate',
         'discount_amount',
         'total_pretax',
-        'vat',
+        'vat_amount',
         'total',
     ];
 

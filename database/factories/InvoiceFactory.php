@@ -68,10 +68,9 @@ $factory->define(Invoice::class, function (Faker $faker) {
             'discount_rate' => $discountRate,
             'discount_amount' => $discountAmount,
             'total_pretax' => $totalPretax,
-            'vat' => $vatAmount,
+            'vat_amount' => $vatAmount,
             'total' => $total,
         ]));
-
     }
 
     $invoiceDate = $faker->date();
@@ -89,7 +88,7 @@ $factory->define(Invoice::class, function (Faker $faker) {
     $invoiceSubtotal = round($lines->sum('subtotal'), 2);
     $invoiceDiscountAmount = round($lines->sum('discount_amount'), 2);
     $invoiceTotalPretax = round($lines->sum('total_pretax'), 2);
-    $invoiceVat = round($lines->sum('vat'), 2);
+    $invoiceVat = round($lines->sum('vat_amount'), 2);
 
     $commission_rate = $third->commission_rate;
     $commission_amount = round($invoiceTotalPretax * ($commission_rate / 100),2);

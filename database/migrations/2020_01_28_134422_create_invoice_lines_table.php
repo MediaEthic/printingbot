@@ -45,7 +45,7 @@ class CreateInvoiceLinesTable extends Migration
             $table->double('discount_rate')->nullable()->default(null);
             $table->double('discount_amount')->nullable()->default(null);
             $table->double('total_pretax')->nullable()->default(null);
-            $table->double('vat')->nullable()->default(null);
+            $table->double('vat_amount')->nullable()->default(null);
             $table->double('total')->nullable()->default(null);
         });
     }

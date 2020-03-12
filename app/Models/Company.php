@@ -45,6 +45,7 @@ class Company extends Model
         'register',
         'siret',
         'tva',
+        'ape',
         'expiry_date',
     ];
 

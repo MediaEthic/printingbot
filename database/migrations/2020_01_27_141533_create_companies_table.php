@@ -23,6 +23,7 @@ class CreateCompaniesTable extends Migration
             $table->string('register', 45)->nullable()->default(null);
             $table->string('siret', 45)->nullable()->default(null);
             $table->string('tva', 45)->nullable()->default(null);
+            $table->string('ape', 200)->nullable()->default(null);
             $table->date('expiry_date')->nullable()->default(null);
         });
     }

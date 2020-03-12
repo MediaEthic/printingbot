@@ -245,7 +245,7 @@
 
                 let vat = this.vats.filter(vat => vat.id === parseInt(this.lines[index].vat_id))[0];
                 let amountVat = parseFloat((total_pretax * (vat.rate / 100)).toFixed(2));
-                this.lines[index].vat = amountVat;
+                this.lines[index].vat_amount = amountVat;
 
                 let total = parseFloat((total_pretax + amountVat).toFixed(2));
                 this.lines[index].total = total;
@@ -264,7 +264,7 @@
                         invoiceSubtotal += parseFloat(value.subtotal);
                         invoiceDiscountAmount += parseFloat(value.discount_amount);
                         invoiceTotalPretax += parseFloat(value.total_pretax);
-                        invoiceVat += parseFloat(value.vat);
+                        invoiceVat += parseFloat(value.vat_amount);
                         invoiceTotal += parseFloat(value.total);
                     }
                 }
