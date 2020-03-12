@@ -18,7 +18,7 @@
                         <th scope="col" class="table-cell">TVA</th>
                         <th scope="col" class="table-cell">Quantité</th>
                         <th scope="col" class="table-cell">Prix unitaire</th>
-                        <th scope="col" class="table-cell">Remise</th>
+                        <th scope="col" class="table-cell">Réduction</th>
                         <th scope="col" class="table-cell">Total HT</th>
                         <th scope="col" class="table-cell"> </th>
                     </tr>
@@ -88,12 +88,12 @@
                                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"
                             />
                         </td>
-                        <td class="table-cell visible-title" data-title="Remise" v-if="line.type != 'comment'">
+                        <td class="table-cell visible-title" data-title="Réduction" v-if="line.type != 'comment'">
                             <field
                                 :type="`number`"
                                 :id="`discount_rate` + index"
                                 v-model="line.discount_rate"
-                                label="Remise"
+                                label="Réduction"
                                 :required="false"
                                 @input="setLineTotal(index)"
                                 :readonly="invoice[0].invoice_status === 'draft' ? false : true"

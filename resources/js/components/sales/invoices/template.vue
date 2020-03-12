@@ -160,7 +160,7 @@
                             </li>
                             <li class="flex justify-between mt-8">
                                 <span class="text-base font-semibold uppercase tracking-widest text-purple4 mr-4">
-                                    Remise
+                                    Réduction
                                 </span>
                                 <span class="text-white text-lg font-bold tracking-widest">{{ invoice[0].discount_amount }}</span>
                             </li>
